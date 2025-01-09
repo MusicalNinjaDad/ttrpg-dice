@@ -1,6 +1,6 @@
 import pytest  # noqa: F401, RUF100
 
-from ttrpg_dice.manydice import multiroll
+from ttrpg_dice import multiroll
 
 
 def test_2d100_target33():
