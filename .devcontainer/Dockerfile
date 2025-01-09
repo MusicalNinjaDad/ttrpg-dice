@@ -1,4 +1,4 @@
-FROM docker.io/library/fedora:40
+FROM docker.io/library/fedora:41
 
 # ---
 # Setup base system ...
@@ -29,12 +29,12 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} \
 # ---
 
 # Man pages for all the stuff which is already installed, man itself and basic manpages
-RUN dnf -y --setopt=install_weak_deps=False reinstall $(dnf list --installed | awk '{print $1}') \
-&& dnf -y --setopt=install_weak_deps=False install \
+RUN dnf -y --setopt=install_weak_deps=False install \
     man \
     man-db \
     man-pages \
-&& dnf -y update
+&& dnf -y update \
+&& dnf -y --setopt=install_weak_deps=False reinstall --skip-unavailable $(dnf list --installed | awk '{print $1}')
 
 # Basic development tools
 RUN dnf -y --setopt=install_weak_deps=False install \
