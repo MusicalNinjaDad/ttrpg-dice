@@ -12,4 +12,3 @@ def _p(numdice: int, dicetype: int, target: int, hits: int) -> int:
 
 def multiroll(numdice: int, dicetype: int, target: int) -> list[int]:
     """Calculate equivalent single roll instead of rolling multiple dice."""
-    ...
