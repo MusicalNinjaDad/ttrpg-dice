@@ -1,4 +1,4 @@
-name: Deploy mkdocs site to Pages
+name: Publish mkdocs site to Pages
 
 on:
   push:
