@@ -3,7 +3,7 @@ repo_url: https://github.com/MusicalNinjaDad/ttrpg-dice
 repo_name: MusicalNinjaDad/ttrpg-dice
 
 watch:
-- ttrpg-dice # To update live preview when docstrings change
+- ttrpg_dice # To update live preview when docstrings change
 
 theme:
   name: "material"
