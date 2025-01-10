@@ -27,18 +27,15 @@ def test_lazytable_upto4d100_target33():
         [100, 80, 40, 11, 1],
     ]
 
-@pytest.mark.xfail
 def test_lazytable_upto4d100_target33_pretty():
-    output = r"""
-Lazyroll table for up to 4d100 targetting 33 for success:
+    output = r"""Lazyroll table for up to 4d100 targeting 33 for success:
 
 	HITS
 	1	2	3	4
 1	33
 2	55	11
-3	70	26	4
-4	80	40	11	1
-"""
+3	70	25	4
+4	80	40	11	1"""
     assert str(LazyRollTable(4, 100, 33)) == output
 
 def test_formatroll():

@@ -59,15 +59,11 @@ class LazyRollTable:
     def __repr__(self) -> str:  # noqa: D105
         return f"LazyRollTable for up to {self._maxdice}d{self._dicetype} targeting {self._target}: {self.rolls}"
     
-    # def __str__(self) -> str:
-    #     description = f"Lazyroll table for up to {self._maxdice}d{self._dicetype} targeting {self._target} for success:"
-    #     table_header = f"\tHITS\n{tab.join([str(i) for i in self._maxdicerange])}"
-    #     table = newline.join([
-    #         tab.join[
-    #             [f"{dice}",""] + [f"{lazytarget}" for lazytarget in lazyrolls]
-    #          for dice, lazyrolls in enumerate(self.rolls)]
-    #     ])
-    #     return newline.join([description,"",table_header,table])
+    def __str__(self) -> str:
+        description = f"Lazyroll table for up to {self._maxdice}d{self._dicetype} targeting {self._target} for success:"
+        table_header = f"\tHITS\n\t{tab.join([str(i) for i in self._maxdicerange[1:]])}"
+        table = newline.join([self._formatroll(d+1, r) for d, r in enumerate(self.rolls[1:])])
+        return newline.join([description,"",table_header,table])
     
     @classmethod
     def _formatroll(cls, numdice: int, rolls: list[int]) -> str:
