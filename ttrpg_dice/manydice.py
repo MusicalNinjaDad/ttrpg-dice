@@ -66,5 +66,5 @@ class LazyRollTable:
             return tab.join([str(numdice),lazytargets])
         description = f"Lazyroll table for up to {self._maxdice}d{self._dicetype} targeting {self._target} for success:"
         table_header = f"\tHITS\n\t{tab.join(str(i) for i in self._maxdicerange[1:])}"
-        table = newline.join([_formatroll(d, r) for d, r in enumerate(self.rolls)][1:])
-        return newline.join([description,"",table_header,table])
+        table_lines = [_formatroll(d, r) for d, r in enumerate(self.rolls)]
+        return newline.join([description,"",table_header, *table_lines[1:]])
