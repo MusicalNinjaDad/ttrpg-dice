@@ -11,3 +11,6 @@ def test_5d100_target33_haszeroresult():
 
 def test_3d100_target41_roundingto100():
     assert multiroll(3, 100, 41) == [100, 79, 37, 7]
+
+def test_2d4_target2():
+    assert multiroll(2, 4, 2) == [4, 3, 1]
