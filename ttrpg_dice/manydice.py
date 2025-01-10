@@ -28,7 +28,8 @@ def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
              1:  4 hits
         ```
     """
-    def _p(hits: int) -> int:
+    def _p(hits: int) -> float:
+        """Calculates the probability of an exact number of hits."""
         misses = numdice - hits
         p_successes = (target/dicetype) ** hits
         p_fails = (1-(target/dicetype)) ** (misses)

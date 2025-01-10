@@ -10,7 +10,7 @@ clean:
     rm -rf dist
     rm -rf wheelhouse
     rm -rf .ruff_cache
-    find . -depth -type d -not -path "./.venv/*" -name "__pycache__" -exec rm -rf "{}" \;
+    find . -depth -type d -not -path "./.venv*/*" -name "__pycache__" -exec rm -rf "{}" \;
     find . -depth -type d -path "*.egg-info" -exec rm -rf "{}" \;
     find . -type f -name "*.egg" -delete
     find . -type f -name "*.so" -delete
@@ -19,13 +19,16 @@ clean:
 clean-cov:
     rm -rf pycov
 
-# clean, remove existing .venv and rebuild the venv with pip install -e .[dev]
-reset: clean clean-cov && (install ".venv/bin/")
-    rm -rf .venv
-    python -m venv .venv
+# clean, remove existing .venv and rebuild the venvs with pip install -e .[dev]
+reset: clean clean-cov newvenv install (newvenv "python3.12" ".venv-3.12") (install ".venv-3.12/bin/")
+
+#create a new virtual environment, optionally for a specific python executable in a specific path
+newvenv python="python" venvpath=".venv":
+  rm -rf {{venvpath}}
+  {{python}} -m venv {{venvpath}}
 
 # install the project and required dependecies for development & testing
-install venvpath="":
+install venvpath=".venv/bin/":
     {{venvpath}}python -m pip install --upgrade pip 
     {{venvpath}}pip install -e .[dev]
 
@@ -37,8 +40,12 @@ lint:
 test:
   - .venv/bin/pytest
 
+# type-check python
+type-check:
+  - .venv-3.12/bin/pytype .
+
 # lint and test python
-check: lint test
+check: lint test type-check
 
 #run coverage analysis on python code
 cov:
