@@ -3,7 +3,7 @@
 from math import comb
 
 
-def multiroll(numdice: int, dicetype: int, target: int) -> list[int]:
+def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
     """Calculate equivalent single roll instead of rolling multiple dice."""
     def _p(hits: int) -> int:
         misses = numdice - hits

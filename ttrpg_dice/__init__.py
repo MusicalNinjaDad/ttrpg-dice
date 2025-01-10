@@ -1,3 +1,3 @@
 """Various functions for TTRPG Gamesmasters to help with dice rolls."""
 
-from .manydice import multiroll
+from .manydice import lazyroll
