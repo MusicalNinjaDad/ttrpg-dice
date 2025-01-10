@@ -9,7 +9,6 @@ def multiroll(numdice: int, dicetype: int, target: int) -> list[int]:
         misses = numdice - hits
         p_successes = (target/dicetype) ** hits
         p_fails = (1-(target/dicetype)) ** (misses)
-        p_hits = p_successes * p_fails * comb(numdice, hits)
-        return round(p_hits * dicetype)
+        return p_successes * p_fails * comb(numdice, hits)
     probs = [_p(hits) for hits in range(numdice+1)]
-    return [sum(probs[i:]) for i, _ in enumerate(probs)]
+    return [round(sum(probs[i:]) * dicetype) for i, _ in enumerate(probs)]
