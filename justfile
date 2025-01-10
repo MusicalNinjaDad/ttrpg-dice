@@ -49,7 +49,7 @@ check: lint test type-check
 
 #run coverage analysis on python code
 cov:
-  pytest --cov --cov-report html:pycov --cov-report term
+  {{venv}}/bin/pytest --cov --cov-report html:pycov --cov-report term
 
 # serve python coverage results on localhost:8000 (doesn't run coverage analysis)
 show-cov:
