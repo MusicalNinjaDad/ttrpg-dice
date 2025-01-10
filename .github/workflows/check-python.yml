@@ -62,5 +62,5 @@ jobs:
         just install
     - name: Run pytype
       run: |
-        pytype .
+        just type-check
     
