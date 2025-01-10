@@ -48,6 +48,12 @@ RUN dnf -y install \
     python \
     python-pip
 
+# python3.12, g++ and python-headers for pytype
+RUN dnf -y --setopt=install_weak_deps=False install \
+    gcc-c++ \
+    python3.12 \
+    python3.12-devel
+
 # ---
 # Final setup steps
 # ---
