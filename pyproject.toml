@@ -63,6 +63,7 @@
 [tool.coverage.run]
     branch = true
     omit = ["tests/*"]
+    dynamic_context = "test_function"
 
 [tool.ruff]
     line-length = 120
