@@ -58,12 +58,13 @@ class LazyRollTable:
         return f"LazyRollTable for up to {self._maxdice}d{self._dicetype} targeting {self._target}: {self.rolls}"
     
     def __str__(self) -> str:
+        """Format as a nice table ignoring zero dice and zero hits."""
         tab = "\t"
         newline = "\n"
         def _formatroll(numdice: int, rolls: list[int]) -> str:
             lazytargets = tab.join(str(lazytarget) for lazytarget in rolls[1:])
             return tab.join([str(numdice),lazytargets])
         description = f"Lazyroll table for up to {self._maxdice}d{self._dicetype} targeting {self._target} for success:"
-        table_header = f"\tHITS\n\t{tab.join([str(i) for i in self._maxdicerange[1:]])}"
+        table_header = f"\tHITS\n\t{tab.join(str(i) for i in self._maxdicerange[1:])}"
         table = newline.join([_formatroll(d, r) for d, r in enumerate(self.rolls)][1:])
         return newline.join([description,"",table_header,table])
