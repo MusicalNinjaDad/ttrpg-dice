@@ -19,6 +19,14 @@ def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
         >>> lazyroll (4, 100, 33)
         [100, 80, 40, 11, 1]
         ```
+        Then roll 1d100 and interpret the hits:
+        ```
+        81-100:  0 hits
+         41-80:  1 hit
+         12-40:  2 hits
+          2-11:  3 hits
+             1:  4 hits
+        ```
     """
     def _p(hits: int) -> int:
         misses = numdice - hits
