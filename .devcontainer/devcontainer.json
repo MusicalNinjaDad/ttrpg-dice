@@ -58,5 +58,6 @@
             }
         }
     },
+    "onCreateCommand": "pip install nbstripout && nbstripout --install",
     "updateContentCommand": "just reset check"
 }
