@@ -106,6 +106,7 @@ exclude_also = [
         "S101",    # Use of `assert`
         "PLR2004", # Magic number comparisons are OK in tests
         "D1",      # Don't REQUIRE docstrings for tests - but they are nice
+        "N802",    # Test case names may include caps (e.g. when referring to a class under test)
     ]
 
     "**/__init__.py" = [

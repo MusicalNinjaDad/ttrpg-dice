@@ -28,6 +28,9 @@ def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
              1:  4 hits
         ```
     """
+    if target > dicetype:
+        msg = f"Good luck rolling {target} on a d{dicetype}!"
+        raise ValueError(msg)
     def _p(hits: int) -> float:
         """Calculates the probability of an exact number of hits."""
         misses = numdice - hits

@@ -21,6 +21,14 @@ def test_0d100():
 def test_guaranteedhit():
     assert lazyroll(3,20,20) == [20, 20, 20, 20]
 
+def test_guaranteedfail():
+    with pytest.raises(ValueError,match="Good luck rolling 13 on a d12!"):
+        lazyroll(3, 12, 13)
+
+def test_guaranteedfail_LazyTable():
+    with pytest.raises(ValueError,match="Good luck rolling 13 on a d12!"):
+        LazyRollTable(3, 12, 13)
+
 def test_lazytable_eq_lazytable():
     assert LazyRollTable(4, 100, 33) == LazyRollTable(4, 100, 33)
 
