@@ -110,3 +110,7 @@
     "tests/assets/expected.pyi" = [
         "ANN001", "ANN201", # Cannot automatically generate type annotations
     ]
+
+    "**/*.ipynb" = [
+        "T201", # Allow `print` in Jupyter notebooks
+    ]

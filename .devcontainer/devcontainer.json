@@ -12,6 +12,8 @@
                 "ms-python.python",
                 "ms-python.vscode-pylance",
                 "charliermarsh.ruff",
+                // jupyter notebook
+                "ms-toolsai.jupyter",
                 // configs, docs, etc.
                 "DavidAnson.vscode-markdownlint",
                 "tamasfe.even-better-toml"
