@@ -55,7 +55,7 @@
         "--doctest-glob=*.pyi",
         "--doctest-glob=*.md",
     ]
-    testpaths = ["tests", "ttrpg-dice"]
+    testpaths = ["tests", "ttrpg_dice"]
 
 [tool.coverage.run]
     branch = true
