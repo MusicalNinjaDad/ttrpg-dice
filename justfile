@@ -1,8 +1,10 @@
+venv := ".venv"
+
 # list available recipes
 list:
   @just --list --justfile {{justfile()}}
   
-# remove pre-built python libraries (excluding .venv)
+# remove pre-built python libraries (excluding those in .venvs)
 clean:
     rm -rf .pytest_cache
     rm -rf build
@@ -20,25 +22,25 @@ clean-cov:
     rm -rf pycov
 
 # clean, remove existing .venv and rebuild the venvs with pip install -e .[dev]
-reset: clean clean-cov newvenv install (newvenv "python3.12" ".venv-3.12") (install ".venv-3.12/bin/")
+reset: clean clean-cov newvenv install (newvenv "python3.12" ".venv-3.12") (install ".venv-3.12")
 
 #create a new virtual environment, optionally for a specific python executable in a specific path
-newvenv python="python" venvpath=".venv":
+newvenv python="python" venvpath=venv:
   rm -rf {{venvpath}}
   {{python}} -m venv {{venvpath}}
 
 # install the project and required dependecies for development & testing
-install venvpath=".venv/bin/":
-    {{venvpath}}python -m pip install --upgrade pip 
-    {{venvpath}}pip install -e .[dev]
+install venvpath=venv:
+    {{venvpath}}/bin/python -m pip install --upgrade pip 
+    {{venvpath}}/bin/pip install -e .[dev]
 
 # lint python with ruff
 lint:
-  - .venv/bin/ruff check .
+  - {{venv}}/bin/ruff check .
 
 # test python
 test:
-  - .venv/bin/pytest
+  - {{venv}}/bin/pytest
 
 # type-check python
 type-check:
