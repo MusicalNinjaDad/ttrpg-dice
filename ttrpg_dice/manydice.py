@@ -35,3 +35,23 @@ def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
         return p_successes * p_fails * comb(numdice, hits)
     probs = [_p(hits) for hits in range(numdice+1)]
     return [round(sum(probs[i:]) * dicetype) for i, _ in enumerate(probs)]
+
+class LazyRollTable:    
+    """Table of values for lazyrolls of varying numbers of goblins."""
+
+    def __init__(self, maxdice: int, dicetype: int, target: int) -> None:
+        """Create a table of lazyrolls for up to `maxdice`."""
+        self._maxdice = maxdice
+        self._dicetype = dicetype
+        self._target = target
+        self.rolls = [lazyroll(i, dicetype, target) for i in range(maxdice+1)]
+
+    def __eq__(self, value: object) -> bool:
+        """Compare self.rolls if `value` is not another LazyRollTable."""
+        if not isinstance(value, LazyRollTable):
+            return self.rolls == value
+        return self == value
+    
+    def __repr__(self) -> str:  # noqa: D105
+        return f"LazyRollTable for up to {self._maxdice}d{self._dicetype} targeting {self._target}: {self.rolls}"
+    
