@@ -65,6 +65,11 @@
     omit = ["tests/*"]
     dynamic_context = "test_function"
 
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    ]
+
 [tool.ruff]
     line-length = 120
     format.skip-magic-trailing-comma = false
