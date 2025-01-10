@@ -46,8 +46,8 @@ jobs:
     - name: Ruff
       uses: chartboost/ruff-action@v1
 
-  typing:
-    continue-on-error: true
+  type-check:
+    continue-on-error: false # make typing mandatory (for now) as pytype is lenient by design
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
