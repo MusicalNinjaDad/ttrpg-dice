@@ -54,7 +54,7 @@ class LazyRollTable:
         """Compare self.rolls if `value` is not another `LazyRollTable`."""
         if not isinstance(value, LazyRollTable):
             return self.rolls == value
-        return self == value
+        return self.rolls== value.rolls
     
     def __repr__(self) -> str:  # noqa: D105
         return f"LazyRollTable for up to {self._maxdice}d{self._dicetype} targeting {self._target}: {self.rolls}"

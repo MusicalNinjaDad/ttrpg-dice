@@ -21,6 +21,9 @@ def test_0d100():
 def test_guaranteedhit():
     assert lazyroll(3,20,20) == [20, 20, 20, 20]
 
+def test_lazytable_eq_lazytable():
+    assert LazyRollTable(4, 100, 33) == LazyRollTable(4, 100, 33)
+
 def test_lazytable_upto4d100_target33():
     assert LazyRollTable(4, 100, 33) == [
         [100],
