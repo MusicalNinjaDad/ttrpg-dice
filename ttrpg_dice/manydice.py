@@ -2,8 +2,6 @@
 
 from math import comb
 
-tab = "\t"
-newline = "\n"
 
 def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
     """
@@ -60,12 +58,12 @@ class LazyRollTable:
         return f"LazyRollTable for up to {self._maxdice}d{self._dicetype} targeting {self._target}: {self.rolls}"
     
     def __str__(self) -> str:
+        tab = "\t"
+        newline = "\n"
+        def _formatroll(numdice: int, rolls: list[int]) -> str:
+            lazytargets = tab.join(str(lazytarget) for lazytarget in rolls[1:])
+            return tab.join([str(numdice),lazytargets])
         description = f"Lazyroll table for up to {self._maxdice}d{self._dicetype} targeting {self._target} for success:"
         table_header = f"\tHITS\n\t{tab.join([str(i) for i in self._maxdicerange[1:]])}"
-        table = newline.join([self._formatroll(d, r) for d, r in enumerate(self.rolls)][1:])
+        table = newline.join([_formatroll(d, r) for d, r in enumerate(self.rolls)][1:])
         return newline.join([description,"",table_header,table])
-    
-    @classmethod
-    def _formatroll(cls, numdice: int, rolls: list[int]) -> str:
-        lazytargets = tab.join(str(lazytarget) for lazytarget in rolls[1:])
-        return tab.join([str(numdice),lazytargets])

@@ -37,6 +37,3 @@ def test_lazytable_upto4d100_target33_pretty():
 3	70	25	4
 4	80	40	11	1"""
     assert str(LazyRollTable(4, 100, 33)) == output
-
-def test_formatroll():
-    assert LazyRollTable._formatroll(1,[100,33]) == "1\t33"
