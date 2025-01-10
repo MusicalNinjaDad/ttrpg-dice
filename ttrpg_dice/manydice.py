@@ -47,9 +47,10 @@ class LazyRollTable:
         self._dicetype = dicetype
         self._target = target
         self.rolls = [lazyroll(i, dicetype, target) for i in self._maxdicerange]
+        """List of lists of resulting lazyrolls - (0-indexed, so _includes_ 0 dice and 0 hits)"""
 
     def __eq__(self, value: object) -> bool:
-        """Compare self.rolls if `value` is not another LazyRollTable."""
+        """Compare self.rolls if `value` is not another `LazyRollTable`."""
         if not isinstance(value, LazyRollTable):
             return self.rolls == value
         return self == value
