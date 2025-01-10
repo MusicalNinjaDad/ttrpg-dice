@@ -48,7 +48,7 @@
     test = ["pytest", "pytest-doctest-mkdocstrings"]
     cov = ["ttrpg-dice[test]", "pytest-cov"]
     doc = ["black", "mkdocs", "mkdocstrings[python]", "mkdocs-material"]
-    dev = ["ttrpg-dice[lint,test,cov,doc]","jupyter"]
+    dev = ["ttrpg-dice[lint,test,cov,doc]","jupyter","nbstripout"]
 
 [tool.pytest.ini_options]
     xfail_strict = true
