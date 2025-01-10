@@ -41,7 +41,7 @@
 # ===========================
 
 [project.optional-dependencies]
-    lint = ["ruff"]
+    lint = ["ruff", "pytype"]
     test = ["pytest", "pytest-doctest-mkdocstrings"]
     cov = ["ttrpg-dice[test]", "pytest-cov"]
     doc = ["black", "mkdocs", "mkdocstrings[python]", "mkdocs-material"]
