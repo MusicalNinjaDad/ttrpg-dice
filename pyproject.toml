@@ -48,7 +48,7 @@
     test = ["pytest", "pytest-doctest-mkdocstrings"]
     cov = ["ttrpg-dice[test]", "pytest-cov"]
     doc = ["black", "mkdocs", "mkdocstrings[python]", "mkdocs-material"]
-    dev = ["ttrpg-dice[lint,test,cov,doc]"]
+    dev = ["ttrpg-dice[lint,test,cov,doc]","jupyter"]
 
 [tool.pytest.ini_options]
     xfail_strict = true
@@ -64,6 +64,11 @@
     branch = true
     omit = ["tests/*"]
     dynamic_context = "test_function"
+
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    ]
 
 [tool.ruff]
     line-length = 120
@@ -101,6 +106,7 @@
         "S101",    # Use of `assert`
         "PLR2004", # Magic number comparisons are OK in tests
         "D1",      # Don't REQUIRE docstrings for tests - but they are nice
+        "N802",    # Test case names may include caps (e.g. when referring to a class under test)
     ]
 
     "**/__init__.py" = [
@@ -109,4 +115,8 @@
 
     "tests/assets/expected.pyi" = [
         "ANN001", "ANN201", # Cannot automatically generate type annotations
+    ]
+
+    "**/*.ipynb" = [
+        "T201", # Allow `print` in Jupyter notebooks
     ]

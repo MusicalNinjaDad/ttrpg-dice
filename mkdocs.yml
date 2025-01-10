@@ -8,7 +8,7 @@ watch:
 theme:
   name: "material"
   icon:
-    logo: simple/livechat
+    logo: material/dice-d12-outline
   palette: # Palette toggles for auto-light-dark mode
   - media: "(prefers-color-scheme)"
     toggle:
