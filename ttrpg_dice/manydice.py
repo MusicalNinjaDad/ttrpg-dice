@@ -2,6 +2,8 @@
 
 from math import comb
 
+tab = "\t"
+newline = "\n"
 
 def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
     """
@@ -42,9 +44,11 @@ class LazyRollTable:
     def __init__(self, maxdice: int, dicetype: int, target: int) -> None:
         """Create a table of lazyrolls for up to `maxdice`."""
         self._maxdice = maxdice
+        self._maxdicerange = range(maxdice+1)
+        """use to iterate from `0` to `maxdice` rolls `for i in self._maxdicerange`"""
         self._dicetype = dicetype
         self._target = target
-        self.rolls = [lazyroll(i, dicetype, target) for i in range(maxdice+1)]
+        self.rolls = [lazyroll(i, dicetype, target) for i in self._maxdicerange]
 
     def __eq__(self, value: object) -> bool:
         """Compare self.rolls if `value` is not another LazyRollTable."""
@@ -55,3 +59,17 @@ class LazyRollTable:
     def __repr__(self) -> str:  # noqa: D105
         return f"LazyRollTable for up to {self._maxdice}d{self._dicetype} targeting {self._target}: {self.rolls}"
     
+    # def __str__(self) -> str:
+    #     description = f"Lazyroll table for up to {self._maxdice}d{self._dicetype} targeting {self._target} for success:"
+    #     table_header = f"\tHITS\n{tab.join([str(i) for i in self._maxdicerange])}"
+    #     table = newline.join([
+    #         tab.join[
+    #             [f"{dice}",""] + [f"{lazytarget}" for lazytarget in lazyrolls]
+    #          for dice, lazyrolls in enumerate(self.rolls)]
+    #     ])
+    #     return newline.join([description,"",table_header,table])
+    
+    @classmethod
+    def _formatroll(cls, numdice: int, rolls: list[int]) -> str:
+        lazytargets = tab.join(str(lazytarget) for lazytarget in rolls[1:])
+        return tab.join([str(numdice),lazytargets])
