@@ -15,3 +15,7 @@ class Dice:
     def __iter__(self) -> Iterator:
         """Iterating over a Dice yields the probabilities starting with P(1)."""
         return iter(self.probabilities[1:])
+    
+    def __eq__(self, value: object) -> bool:
+        """Dice are equal if they give the same probabilities."""
+        return self.probabilities == value.probabilities
