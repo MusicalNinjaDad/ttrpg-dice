@@ -1,5 +1,8 @@
 """A Dice class."""
 
+from collections.abc import Iterator
+
+
 class Dice:
     """A Dice class."""
 
@@ -8,3 +11,7 @@ class Dice:
         self.probabilities = [None] + faces*[1/faces]
         """List of P(result) where result is index of list. P(0) = `None`"""
         self.faces = faces
+
+    def __iter__(self) -> Iterator:
+        """Iterating over a Dice yields the probabilities starting with P(1)."""
+        return iter(self.probabilities[1:])
