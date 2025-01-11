@@ -78,7 +78,8 @@ class Dice:
         try:
             rolls = [sum(r) for r in product(self.faces, other.faces)] # pytype: disable=attribute-error
         except AttributeError:
-            rolls = [r + int(other) for r in self.faces]
+            other = self._int(other, "add", "and")
+            rolls = [r + other for r in self.faces]
         return self._from_possiblerolls(rolls)
 
     @classmethod

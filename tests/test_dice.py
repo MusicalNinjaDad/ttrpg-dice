@@ -69,6 +69,18 @@ def test_d4_plus_float():
     advantage = d(4) + 2.0
     assert list(advantage) == [0, 0, 0.25, 0.25, 0.25, 0.25]
 
+def test_Dice_plus_string():
+    assert d(4) + "2" == d(4) + 2
+
+def test_Dice_plus_two():
+    msg = re.escape("Cannot add 'two' and 'Dice'. (Hint: try using a string which only contains numbers)")
+    with pytest.raises(TypeError, match=msg):
+        d(4) + "two"
+
+def test_Dice_plus_None():
+    with pytest.raises(TypeError, match="Cannot add 'NoneType' and 'Dice'"):
+        d(4) + None
+
 def test_d4x2():
     advantage = d(4) * 2
     assert list(advantage) == [0, 0.25, 0, 0.25, 0, 0.25, 0, 0.25]
