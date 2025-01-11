@@ -51,24 +51,24 @@ class Dice:
     # pytype: disable=invalid-annotation  # noqa: ERA001
     def __rmul__(self, other: SupportsInt) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
-        other = self._int(other)
+        other = self._int(other, "multiply", "by")
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
         return self._from_possiblerolls(rolls)
     
     def __mul__(self, other: SupportsInt) -> Self:
         """Multiply result by constant."""
-        other = self._int(other)
+        other = self._int(other, "multiply", "by")
         rolls = [r * other for r in self.faces]
         return self._from_possiblerolls(rolls)
 
-    def _int(self, other: SupportsInt) -> int:
+    def _int(self, other: SupportsInt, action: str, conjunction: str) -> int:
         try:
             other = int(other)
         except TypeError as e:
-            msg=f"Cannot multiply '{type(other).__name__}' by '{type(self).__name__}'"
+            msg=f"Cannot {action} '{type(other).__name__}' {conjunction} '{type(self).__name__}'"
             raise TypeError(msg) from e
         except ValueError as e:
-            msg = f"Cannot multiply '{other}' by '{type(self).__name__}'."
+            msg = f"Cannot {action} '{other}' {conjunction} '{type(self).__name__}'."
             msg += " (Hint: try using a string which only contains numbers)"
             raise TypeError(msg) from e
         return other
