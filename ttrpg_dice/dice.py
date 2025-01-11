@@ -7,3 +7,4 @@ class Dice:
         """Build a die."""
         self.probabilities = [None] + faces*[1/faces]
         """List of P(result) where result is index of list. P(0) = `None`"""
+        self.faces = faces
