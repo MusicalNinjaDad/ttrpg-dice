@@ -38,3 +38,11 @@ class Dice:
         combo = Dice(1)
         combo.probabilities = probabilities
         return combo
+
+    @classmethod
+    def from_probabilities(cls, probabilities: list[float]) -> Self:
+        """Create a new die with a given set of probabilities."""
+        die = cls.__new__(cls)
+        die.probabilities = probabilities
+        die.numfaces = len(probabilities)-1
+        return die

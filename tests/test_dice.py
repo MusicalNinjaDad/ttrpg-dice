@@ -23,6 +23,10 @@ def test_inequality():
     assert d4 != d6
     assert d4 != [None, 0.25, 0.25, 0.25, 0.25]
 
+def test_from_probabilities():
+    d4 = d.from_probabilities([None, 0.25, 0.25, 0.25, 0.25])
+    assert d4 == d(4)
+
 def test_iterate_faces():
     d4 = d(4)
     assert list(d4.faces) == [1,2,3,4]
