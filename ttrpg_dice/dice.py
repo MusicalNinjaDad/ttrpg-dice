@@ -36,6 +36,9 @@ class Dice:
         if value.count(None) > 1:
             msg = "Only the first probability, P(0), may be `None`"
             raise ValueError(msg)
+        if sum(value[1:]) != 1:
+            msg = f"Dice probabilities must sum to 1 (not {sum(value[1:])})"
+            raise ValueError(msg)
         self._probabilities = value
 
     @property

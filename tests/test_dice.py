@@ -100,3 +100,8 @@ def test_cannot_change_probabilities():
     msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
     with pytest.raises(AttributeError,match=msg):
         d4.probabilities = [1,2]
+
+def test_does_not_sum_to_1():
+    msg = re.escape("Dice probabilities must sum to 1 (not 2.0)")
+    with pytest.raises(ValueError,match=msg):
+        d.from_probabilities([None, 0.5, 1.5])
