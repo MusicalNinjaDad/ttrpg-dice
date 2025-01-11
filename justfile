@@ -41,8 +41,8 @@ test:
   {{venv}}/bin/pytest
 
 # type-check python
-type-check:
-  .venv-3.12/bin/pytype .
+type-check venvpath=".venv-3.12":
+  {{venvpath}}/bin/pytype .
 
 # lint and test python
 check:

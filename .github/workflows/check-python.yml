@@ -63,5 +63,5 @@ jobs:
         just install
     - name: Run pytype
       run: |
-        just type-check
+        just type-check .venv
     
