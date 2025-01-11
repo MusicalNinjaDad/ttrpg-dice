@@ -18,9 +18,23 @@ class Dice:
 
     def __init__(self, faces: int) -> None:
         """Build a die."""
-        self.probabilities = [None] + faces*[1/faces]
-        """List of P(result) where result is index of list. P(0) = `None`"""
-        
+        self._probabilities = [None] + faces*[1/faces]
+
+    @property
+    def probabilities(self) -> list[float | None]:
+        """List of P(result) where result is index of list. P(0) = `None`."""
+        return self._probabilities
+
+    @probabilities.setter
+    def probabilities(self, value: list[float | None]) -> None:
+        if value[0] is not None:
+            msg = "First probability, P(0), must be `None`"
+            raise ValueError(msg)
+        if value.count(None) > 1:
+            msg = "Only the first probability, P(0), may be `None`"
+            raise ValueError(msg)
+        self._probabilities = value
+
     @property
     def numfaces(self) -> int:
         """How faces this Dice has."""

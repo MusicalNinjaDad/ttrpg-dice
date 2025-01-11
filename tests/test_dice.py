@@ -84,3 +84,13 @@ def test_Dice_plus_None():
 def test_d4x2():
     advantage = d(4) * 2
     assert list(advantage) == [0, 0.25, 0, 0.25, 0, 0.25, 0, 0.25]
+
+def test_invalidprobs_p0_not_None():
+    msg = re.escape("First probability, P(0), must be `None`")
+    with pytest.raises(ValueError, match=msg):
+        d.from_probabilities([0.5,0.5])
+
+def test_invalidprobs_px_is_None():
+    msg = re.escape("Only the first probability, P(0), may be `None`")
+    with pytest.raises(ValueError, match=msg):
+        d.from_probabilities([None, 0.5, 0.5, None])
