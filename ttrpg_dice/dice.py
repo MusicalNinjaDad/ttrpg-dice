@@ -1,6 +1,8 @@
 """A Dice class."""
 
 from collections.abc import Iterator
+from itertools import product
+from typing import Self
 
 
 class Dice:
@@ -23,3 +25,16 @@ class Dice:
             return self.probabilities == value.probabilities # pytype: disable=attribute-error
         except AttributeError:
             return False
+
+    def __rmul__(self, other: int) -> Self:
+        """n * Dice(x) returns a Dice with probabilities for ndX."""  # noqa: D403
+        rolls = [sum(r) for r in product(self.faces, repeat=other)]
+        possibilities = [0] * (max(rolls)+1)
+        for r in rolls:
+            possibilities[r] += 1
+        total_possibilities = sum(possibilities)
+        probabilities = [n / total_possibilities for n in possibilities]
+        probabilities[0] = None
+        combo = Dice(1)
+        combo.probabilities = probabilities
+        return combo

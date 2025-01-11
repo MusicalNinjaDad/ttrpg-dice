@@ -6,7 +6,7 @@ from ttrpg_dice import Dice as d  # noqa: N813
 def test_d4():
     d4 = d(4)
     assert d4.probabilities == [None, 0.25, 0.25, 0.25, 0.25]
-    assert d4.faces == 4
+    assert d4.numfaces == 4
 
 def test_iterate():
     d4 = d(4)
@@ -26,3 +26,6 @@ def test_inequality():
 def test_iterate_faces():
     d4 = d(4)
     assert list(d4.faces) == [1,2,3,4]
+
+def test_2d4():
+    assert (2 * d(4)).probabilities == [None, 0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625]
