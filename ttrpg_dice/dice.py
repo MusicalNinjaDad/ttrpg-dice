@@ -12,7 +12,11 @@ class Dice:
         """Build a die."""
         self.probabilities = [None] + faces*[1/faces]
         """List of P(result) where result is index of list. P(0) = `None`"""
-        self.numfaces = faces
+        
+    @property
+    def numfaces(self) -> int:
+        """How faces this Dice has."""
+        return len(self.probabilities)-1
 
     @property
     def faces(self) -> range:
@@ -48,5 +52,4 @@ class Dice:
         """Create a new die with a given set of probabilities."""
         die = cls.__new__(cls)
         die.probabilities = probabilities
-        die.numfaces = len(probabilities)-1
         return die
