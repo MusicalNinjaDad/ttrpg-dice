@@ -43,7 +43,7 @@ class Dice:
         except AttributeError:
             return False
 
-    def __rmul__(self, other: int) -> Self:
+    def __rmul__(self, other: int) -> Self: # pytype: disable=invalid-annotation
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
         possibilities = [None] + ([0] * max(rolls))
@@ -54,7 +54,7 @@ class Dice:
         return self.from_probabilities(probabilities)
 
     @classmethod
-    def from_probabilities(cls, probabilities: list[float]) -> Self:
+    def from_probabilities(cls, probabilities: list[float]) -> Self: # pytype: disable=invalid-annotation
         """Create a new die with a given set of probabilities."""
         die = cls.__new__(cls)
         die.probabilities = probabilities
