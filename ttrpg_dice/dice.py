@@ -61,18 +61,6 @@ class Dice:
         rolls = [r * other for r in self.faces]
         return self._from_possiblerolls(rolls)
 
-    def _int(self, other: SupportsInt, action: str, conjunction: str) -> int:
-        try:
-            other = int(other)
-        except TypeError as e:
-            msg=f"Cannot {action} '{type(other).__name__}' {conjunction} '{type(self).__name__}'"
-            raise TypeError(msg) from e
-        except ValueError as e:
-            msg = f"Cannot {action} '{other}' {conjunction} '{type(self).__name__}'."
-            msg += " (Hint: try using a string which only contains numbers)"
-            raise TypeError(msg) from e
-        return other
-
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
         try:
@@ -100,3 +88,17 @@ class Dice:
         return die
     # pytype: enable=invalid-annotation  # noqa: ERA001
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
+
+    @classmethod
+    def _int(cls, other: SupportsInt, action: str, conjunction: str) -> int:
+        """Attempts to convert `other` to an int for use in arithmetic magic methods."""
+        try:
+            other = int(other)
+        except TypeError as e:
+            msg=f"Cannot {action} '{type(other).__name__}' {conjunction} '{cls.__name__}'"
+            raise TypeError(msg) from e
+        except ValueError as e:
+            msg = f"Cannot {action} '{other}' {conjunction} '{cls.__name__}'."
+            msg += " (Hint: try using a string which only contains numbers)"
+            raise TypeError(msg) from e
+        return other
