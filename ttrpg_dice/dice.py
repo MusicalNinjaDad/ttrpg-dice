@@ -42,12 +42,11 @@ class Dice:
     def __rmul__(self, other: int) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
-        possibilities = [0] * (max(rolls)+1)
+        possibilities = [None] + ([0] * max(rolls))
         for r in rolls:
             possibilities[r] += 1
-        total_possibilities = sum(possibilities)
-        probabilities = [n / total_possibilities for n in possibilities]
-        probabilities[0] = None
+        total_possibilities = sum(possibilities[1:])
+        probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
         return self.from_probabilities(probabilities)
 
     @classmethod
