@@ -49,13 +49,13 @@ class Dice:
 
     # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
     # pytype: disable=invalid-annotation  # noqa: ERA001
-    def __rmul__(self, other: int) -> Self:
+    def __rmul__(self, other: SupportsInt) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         try:
             other = int(other)
-        except TypeError:
+        except TypeError as e:
             msg=f"Cannot multiply '{type(other).__name__}' by '{type(self).__name__}'"
-            raise TypeError(msg)  # noqa: B904
+            raise TypeError(msg) from e
         except ValueError as e:
             msg = f"Cannot multiply '{other}' by '{type(self).__name__}'."
             msg += " (Hint: try using a string which only contains numbers)"
