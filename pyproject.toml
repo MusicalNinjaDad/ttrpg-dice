@@ -44,14 +44,29 @@
 # ===========================
 
 [project.optional-dependencies]
-    lint = [
-        "ruff",
-        "pytype; python_version <= '3.12'"
+    lint = ["ruff"]
+    typing = [
+        "ttrpg-dice[test]",
+        "pytype; python_version <= '3.12'",
     ]
-    test = ["pytest", "pytest-doctest-mkdocstrings"]
-    cov = ["ttrpg-dice[test]", "pytest-cov"]
-    doc = ["black", "mkdocs", "mkdocstrings[python]", "mkdocs-material"]
-    dev = ["ttrpg-dice[lint,test,cov,doc]","jupyter"]
+    test = [
+        "pytest",
+        "pytest-doctest-mkdocstrings",
+        ]
+    cov = [
+        "ttrpg-dice[test]",
+        "pytest-cov",
+    ]
+    doc = [
+        "black",
+        "mkdocs",
+        "mkdocstrings[python]",
+        "mkdocs-material",
+    ]
+    dev = [
+        "ttrpg-dice[lint,typing,test,cov,doc]",
+        "jupyter",
+    ]
 
 [tool.pytest.ini_options]
     xfail_strict = true

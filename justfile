@@ -22,7 +22,7 @@ clean-cov:
     rm -rf pycov
 
 # clean, remove existing .venvs and rebuild the venvs with pip install -e .[dev]
-reset: clean clean-cov && install (install "python3.12" ".venv-3.12" "[lint,test]")
+reset: clean clean-cov && install (install "python3.12" ".venv-3.12" "[typing]")
     rm -rf .venv*
 
 # (re-)create a venv and install the project and required dependecies for development & testing
