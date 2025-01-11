@@ -43,7 +43,9 @@ class Dice:
         except AttributeError:
             return False
 
-    def __rmul__(self, other: int) -> Self: # pytype: disable=invalid-annotation
+    # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
+    # pytype: disable=invalid-annotation  # noqa: ERA001
+    def __rmul__(self, other: int) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         try:
             other = int(other)
@@ -61,10 +63,22 @@ class Dice:
         total_possibilities = sum(possibilities[1:])
         probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
         return self.from_probabilities(probabilities)
+    
+    def __add__(self, other: Self) -> Self:
+        """Adding two Dice to gives the combined roll."""
+        rolls = [sum(r) for r in product(self.faces, other.faces)]
+        possibilities = [None] + ([0] * max(rolls))
+        for r in rolls:
+            possibilities[r] += 1
+        total_possibilities = sum(possibilities[1:])
+        probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
+        return self.from_probabilities(probabilities)
 
     @classmethod
-    def from_probabilities(cls, probabilities: list[float]) -> Self: # pytype: disable=invalid-annotation
+    def from_probabilities(cls, probabilities: list[float]) -> Self:
         """Create a new die with a given set of probabilities."""
         die = cls.__new__(cls)
         die.probabilities = probabilities
         return die
+    # pytype: enable=invalid-annotation  # noqa: ERA001
+    # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below

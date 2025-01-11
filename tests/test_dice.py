@@ -56,3 +56,7 @@ def test_weighted():
 
 def test_notweighted():
     assert not d(4).weighted
+
+def test_d4_plus_d2():
+    mix = d(4) + d(2)
+    assert list(mix) == [0, 0.125, 0.25, 0.25, 0.25, 0.125]
