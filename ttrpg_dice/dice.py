@@ -45,7 +45,7 @@ class Dice:
 
     def __rmul__(self, other: int) -> Self: # pytype: disable=invalid-annotation
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
-        rolls = [sum(r) for r in product(self.faces, repeat=other)]
+        rolls = [sum(r) for r in product(self.faces, repeat=int(other))]
         possibilities = [None] + ([0] * max(rolls))
         for r in rolls:
             possibilities[r] += 1
