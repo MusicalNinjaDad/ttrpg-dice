@@ -65,7 +65,7 @@ class Dice:
         return self._from_possiblerolls(rolls)
 
     @classmethod
-    def _from_possiblerolls(cls, rolls: list[float]) -> Self:
+    def _from_possiblerolls(cls, rolls: list[int]) -> Self:
         """Create a new die from a list of possible rolls."""
         possibilities = [None] + ([0] * max(rolls))
         for r in rolls:
