@@ -62,6 +62,20 @@ class Dice:
             raise TypeError(msg) from e
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
         return self._from_possiblerolls(rolls)
+    
+    def __mul__(self, other: SupportsInt) -> Self:
+        """Multiply result by constant."""
+        try:
+            other = int(other)
+        except TypeError as e:
+            msg=f"Cannot multiply '{type(other).__name__}' by '{type(self).__name__}'"
+            raise TypeError(msg) from e
+        except ValueError as e:
+            msg = f"Cannot multiply '{other}' by '{type(self).__name__}'."
+            msg += " (Hint: try using a string which only contains numbers)"
+            raise TypeError(msg) from e
+        rolls = [r * other for r in self.faces]
+        return self._from_possiblerolls(rolls)
 
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""

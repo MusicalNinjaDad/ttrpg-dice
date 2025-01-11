@@ -68,3 +68,7 @@ def test_d4_plus_2():
 def test_d4_plus_float():
     advantage = d(4) + 2.0
     assert list(advantage) == [0, 0, 0.25, 0.25, 0.25, 0.25]
+
+def test_d4x2():
+    advantage = d(4) * 2
+    assert list(advantage) == [0, 0.25, 0, 0.25, 0, 0.25, 0, 0.25]
