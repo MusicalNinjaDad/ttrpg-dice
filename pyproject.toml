@@ -89,6 +89,9 @@ exclude_also = [
     "def __repr__",
     ]
 
+[tool.pytype]
+inputs = ["ttrpg_dice"]
+
 [tool.ruff]
     line-length = 120
     format.skip-magic-trailing-comma = false

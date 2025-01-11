@@ -12,6 +12,7 @@ clean:
     rm -rf dist
     rm -rf wheelhouse
     rm -rf .ruff_cache
+    rm -rf .pytype
     find . -depth -type d -not -path "./.venv*/*" -name "__pycache__" -exec rm -rf "{}" \;
     find . -depth -type d -path "*.egg-info" -exec rm -rf "{}" \;
     find . -type f -name "*.egg" -delete
@@ -42,7 +43,7 @@ test:
 
 # type-check python
 type-check venvpath=".venv-3.12":
-  {{venvpath}}/bin/pytype .
+  {{venvpath}}/bin/pytype
 
 # lint and test python
 check:
