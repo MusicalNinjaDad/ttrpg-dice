@@ -16,3 +16,9 @@ def test_eq():
     d4 = d(4)
     assert d4 is not d(4)
     assert d4 == d(4)
+
+def test_inequality():
+    d4 = d(4)
+    d6 = d(6)
+    assert d4 != d6
+    assert d4 != [None, 0.25, 0.25, 0.25, 0.25]

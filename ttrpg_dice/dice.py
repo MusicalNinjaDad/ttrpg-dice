@@ -18,4 +18,7 @@ class Dice:
     
     def __eq__(self, value: object) -> bool:
         """Dice are equal if they give the same probabilities."""
-        return self.probabilities == value.probabilities
+        try:
+            return self.probabilities == value.probabilities # pytype: disable=attribute-error
+        except AttributeError:
+            return False
