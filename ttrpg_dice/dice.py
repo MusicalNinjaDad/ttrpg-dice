@@ -45,7 +45,16 @@ class Dice:
 
     def __rmul__(self, other: int) -> Self: # pytype: disable=invalid-annotation
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
-        rolls = [sum(r) for r in product(self.faces, repeat=int(other))]
+        try:
+            other = int(other)
+        except TypeError:
+            msg=f"Cannot multiply '{type(other).__name__}' by '{type(self).__name__}'"
+            raise TypeError(msg)  # noqa: B904
+        except ValueError as e:
+            msg = f"Cannot multiply '{other}' by '{type(self).__name__}'."
+            msg += " (Hint: try using a string which only contains numbers)"
+            raise TypeError(msg) from e
+        rolls = [sum(r) for r in product(self.faces, repeat=other)]
         possibilities = [None] + ([0] * max(rolls))
         for r in rolls:
             possibilities[r] += 1

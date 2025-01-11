@@ -1,3 +1,4 @@
+import re
 import pytest  # noqa: F401, RUF100
 
 from ttrpg_dice import Dice as d  # noqa: N813
@@ -36,6 +37,18 @@ def test_2d4():
 
 def test_floatxDice():
     assert (2.0000001 * d(4)).probabilities == [None, 0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625]
+
+def test_stringxDice():
+    assert "2" * d(4) == 2 * d(4)
+
+def test_twoxDice():
+    msg = re.escape("Cannot multiply 'two' by 'Dice'. (Hint: try using a string which only contains numbers)")
+    with pytest.raises(TypeError, match=msg):
+        "two" * d(4)
+
+def test_NonexDice():
+    with pytest.raises(TypeError, match="Cannot multiply 'NoneType' by 'Dice'"):
+        None * d(4)
 
 def test_weighted():
     assert (2 * d(4)).weighted
