@@ -13,7 +13,11 @@ class Dice:
         self.probabilities = [None] + faces*[1/faces]
         """List of P(result) where result is index of list. P(0) = `None`"""
         self.numfaces = faces
-        self.faces = range(1,faces+1)
+
+    @property
+    def faces(self) -> range:
+        """Range of available faces on this Dice."""
+        return range(1,self.numfaces+1)
 
     def __iter__(self) -> Iterator:
         """Iterating over a Dice yields the probabilities starting with P(1)."""
