@@ -57,22 +57,22 @@ class Dice:
             msg += " (Hint: try using a string which only contains numbers)"
             raise TypeError(msg) from e
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
-        possibilities = [None] + ([0] * max(rolls))
-        for r in rolls:
-            possibilities[r] += 1
-        total_possibilities = sum(possibilities[1:])
-        probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
-        return self.from_probabilities(probabilities)
-    
+        return self._from_possiblerolls(rolls)
+
     def __add__(self, other: Self) -> Self:
         """Adding two Dice to gives the combined roll."""
         rolls = [sum(r) for r in product(self.faces, other.faces)]
+        return self._from_possiblerolls(rolls)
+
+    @classmethod
+    def _from_possiblerolls(cls, rolls: list[float]) -> Self:
+        """Create a new die from a list of possible rolls."""
         possibilities = [None] + ([0] * max(rolls))
         for r in rolls:
             possibilities[r] += 1
         total_possibilities = sum(possibilities[1:])
         probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
-        return self.from_probabilities(probabilities)
+        return cls.from_probabilities(probabilities)
 
     @classmethod
     def from_probabilities(cls, probabilities: list[float]) -> Self:
