@@ -5,6 +5,7 @@ on:
     paths: 
     - "**.py"
     - "**pyproject.toml"
+    - "**justfile"
     - ".github/workflows/check-python.yml"
   pull_request:
   workflow_call:
@@ -62,5 +63,5 @@ jobs:
         just install
     - name: Run pytype
       run: |
-        just type-check
+        just type-check .venv
     

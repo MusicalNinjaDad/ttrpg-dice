@@ -22,30 +22,33 @@ clean-cov:
     rm -rf pycov
 
 # clean, remove existing .venvs and rebuild the venvs with pip install -e .[dev]
-reset: clean clean-cov && install (install "python3.12" ".venv-3.12")
+reset: clean clean-cov && install (install "python3.12" ".venv-3.12" "[lint,test]")
     rm -rf .venv*
 
 # (re-)create a venv and install the project and required dependecies for development & testing
-install python="python" venvpath=venv:
+install python="python" venvpath=venv extras="[dev]":
     rm -rf {{venvpath}}
     {{python}} -m venv {{venvpath}}
     {{venvpath}}/bin/python -m pip install --upgrade pip 
-    {{venvpath}}/bin/pip install -e .[dev]
+    {{venvpath}}/bin/pip install -e .{{extras}}
 
 # lint python with ruff
 lint:
-  - {{venv}}/bin/ruff check .
+  {{venv}}/bin/ruff check .
 
 # test python
 test:
-  - {{venv}}/bin/pytest
+  {{venv}}/bin/pytest
 
 # type-check python
-type-check:
-  - .venv-3.12/bin/pytype .
+type-check venvpath=".venv-3.12":
+  {{venvpath}}/bin/pytype .
 
 # lint and test python
-check: lint test type-check
+check:
+  @- just lint
+  @- just test
+  @- just type-check
 
 #run coverage analysis on python code
 cov:
