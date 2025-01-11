@@ -22,6 +22,11 @@ class Dice:
     def faces(self) -> range:
         """Range of available faces on this Dice."""
         return range(1,self.numfaces+1)
+    
+    @property
+    def weighted(self) -> bool:
+        """Is this Dice weighted, or are all results equally likely?"""
+        return min(self.probabilities[1:]) != max(self.probabilities[1:])
 
     def __iter__(self) -> Iterator:
         """Iterating over a Dice yields the probabilities starting with P(1)."""

@@ -33,3 +33,9 @@ def test_iterate_faces():
 
 def test_2d4():
     assert (2 * d(4)).probabilities == [None, 0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625]
+
+def test_weighted():
+    assert (2 * d(4)).weighted
+
+def test_notweighted():
+    assert not d(4).weighted
