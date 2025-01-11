@@ -18,7 +18,7 @@ class Dice:
 
     def __init__(self, faces: int) -> None:
         """Build a die."""
-        self._probabilities = [None] + faces*[1/faces]
+        self.probabilities = [None] + faces*[1/faces]
 
     @property
     def probabilities(self) -> list[float | None]:
