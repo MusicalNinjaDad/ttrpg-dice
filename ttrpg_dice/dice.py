@@ -2,7 +2,11 @@
 
 from collections.abc import Iterator
 from itertools import product
-from typing import Self
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self  # type: ignore[reportMissingModuleSource]
 
 
 class Dice:

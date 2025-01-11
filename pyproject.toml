@@ -15,6 +15,9 @@
         "Intended Audience :: Developers",
         "Natural Language :: English",
     ]
+    dependencies = [
+        "typing-extensions; python_version < '3.11'"
+    ]
 
 [project.urls]
     # Homepage = ""
