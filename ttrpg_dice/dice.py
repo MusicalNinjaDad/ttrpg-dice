@@ -48,9 +48,7 @@ class Dice:
         total_possibilities = sum(possibilities)
         probabilities = [n / total_possibilities for n in possibilities]
         probabilities[0] = None
-        combo = Dice(1)
-        combo.probabilities = probabilities
-        return combo
+        return self.from_probabilities(probabilities)
 
     @classmethod
     def from_probabilities(cls, probabilities: list[float]) -> Self:
