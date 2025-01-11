@@ -34,18 +34,21 @@ install python="python" venvpath=venv extras="[dev]":
 
 # lint python with ruff
 lint:
-  - {{venv}}/bin/ruff check .
+  {{venv}}/bin/ruff check .
 
 # test python
 test:
-  - {{venv}}/bin/pytest
+  {{venv}}/bin/pytest
 
 # type-check python
 type-check:
-  - .venv-3.12/bin/pytype .
+  .venv-3.12/bin/pytype .
 
 # lint and test python
-check: lint test type-check
+check:
+  @- just lint
+  @- just test
+  @- just type-check
 
 #run coverage analysis on python code
 cov:
