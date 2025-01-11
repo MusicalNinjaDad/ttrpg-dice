@@ -60,3 +60,11 @@ def test_notweighted():
 def test_d4_plus_d2():
     mix = d(4) + d(2)
     assert list(mix) == [0, 0.125, 0.25, 0.25, 0.25, 0.125]
+
+def test_d4_plus_2():
+    advantage = d(4) + 2
+    assert list(advantage) == [0, 0, 0.25, 0.25, 0.25, 0.25]
+
+def test_d4_plus_float():
+    advantage = d(4) + 2.0
+    assert list(advantage) == [0, 0, 0.25, 0.25, 0.25, 0.25]

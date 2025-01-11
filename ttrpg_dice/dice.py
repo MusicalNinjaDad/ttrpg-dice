@@ -1,7 +1,11 @@
 """A Dice class."""
+from __future__ import annotations
 
-from collections.abc import Iterator
 from itertools import product
+from typing import TYPE_CHECKING, SupportsInt
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 try:
     from typing import Self
@@ -59,9 +63,12 @@ class Dice:
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
         return self._from_possiblerolls(rolls)
 
-    def __add__(self, other: Self) -> Self:
+    def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
-        rolls = [sum(r) for r in product(self.faces, other.faces)]
+        try:
+            rolls = [sum(r) for r in product(self.faces, other.faces)] # pytype: disable=attribute-error
+        except AttributeError:
+            rolls = [r + int(other) for r in self.faces]
         return self._from_possiblerolls(rolls)
 
     @classmethod
