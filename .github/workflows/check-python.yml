@@ -35,7 +35,7 @@ jobs:
       uses: taiki-e/install-action@just
     - name: Install dependencies
       run: |
-        just install extras=[test]
+        just install [test]
     - name: Test with pytest
       run: |
         just test
@@ -60,7 +60,7 @@ jobs:
       uses: taiki-e/install-action@just
     - name: Install dependencies
       run: |
-        just install extras=[typing]
+        just install [typing]
     - name: Run pytype
       run: |
         just type-check .venv
