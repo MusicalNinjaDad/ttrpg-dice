@@ -5,6 +5,7 @@ on:
     paths: 
     - "**.py"
     - "**pyproject.toml"
+    - "**justfile"
     - ".github/workflows/check-python.yml"
   pull_request:
   workflow_call:
