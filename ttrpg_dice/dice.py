@@ -6,7 +6,7 @@ from itertools import product
 try:
     from typing import Self
 except ImportError:
-    from typing_extensions import Self  # type: ignore[reportMissingModuleSource]
+    from typing_extensions import Self  # required for Python3.10 and below
 
 
 class Dice:
