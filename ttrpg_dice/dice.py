@@ -27,6 +27,9 @@ class Dice:
 
     @probabilities.setter
     def probabilities(self, value: list[float | None]) -> None:
+        if hasattr(self,"_probabilities"):
+            msg = "You cannot change a Dice's probabilities, create a new Dice instead."
+            raise AttributeError(msg)
         if value[0] is not None:
             msg = "First probability, P(0), must be `None`"
             raise ValueError(msg)

@@ -94,3 +94,9 @@ def test_invalidprobs_px_is_None():
     msg = re.escape("Only the first probability, P(0), may be `None`")
     with pytest.raises(ValueError, match=msg):
         d.from_probabilities([None, 0.5, 0.5, None])
+
+def test_cannot_change_probabilities():
+    d4 = d(4)
+    msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
+    with pytest.raises(AttributeError,match=msg):
+        d4.probabilities = [1,2]
