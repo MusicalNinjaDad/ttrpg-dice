@@ -27,7 +27,7 @@ class Dice:
             return False
 
     def __rmul__(self, other: int) -> Self:
-        """n * Dice(x) returns a Dice with probabilities for ndX."""  # noqa: D403
+        """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
         possibilities = [0] * (max(rolls)+1)
         for r in rolls:
