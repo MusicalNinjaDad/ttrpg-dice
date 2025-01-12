@@ -107,14 +107,21 @@ def test_does_not_sum_to_1():
         d.from_probabilities([None, 0.5, 1.5], "")
 
 @pytest.mark.parametrize(
-    ["dietype","description"],
+    ["dietype", "description"],
     [
         pytest.param(d(100), "d100", id="d100"),
-        pytest.param(2*d(4), "2d4", id="2d4"),
-        pytest.param(d(4)*2, "d4*2", id="d4*2"),
-        pytest.param(d(4)+d(6), "d4 + d6", id="d4 + d6"),
+        pytest.param(2 * d(4), "2d4", id="2d4"),
+        pytest.param(d(4) * 2, "d4*2", id="d4*2"),
+        pytest.param(d(4) + d(6), "d4 + d6", id="d4 + d6"),
         pytest.param(d(8) + 5, "d8 + 5", id="d8 + 5"),
-        pytest.param((2*d(6))+(d(8)*4)+5, "2d6 + d8*4 + 5", id="combined arithmetic"),
+        pytest.param((2 * d(6)) + (d(8) * 4) + 5, "2d6 + d8*4 + 5", id="combined arithmetic"),
+        pytest.param(d(6) + d(4), "d4 + d6", id="sorting addition: two dice"),
+        pytest.param(
+            d(6) + (2 * d(4)),
+            "2d4 + d6",
+            id="sorting addition: complex dice",
+            marks=pytest.mark.xfail(reason="NotImplemented"),
+        ),
     ],
 )
 def test_str(dietype, description):
