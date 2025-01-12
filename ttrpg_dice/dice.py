@@ -92,11 +92,15 @@ class Dice:
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
         try:
-            rolls = [sum(r) for r in product(self.faces, other.faces)] # pytype: disable=attribute-error
+             # pytype: disable=attribute-error  # noqa: ERA001
+            rolls = [sum(r) for r in product(self.faces, other.faces)]
+            descr = f"{self.description} + {other.description}"
+            # pytype: enable=attribute-error  # noqa: ERA001
         except AttributeError:
             other = self._int(other, "add", "and")
             rolls = [r + other for r in self.faces]
-        return self._from_possiblerolls(rolls, "")
+            descr = ""
+        return self._from_possiblerolls(rolls, descr)
 
     @classmethod
     def _from_possiblerolls(cls, rolls: list[int], description: str) -> Self:
