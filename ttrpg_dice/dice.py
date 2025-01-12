@@ -96,7 +96,7 @@ class Dice:
         try:
              # pytype: disable=attribute-error
             rolls = [sum(r) for r in product(self.faces, other.faces)]
-            contents = {self.numfaces:1, other.numfaces:1}
+            contents = self.contents | other.contents
             if other.numfaces > self.numfaces:
                 descr = f"{self.description} + {other.description}"
             else:

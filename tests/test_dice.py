@@ -137,12 +137,7 @@ def test_str(dietype, description):
         pytest.param(d(8) + 5, {1:5, 8:1}, id="d8 + 5"),
         # pytest.param((2 * d(6)) + (d(8) * 4) + 5, "2d6 + d8*4 + 5", id="combined arithmetic"),
         # pytest.param(d(6) + d(4), "d4 + d6", id="sorting addition: two dice"),
-        # pytest.param(
-        #     d(6) + (2 * d(4)),
-        #     "2d4 + d6",
-        #     id="sorting addition: complex dice",
-        #     marks=pytest.mark.xfail(reason="NotImplemented"),
-        # ),
+        pytest.param(d(6) + (2 * d(4)), {4:2,6:1}, id="2d4 + d6"),
     ],
 )
 def test_contents(dietype, contents):
