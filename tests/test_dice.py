@@ -26,7 +26,7 @@ def test_inequality():
     assert d4 != [None, 0.25, 0.25, 0.25, 0.25]
 
 def test_from_probabilities():
-    d4 = d.from_probabilities([None, 0.25, 0.25, 0.25, 0.25])
+    d4 = d.from_probabilities([None, 0.25, 0.25, 0.25, 0.25], "")
     assert d4 == d(4)
 
 def test_iterate_faces():
@@ -88,12 +88,12 @@ def test_d4x2():
 def test_invalidprobs_p0_not_None():
     msg = re.escape("First probability, P(0), must be `None`")
     with pytest.raises(ValueError, match=msg):
-        d.from_probabilities([0.5,0.5])
+        d.from_probabilities([0.5,0.5], "")
 
 def test_invalidprobs_px_is_None():
     msg = re.escape("Only the first probability, P(0), may be `None`")
     with pytest.raises(ValueError, match=msg):
-        d.from_probabilities([None, 0.5, 0.5, None])
+        d.from_probabilities([None, 0.5, 0.5, None], "")
 
 def test_cannot_change_probabilities():
     d4 = d(4)
@@ -104,7 +104,7 @@ def test_cannot_change_probabilities():
 def test_does_not_sum_to_1():
     msg = re.escape("Dice probabilities must sum to 1 (not 2.0)")
     with pytest.raises(ValueError,match=msg):
-        d.from_probabilities([None, 0.5, 1.5])
+        d.from_probabilities([None, 0.5, 1.5], "")
 
 @pytest.mark.parametrize(
     ["dietype","description"],

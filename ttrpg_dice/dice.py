@@ -87,7 +87,7 @@ class Dice:
         """Multiply result by constant."""
         other = self._int(other, "multiply", "by")
         rolls = [r * other for r in self.faces]
-        return self._from_possiblerolls(rolls)
+        return self._from_possiblerolls(rolls, "")
 
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
@@ -96,7 +96,7 @@ class Dice:
         except AttributeError:
             other = self._int(other, "add", "and")
             rolls = [r + other for r in self.faces]
-        return self._from_possiblerolls(rolls)
+        return self._from_possiblerolls(rolls, "")
 
     @classmethod
     def _from_possiblerolls(cls, rolls: list[int], description: str) -> Self:
