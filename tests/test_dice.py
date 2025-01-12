@@ -125,7 +125,7 @@ def test_str(dietype, description):
         pytest.param(2 * d(4), {4:2}, id="2d4"),
         pytest.param(d(4) + d(6), {4:1, 6:1}, id="d4 + d6"),
         pytest.param(d(8) + 5, {1:5, 8:1}, id="d8 + 5"),
-        # pytest.param(d(6) + d(4), "d4 + d6", id="sorting addition: two dice"),
+        pytest.param(d(6) + d(4), {4:1, 6:1}, id="sorting addition: two dice"),
         pytest.param(d(6) + (2 * d(4)), {4:2,6:1}, id="sorting addition: complex dice"),
         # pytest.param((2 * d(6)) + d(8) + 5, "2d6 + d8 + 5", id="combined arithmetic"),
         pytest.param(d(8) + (2 * d(8)), {8:3}, id="add similar dice"),
