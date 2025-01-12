@@ -91,7 +91,7 @@ class Dice:
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
         try:
-             # pytype: disable=attribute-error
+            # pytype: disable=attribute-error
             rolls = [sum(r) for r in product(self.faces, other.faces)]
             contents = defaultdict(
                 int,
