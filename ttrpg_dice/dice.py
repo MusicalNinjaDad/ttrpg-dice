@@ -77,7 +77,7 @@ class Dice:
         return self.description
 
     # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
-    # pytype: disable=invalid-annotation  # noqa: ERA001
+    # pytype: disable=invalid-annotation
     def __rmul__(self, other: SupportsInt) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         other = self._int(other, "multiply", "by")
@@ -93,13 +93,13 @@ class Dice:
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
         try:
-             # pytype: disable=attribute-error  # noqa: ERA001
+             # pytype: disable=attribute-error
             rolls = [sum(r) for r in product(self.faces, other.faces)]
             if other.numfaces > self.numfaces:
                 descr = f"{self.description} + {other.description}"
             else:
                 descr = f"{other.description} + {self.description}"
-            # pytype: enable=attribute-error  # noqa: ERA001
+            # pytype: enable=attribute-error
         except AttributeError:
             other = self._int(other, "add", "and")
             rolls = [r + other for r in self.faces]
@@ -123,7 +123,7 @@ class Dice:
         die.probabilities = probabilities
         die.description = description
         return die
-    # pytype: enable=invalid-annotation  # noqa: ERA001
+    # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
 
     @classmethod
