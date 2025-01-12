@@ -138,6 +138,7 @@ def test_str(dietype, description):
         # pytest.param((2 * d(6)) + (d(8) * 4) + 5, "2d6 + d8*4 + 5", id="combined arithmetic"),
         # pytest.param(d(6) + d(4), "d4 + d6", id="sorting addition: two dice"),
         pytest.param(d(6) + (2 * d(4)), {4:2,6:1}, id="2d4 + d6"),
+        pytest.param(d(8) + (2 * d(8)), {8:3}, id="add similar dice"),
     ],
 )
 def test_contents(dietype, contents):
