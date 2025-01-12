@@ -99,7 +99,7 @@ class Dice:
         except AttributeError:
             other = self._int(other, "add", "and")
             rolls = [r + other for r in self.faces]
-            descr = ""
+            descr = f"{self.description} + {other}"
         return self._from_possiblerolls(rolls, descr)
 
     @classmethod
