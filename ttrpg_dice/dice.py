@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from itertools import product
+from math import isclose
 from typing import TYPE_CHECKING, SupportsInt
 
 if TYPE_CHECKING:
@@ -40,7 +41,7 @@ class Dice:
         if value.count(None) > 1:
             msg = "Only the first probability, P(0), may be `None`"
             raise ValueError(msg)
-        if sum(value[1:]) != 1:
+        if not isclose(sum(value[1:]),1): # isclose required for Python3.11 and below
             msg = f"Dice probabilities must sum to 1 (not {sum(value[1:])})"
             raise ValueError(msg)
         self._probabilities = value
@@ -94,7 +95,10 @@ class Dice:
         try:
              # pytype: disable=attribute-error  # noqa: ERA001
             rolls = [sum(r) for r in product(self.faces, other.faces)]
-            descr = f"{self.description} + {other.description}"
+            if other.numfaces > self.numfaces:
+                descr = f"{self.description} + {other.description}"
+            else:
+                descr = f"{other.description} + {self.description}"
             # pytype: enable=attribute-error  # noqa: ERA001
         except AttributeError:
             other = self._int(other, "add", "and")
