@@ -16,9 +16,13 @@ except ImportError:
 class Dice:
     """A Dice class."""
 
-    def __init__(self, faces: int) -> None:
+    def __init__(self, faces: int, description: str = "") -> None:
         """Build a die."""
         self.probabilities = [None] + faces*[1/faces]
+        if description:
+            self.description = description
+        else:
+            self.description = f"d{self.numfaces}"
 
     @property
     def probabilities(self) -> list[float | None]:
@@ -69,7 +73,7 @@ class Dice:
         
     def __str__(self) -> str:
         """The type of Dice in NdX notation."""
-        return f"d{self.numfaces}"
+        return self.description
 
     # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
     # pytype: disable=invalid-annotation  # noqa: ERA001
@@ -77,7 +81,7 @@ class Dice:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         other = self._int(other, "multiply", "by")
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
-        return self._from_possiblerolls(rolls)
+        return self._from_possiblerolls(rolls, description=f"{other}{self}")
     
     def __mul__(self, other: SupportsInt) -> Self:
         """Multiply result by constant."""
@@ -95,20 +99,21 @@ class Dice:
         return self._from_possiblerolls(rolls)
 
     @classmethod
-    def _from_possiblerolls(cls, rolls: list[int]) -> Self:
+    def _from_possiblerolls(cls, rolls: list[int], description: str) -> Self:
         """Create a new die from a list of possible rolls."""
         possibilities = [None] + ([0] * max(rolls))
         for r in rolls:
             possibilities[r] += 1
         total_possibilities = sum(possibilities[1:])
         probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
-        return cls.from_probabilities(probabilities)
+        return cls.from_probabilities(probabilities, description)
 
     @classmethod
-    def from_probabilities(cls, probabilities: list[float]) -> Self:
+    def from_probabilities(cls, probabilities: list[float], description: str) -> Self:
         """Create a new die with a given set of probabilities."""
         die = cls.__new__(cls)
         die.probabilities = probabilities
+        die.description = description
         return die
     # pytype: enable=invalid-annotation  # noqa: ERA001
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below

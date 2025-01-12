@@ -110,6 +110,7 @@ def test_does_not_sum_to_1():
     ["dietype","description"],
     [
         pytest.param(d(100), "d100", id="d100"),
+        pytest.param(2*d(4), "2d4", id="2d4"),
     ],
 )
 def test_str(dietype, description):
