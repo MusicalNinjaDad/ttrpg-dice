@@ -1,7 +1,7 @@
 """A Dice class."""
 from __future__ import annotations
 
-from collections import defaultdict
+from collections import defaultdict, deque
 from itertools import product
 from math import isclose
 from typing import TYPE_CHECKING, SupportsInt
@@ -152,4 +152,6 @@ class Dice:
     @classmethod
     def describe(cls, contents: dict) -> str:
         """Generate a NdX description based on dice contents."""
-        return " + ".join(f"{n if n > 1 else ''}d{x}" for x, n in sorted(contents.items()))
+        contents = deque(sorted(contents.items()))
+        if contents[0][0] == 1: contents.rotate(-1)
+        return " + ".join(f"{n if n > 1 else ''}d{x if x > 1 else ''}" for x, n in contents).rstrip("d")

@@ -1,4 +1,5 @@
 import re
+from dataclasses import dataclass
 
 import pytest  # noqa: F401, RUF100
 
@@ -102,6 +103,25 @@ def test_does_not_sum_to_1():
     with pytest.raises(ValueError,match=msg):
         d.from_probabilities([None, 0.5, 1.5], "")
 
+@dataclass
+class ArithmeticTest:
+    dice: d
+    description: str
+    contents: dict
+    id: str
+
+ArithmeticCases = [
+    ArithmeticTest(d(100), "d100", {100:1}, id="d100"),
+    ArithmeticTest(2 * d(4), "2d4", {4:2}, id="2d4"),
+    ArithmeticTest(d(4) + d(6), "d4 + d6", {4:1, 6:1}, id="d4 + d6"),
+    ArithmeticTest(d(8) + 5, "d8 + 5", {1:5, 8:1}, id="d8 + 5"),
+    ArithmeticTest(d(6) + d(4), "d4 + d6", {4:1, 6:1}, id="sorting addition: two dice"),
+    ArithmeticTest(d(6) + (2 * d(4)), "2d4 + d6", {4:2,6:1}, id="sorting addition: complex dice"),
+    ArithmeticTest((2 * d(6)) + d(8) + 5, "2d6 + d8 + 5", {1:5, 6:2, 8:1}, id="combined arithmetic"),
+    ArithmeticTest(d(8) + (2 * d(8)), "3d8", {8:3}, id="add similar dice"),
+]
+
+
 @pytest.mark.parametrize(
     ["dietype", "description"],
     [
@@ -134,5 +154,10 @@ def test_str(dietype, description):
 def test_contents(dietype, contents):
     assert dietype.contents == contents
 
-def test_describe():
-    assert d.describe({4:2}) == "2d4"
+
+@pytest.mark.parametrize(
+    ["contents", "description"],
+    [pytest.param(tc.contents, tc.description, id=tc.id) for tc in ArithmeticCases],
+)
+def test_describe(contents, description):
+    assert d.describe(contents) ==  description
