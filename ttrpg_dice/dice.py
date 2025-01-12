@@ -20,6 +20,7 @@ class Dice:
     def __init__(self, faces: int, description: str = "") -> None:
         """Build a die."""
         self.probabilities = [None] + faces*[1/faces]
+        self.contents = {faces: 1}
         if description:
             self.description = description
         else:
