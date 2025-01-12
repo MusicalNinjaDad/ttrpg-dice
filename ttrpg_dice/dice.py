@@ -96,6 +96,7 @@ class Dice:
         try:
              # pytype: disable=attribute-error
             rolls = [sum(r) for r in product(self.faces, other.faces)]
+            contents = {self.numfaces:1, other.numfaces:1}
             if other.numfaces > self.numfaces:
                 descr = f"{self.description} + {other.description}"
             else:
@@ -104,8 +105,9 @@ class Dice:
         except AttributeError:
             other = self._int(other, "add", "and")
             rolls = [r + other for r in self.faces]
+            contents = {}
             descr = f"{self.description} + {other}"
-        return self._from_possiblerolls(rolls, descr)
+        return self._from_possiblerolls(rolls, descr, contents)
 
     @classmethod
     def _from_possiblerolls(cls, rolls: list[int], description: str, contents: dict = {}) -> Self:
