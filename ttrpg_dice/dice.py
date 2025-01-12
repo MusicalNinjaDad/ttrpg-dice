@@ -100,10 +100,7 @@ class Dice:
                     for faces in self.contents.keys() | other.contents.keys()
                 },
             )
-            if other.numfaces > self.numfaces:
-                descr = f"{self.description} + {other.description}"
-            else:
-                descr = f"{other.description} + {self.description}"
+            descr = " + ".join(f"{n if n > 1 else ''}d{x}" for x, n in sorted(contents.items()))
             # pytype: enable=attribute-error
         except AttributeError:
             other = self._int(other, "add", "and")
