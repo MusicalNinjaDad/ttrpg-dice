@@ -135,11 +135,3 @@ def test_str(dietype, description):
 )
 def test_contents(dietype, contents):
     assert dietype.contents == contents
-
-
-@pytest.mark.parametrize(
-    ["contents", "description"],
-    [pytest.param(tc.contents, tc.description, id=tc.id) for tc in ArithmeticCases],
-)
-def test_describe(contents, description):
-    assert d.describe(contents) ==  description

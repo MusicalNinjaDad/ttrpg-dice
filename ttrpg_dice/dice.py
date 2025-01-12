@@ -72,7 +72,9 @@ class Dice:
         
     def __str__(self) -> str:
         """The type of Dice in NdX notation."""
-        return self.describe(self.contents)
+        sortedcontents = deque(sorted(self.contents.items()))
+        if sortedcontents[0][0] == 1: sortedcontents.rotate(-1)
+        return " + ".join(f"{n if n > 1 else ''}d{x if x > 1 else ''}" for x, n in sortedcontents).rstrip("d")
 
     # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
     # pytype: disable=invalid-annotation
@@ -141,10 +143,3 @@ class Dice:
             msg += " (Hint: try using a string which only contains numbers)"
             raise TypeError(msg) from e
         return other
-    
-    @classmethod
-    def describe(cls, contents: dict) -> str:
-        """Generate a NdX description based on dice contents."""
-        sortedcontents = deque(sorted(contents.items()))
-        if sortedcontents[0][0] == 1: sortedcontents.rotate(-1)
-        return " + ".join(f"{n if n > 1 else ''}d{x if x > 1 else ''}" for x, n in sortedcontents).rstrip("d")
