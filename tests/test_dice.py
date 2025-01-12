@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 
@@ -10,10 +12,6 @@ def test_d4():
     d4 = d(4)
     assert d4.probabilities == [None, 0.25, 0.25, 0.25, 0.25]
     assert d4.numfaces == 4
-
-def test_iterate():
-    d4 = d(4)
-    assert list(d4) == [0.25, 0.25, 0.25, 0.25]
 
 def test_eq():
     d4 = d(4)
@@ -34,11 +32,14 @@ def test_iterate_faces():
     d4 = d(4)
     assert list(d4.faces) == [1,2,3,4]
 
-def test_2d4():
-    assert (2 * d(4)).probabilities == [None, 0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625]
+def test_d4_plus_float():
+    assert d(4) + 2.0 == d(4) + 2
+
+def test_Dice_plus_string():
+    assert d(4) + "2" == d(4) + 2
 
 def test_floatxDice():
-    assert (2.0000001 * d(4)).probabilities == [None, 0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625]
+    assert 2.0000001 * d(4) == 2*d(4)
 
 def test_stringxDice():
     assert "2" * d(4) == 2 * d(4)
@@ -57,21 +58,6 @@ def test_weighted():
 
 def test_notweighted():
     assert not d(4).weighted
-
-def test_d4_plus_d2():
-    mix = d(4) + d(2)
-    assert list(mix) == [0, 0.125, 0.25, 0.25, 0.25, 0.125]
-
-def test_d4_plus_2():
-    advantage = d(4) + 2
-    assert list(advantage) == [0, 0, 0.25, 0.25, 0.25, 0.25]
-
-def test_d4_plus_float():
-    advantage = d(4) + 2.0
-    assert list(advantage) == [0, 0, 0.25, 0.25, 0.25, 0.25]
-
-def test_Dice_plus_string():
-    assert d(4) + "2" == d(4) + 2
 
 def test_Dice_plus_two():
     msg = re.escape("Cannot add 'two' and 'Dice'. (Hint: try using a string which only contains numbers)")
@@ -103,35 +89,45 @@ def test_does_not_sum_to_1():
     with pytest.raises(ValueError,match=msg):
         d.from_probabilities([None, 0.5, 1.5], "")
 
+
+
 @dataclass
-class ArithmeticTest:
+class DiceTest:
     dice: d
     description: str
     contents: dict
+    probabilities: list | None
     id: str
 
-ArithmeticCases = [
-    ArithmeticTest(d(100), "d100", {100:1}, id="d100"),
-    ArithmeticTest(2 * d(4), "2d4", {4:2}, id="2d4"),
-    ArithmeticTest(d(4) + d(6), "d4 + d6", {4:1, 6:1}, id="d4 + d6"),
-    ArithmeticTest(d(8) + 5, "d8 + 5", {1:5, 8:1}, id="d8 + 5"),
-    ArithmeticTest(d(6) + d(4), "d4 + d6", {4:1, 6:1}, id="sorting addition: two dice"),
-    ArithmeticTest(d(6) + (2 * d(4)), "2d4 + d6", {4:2,6:1}, id="sorting addition: complex dice"),
-    ArithmeticTest((2 * d(6)) + d(8) + 5, "2d6 + d8 + 5", {1:5, 6:2, 8:1}, id="combined arithmetic"),
-    ArithmeticTest(d(8) + (2 * d(8)), "3d8", {8:3}, id="add similar dice"),
+DiceTests = [
+    DiceTest(d(4), "d4", {4:1}, [0.25, 0.25, 0.25, 0.25], id="d4"),
+    DiceTest(d(100), "d100", {100:1}, [0.01]*100, id="d100"),
+    DiceTest(2 * d(4), "2d4", {4:2}, [0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625], id="2d4"),
+    DiceTest(d(2) + d(4), "d2 + d4", {2:1, 4:1}, [0, 0.125, 0.25, 0.25, 0.25, 0.125], id="d2 + d4"),
+    DiceTest(d(4) + 2, "d4 + 2", {1:2, 4:1}, [0, 0, 0.25, 0.25, 0.25, 0.25], id="d4 + 2"),
+    DiceTest(d(6) + d(4), "d4 + d6", {4:1, 6:1}, None, id="sorting addition: two dice"),
+    DiceTest(d(6) + (2 * d(4)), "2d4 + d6", {4:2,6:1}, None, id="sorting addition: complex dice"),
+    DiceTest((2 * d(6)) + d(8) + 5, "2d6 + d8 + 5", {1:5, 6:2, 8:1}, None, id="combined arithmetic"),
+    DiceTest(d(8) + (2 * d(8)), "3d8", {8:3}, None, id="add similar dice"),
 ]
 
+@pytest.mark.parametrize(
+    ["dietype", "probabilities"],
+    [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests if tc.probabilities is not None],
+)
+def test_probabilities(dietype, probabilities):
+    assert list(dietype) == probabilities
 
 @pytest.mark.parametrize(
     ["dietype", "description"],
-    [pytest.param(tc.dice, tc.description, id=tc.id) for tc in ArithmeticCases],
+    [pytest.param(tc.dice, tc.description, id=tc.id) for tc in DiceTests],
 )
 def test_str(dietype, description):
     assert str(dietype) == description
 
 @pytest.mark.parametrize(
     ["dietype", "contents"],
-    [pytest.param(tc.dice, tc.contents, id=tc.id) for tc in ArithmeticCases],
+    [pytest.param(tc.dice, tc.contents, id=tc.id) for tc in DiceTests],
 )
 def test_contents(dietype, contents):
     assert dietype.contents == contents
