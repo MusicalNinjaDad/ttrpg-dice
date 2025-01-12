@@ -18,15 +18,11 @@ except ImportError:
 class Dice:
     """A Dice class."""
 
-    def __init__(self, faces: int, description: str = "") -> None:
+    def __init__(self, faces: int) -> None:
         """Build a die."""
         self.probabilities = [None] + faces*[1/faces]
         self.contents = defaultdict(int, {faces:1})
-        if description:
-            self.description = description
-        else:
-            self.description = f"d{self.numfaces}"
-
+        
     @property
     def probabilities(self) -> list[float | None]:
         """List of P(result) where result is index of list. P(0) = `None`."""
@@ -76,7 +72,7 @@ class Dice:
         
     def __str__(self) -> str:
         """The type of Dice in NdX notation."""
-        return self.description
+        return self.describe(self.contents)
 
     # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
     # pytype: disable=invalid-annotation
@@ -85,7 +81,7 @@ class Dice:
         other = self._int(other, "multiply", "by")
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
         return self._from_possiblerolls(
-            rolls, description=f"{other}{self}", contents=defaultdict(int, {self.numfaces: other}),
+            rolls, contents=defaultdict(int, {self.numfaces: other}),
         )
 
     def __add__(self, other: Self | SupportsInt) -> Self:
@@ -100,18 +96,16 @@ class Dice:
                     for faces in self.contents.keys() | other.contents.keys()
                 },
             )
-            descr = " + ".join(f"{n if n > 1 else ''}d{x}" for x, n in sorted(contents.items()))
             # pytype: enable=attribute-error
         except AttributeError:
             other = self._int(other, "add", "and")
             rolls = [r + other for r in self.faces]
             contents = self.contents
             contents[1] += other
-            descr = f"{self.description} + {other}"
-        return self._from_possiblerolls(rolls, descr, contents)
+        return self._from_possiblerolls(rolls, contents)
 
     @classmethod
-    def _from_possiblerolls(cls, rolls: list[int], description: str, contents: defaultdict | None = None) -> Self:
+    def _from_possiblerolls(cls, rolls: list[int], contents: defaultdict | None = None) -> Self:
         """Create a new die from a list of possible rolls."""
         if contents is None: contents = defaultdict(int)
         possibilities = [None] + ([0] * max(rolls))
@@ -119,17 +113,16 @@ class Dice:
             possibilities[r] += 1
         total_possibilities = sum(possibilities[1:])
         probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
-        return cls.from_probabilities(probabilities, description, contents)
+        return cls.from_probabilities(probabilities, contents)
 
     @classmethod
     def from_probabilities(
-        cls, probabilities: list[float], description: str, contents: defaultdict | None = None,
+        cls, probabilities: list[float], contents: defaultdict | None = None,
     ) -> Self:
         """Create a new die with a given set of probabilities."""
         if contents is None: contents = defaultdict(int)
         die = cls.__new__(cls)
         die.probabilities = probabilities
-        die.description = description
         die.contents = contents
         return die
     # pytype: enable=invalid-annotation
