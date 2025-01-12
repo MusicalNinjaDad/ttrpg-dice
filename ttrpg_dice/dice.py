@@ -105,7 +105,8 @@ class Dice:
         except AttributeError:
             other = self._int(other, "add", "and")
             rolls = [r + other for r in self.faces]
-            contents = {1:other, self.numfaces:1}
+            contents = self.contents
+            contents[1] += other
             descr = f"{self.description} + {other}"
         return self._from_possiblerolls(rolls, descr, contents)
 
