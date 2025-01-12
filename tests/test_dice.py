@@ -131,7 +131,7 @@ def test_str(dietype, description):
     ["dietype", "contents"],
     [
         pytest.param(d(100), {100:1}, id="d100"),
-        # pytest.param(2 * d(4), "2d4", id="2d4"),
+        pytest.param(2 * d(4), {4:2}, id="2d4"),
         # pytest.param(d(4) * 2, "d4*2", id="d4*2"),
         # pytest.param(d(4) + d(6), "d4 + d6", id="d4 + d6"),
         # pytest.param(d(8) + 5, "d8 + 5", id="d8 + 5"),

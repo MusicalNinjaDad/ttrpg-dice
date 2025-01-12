@@ -83,7 +83,7 @@ class Dice:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         other = self._int(other, "multiply", "by")
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
-        return self._from_possiblerolls(rolls, description=f"{other}{self}")
+        return self._from_possiblerolls(rolls, description=f"{other}{self}", contents={self.numfaces:other})
     
     def __mul__(self, other: SupportsInt) -> Self:
         """Multiply result by constant."""
@@ -108,21 +108,22 @@ class Dice:
         return self._from_possiblerolls(rolls, descr)
 
     @classmethod
-    def _from_possiblerolls(cls, rolls: list[int], description: str) -> Self:
+    def _from_possiblerolls(cls, rolls: list[int], description: str, contents: dict = {}) -> Self:
         """Create a new die from a list of possible rolls."""
         possibilities = [None] + ([0] * max(rolls))
         for r in rolls:
             possibilities[r] += 1
         total_possibilities = sum(possibilities[1:])
         probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
-        return cls.from_probabilities(probabilities, description)
+        return cls.from_probabilities(probabilities, description, contents)
 
     @classmethod
-    def from_probabilities(cls, probabilities: list[float], description: str) -> Self:
+    def from_probabilities(cls, probabilities: list[float], description: str, contents: dict = {}) -> Self:
         """Create a new die with a given set of probabilities."""
         die = cls.__new__(cls)
         die.probabilities = probabilities
         die.description = description
+        die.contents = contents
         return die
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
