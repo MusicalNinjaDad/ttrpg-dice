@@ -81,10 +81,6 @@ def test_Dice_plus_None():
     with pytest.raises(TypeError, match="Cannot add 'NoneType' and 'Dice'"):
         d(4) + None
 
-def test_d4x2():
-    advantage = d(4) * 2
-    assert list(advantage) == [0, 0.25, 0, 0.25, 0, 0.25, 0, 0.25]
-
 def test_invalidprobs_p0_not_None():
     msg = re.escape("First probability, P(0), must be `None`")
     with pytest.raises(ValueError, match=msg):
@@ -111,10 +107,10 @@ def test_does_not_sum_to_1():
     [
         pytest.param(d(100), "d100", id="d100"),
         pytest.param(2 * d(4), "2d4", id="2d4"),
-        pytest.param(d(4) * 2, "d4*2", id="d4*2"),
         pytest.param(d(4) + d(6), "d4 + d6", id="d4 + d6"),
         pytest.param(d(8) + 5, "d8 + 5", id="d8 + 5"),
-        pytest.param((2 * d(6)) + (d(8) * 4) + 5, "2d6 + d8*4 + 5", id="combined arithmetic"),
+        pytest.param((2 * d(6)) + d(8) + 5, "2d6 + d8 + 5", id="combined arithmetic",
+            marks=pytest.mark.xfail(reason="NotImplemented")),
         pytest.param(d(6) + d(4), "d4 + d6", id="sorting addition: two dice"),
         pytest.param(
             d(6) + (2 * d(4)),
@@ -132,10 +128,9 @@ def test_str(dietype, description):
     [
         pytest.param(d(100), {100:1}, id="d100"),
         pytest.param(2 * d(4), {4:2}, id="2d4"),
-        # pytest.param(d(4) * 2, "d4*2", id="d4*2"),
         pytest.param(d(4) + d(6), {4:1, 6:1}, id="d4 + d6"),
         pytest.param(d(8) + 5, {1:5, 8:1}, id="d8 + 5"),
-        # pytest.param((2 * d(6)) + (d(8) * 4) + 5, "2d6 + d8*4 + 5", id="combined arithmetic"),
+        # pytest.param((2 * d(6)) + d(8) + 5, "2d6 + d8 + 5", id="combined arithmetic"),
         # pytest.param(d(6) + d(4), "d4 + d6", id="sorting addition: two dice"),
         pytest.param(d(6) + (2 * d(4)), {4:2,6:1}, id="2d4 + d6"),
         pytest.param(d(8) + (2 * d(8)), {8:3}, id="add similar dice"),

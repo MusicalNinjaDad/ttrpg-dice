@@ -87,12 +87,6 @@ class Dice:
         return self._from_possiblerolls(
             rolls, description=f"{other}{self}", contents=defaultdict(int, {self.numfaces: other}),
         )
-    
-    def __mul__(self, other: SupportsInt) -> Self:
-        """Multiply result by constant."""
-        other = self._int(other, "multiply", "by")
-        rolls = [r * other for r in self.faces]
-        return self._from_possiblerolls(rolls, description=f"{self}*{other}")
 
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
