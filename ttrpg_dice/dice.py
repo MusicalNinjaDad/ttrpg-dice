@@ -152,6 +152,6 @@ class Dice:
     @classmethod
     def describe(cls, contents: dict) -> str:
         """Generate a NdX description based on dice contents."""
-        contents = deque(sorted(contents.items()))
-        if contents[0][0] == 1: contents.rotate(-1)
-        return " + ".join(f"{n if n > 1 else ''}d{x if x > 1 else ''}" for x, n in contents).rstrip("d")
+        sortedcontents = deque(sorted(contents.items()))
+        if sortedcontents[0][0] == 1: sortedcontents.rotate(-1)
+        return " + ".join(f"{n if n > 1 else ''}d{x if x > 1 else ''}" for x, n in sortedcontents).rstrip("d")
