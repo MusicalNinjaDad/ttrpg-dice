@@ -84,7 +84,9 @@ class Dice:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         other = self._int(other, "multiply", "by")
         rolls = [sum(r) for r in product(self.faces, repeat=other)]
-        return self._from_possiblerolls(rolls, description=f"{other}{self}", contents=defaultdict(int,{self.numfaces:other}))
+        return self._from_possiblerolls(
+            rolls, description=f"{other}{self}", contents=defaultdict(int, {self.numfaces: other}),
+        )
     
     def __mul__(self, other: SupportsInt) -> Self:
         """Multiply result by constant."""
@@ -97,7 +99,13 @@ class Dice:
         try:
              # pytype: disable=attribute-error
             rolls = [sum(r) for r in product(self.faces, other.faces)]
-            contents = defaultdict(int, {faces:self.contents[faces] + other.contents[faces] for faces in self.contents.keys() | other.contents.keys()})
+            contents = defaultdict(
+                int,
+                {
+                    faces: self.contents[faces] + other.contents[faces]
+                    for faces in self.contents.keys() | other.contents.keys()
+                },
+            )
             if other.numfaces > self.numfaces:
                 descr = f"{self.description} + {other.description}"
             else:
@@ -111,8 +119,9 @@ class Dice:
         return self._from_possiblerolls(rolls, descr, contents)
 
     @classmethod
-    def _from_possiblerolls(cls, rolls: list[int], description: str, contents: defaultdict = defaultdict(int)) -> Self:
+    def _from_possiblerolls(cls, rolls: list[int], description: str, contents: defaultdict | None = None) -> Self:
         """Create a new die from a list of possible rolls."""
+        if contents is None: contents = defaultdict(int)
         possibilities = [None] + ([0] * max(rolls))
         for r in rolls:
             possibilities[r] += 1
@@ -121,8 +130,11 @@ class Dice:
         return cls.from_probabilities(probabilities, description, contents)
 
     @classmethod
-    def from_probabilities(cls, probabilities: list[float], description: str, contents: defaultdict = defaultdict(int)) -> Self:
+    def from_probabilities(
+        cls, probabilities: list[float], description: str, contents: defaultdict | None = None,
+    ) -> Self:
         """Create a new die with a given set of probabilities."""
+        if contents is None: contents = defaultdict(int)
         die = cls.__new__(cls)
         die.probabilities = probabilities
         die.description = description
