@@ -66,6 +66,10 @@ class Dice:
             return self.probabilities == value.probabilities # pytype: disable=attribute-error
         except AttributeError:
             return False
+        
+    def __str__(self) -> str:
+        """The type of Dice in NdX notation."""
+        return f"d{self.numfaces}"
 
     # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
     # pytype: disable=invalid-annotation  # noqa: ERA001

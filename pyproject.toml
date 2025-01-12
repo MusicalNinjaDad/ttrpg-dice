@@ -100,6 +100,7 @@ inputs = ["ttrpg_dice"]
 [tool.ruff.lint]
     select = ["ALL"]
     flake8-pytest-style.fixture-parentheses = false
+    flake8-pytest-style.parametrize-names-type = "list"
     flake8-annotations.mypy-init-return = true
     extend-ignore = [
         "E701",   # One-line ifs are not great, one-liners with suppression are worse

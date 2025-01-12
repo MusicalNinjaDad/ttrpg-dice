@@ -105,3 +105,12 @@ def test_does_not_sum_to_1():
     msg = re.escape("Dice probabilities must sum to 1 (not 2.0)")
     with pytest.raises(ValueError,match=msg):
         d.from_probabilities([None, 0.5, 1.5])
+
+@pytest.mark.parametrize(
+    ["dietype","description"],
+    [
+        pytest.param(d(100), "d100", id="d100"),
+    ],
+)
+def test_str(dietype, description):
+    assert str(dietype) == description
