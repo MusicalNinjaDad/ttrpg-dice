@@ -148,3 +148,8 @@ class Dice:
             msg += " (Hint: try using a string which only contains numbers)"
             raise TypeError(msg) from e
         return other
+    
+    @classmethod
+    def describe(cls, contents: dict) -> str:
+        """Generate a NdX description based on dice contents."""
+        return " + ".join(f"{n if n > 1 else ''}d{x}" for x, n in sorted(contents.items()))

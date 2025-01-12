@@ -134,3 +134,5 @@ def test_str(dietype, description):
 def test_contents(dietype, contents):
     assert dietype.contents == contents
 
+def test_describe():
+    assert d.describe({4:2}) == "2d4"
