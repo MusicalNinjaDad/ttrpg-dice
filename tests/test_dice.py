@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from math import isclose
+from operator import indexOf
 
 import pytest  # noqa: F401, RUF100
 
@@ -100,15 +102,21 @@ class DiceTest:
     id: str
 
 DiceTests = [
-    DiceTest(d(4), "d4", {4:1}, [0.25, 0.25, 0.25, 0.25], id="d4"),
-    DiceTest(d(100), "d100", {100:1}, [0.01]*100, id="d100"),
-    DiceTest(2 * d(4), "2d4", {4:2}, [0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625], id="2d4"),
-    DiceTest(d(2) + d(4), "d2 + d4", {2:1, 4:1}, [0, 0.125, 0.25, 0.25, 0.25, 0.125], id="d2 + d4"),
-    DiceTest(d(4) + 2, "d4 + 2", {1:2, 4:1}, [0, 0, 0.25, 0.25, 0.25, 0.25], id="d4 + 2"),
-    DiceTest(d(6) + d(4), "d4 + d6", {4:1, 6:1}, None, id="sorting addition: two dice"),
-    DiceTest(d(6) + (2 * d(4)), "2d4 + d6", {4:2,6:1}, None, id="sorting addition: complex dice"),
-    DiceTest((2 * d(6)) + d(8) + 5, "2d6 + d8 + 5", {1:5, 6:2, 8:1}, None, id="combined arithmetic"),
-    DiceTest(d(8) + (2 * d(8)), "3d8", {8:3}, None, id="add similar dice"),
+    DiceTest(d(4), "d4", {4: 1}, [0.25, 0.25, 0.25, 0.25], id="d4"),
+    DiceTest(d(100), "d100", {100: 1}, [0.01] * 100, id="d100"),
+    DiceTest(2 * d(4), "2d4", {4: 2}, [0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625], id="2d4"),
+    DiceTest(d(2) + d(4), "d2 + d4", {2: 1, 4: 1}, [0, 0.125, 0.25, 0.25, 0.25, 0.125], id="d2 + d4"),
+    DiceTest(d(4) + 2, "d4 + 2", {1: 2, 4: 1}, [0, 0, 0.25, 0.25, 0.25, 0.25], id="d4 + 2"),
+    DiceTest(
+        d(6) + d(4),
+        "d4 + d6",
+        {4: 1, 6: 1},
+        [0,0.0416666666667,0.0833333333333,0.125,0.166666666667,0.166666666667,0.166666666667,0.125,0.0833333333333,0.0416666666667],
+        id="sorting addition: two dice",
+    ),
+    DiceTest(d(4) + (2 * d(2)), "2d2 + d4", {2: 2, 4: 1}, None, id="sorting addition: complex dice"),
+    DiceTest((2 * d(6)) + d(8) + 5, "2d6 + d8 + 5", {1: 5, 6: 2, 8: 1}, None, id="combined arithmetic"),
+    DiceTest(d(8) + (2 * d(8)), "3d8", {8: 3}, None, id="add similar dice"),
 ]
 
 @pytest.mark.parametrize(
@@ -116,7 +124,12 @@ DiceTests = [
     [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests if tc.probabilities is not None],
 )
 def test_probabilities(dietype, probabilities):
-    assert list(dietype) == probabilities
+    check = [isclose(p,e) for p, e in zip(list(dietype), probabilities)]
+    try:
+        mismatch = indexOf(check, False)  # noqa: FBT003
+        msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
+    except ValueError: pass
+    assert all(check), msg
 
 @pytest.mark.parametrize(
     ["dietype", "description"],
