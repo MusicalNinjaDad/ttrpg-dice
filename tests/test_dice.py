@@ -10,10 +10,15 @@ import pytest  # noqa: F401, RUF100
 from ttrpg_dice import Dice as d  # noqa: N813
 
 
-def test_d4():
+def test_faces():
     d4 = d(4)
-    assert d4.probabilities == [None, 0.25, 0.25, 0.25, 0.25]
     assert d4.numfaces == 4
+    assert list(d4.faces) == [1,2,3,4]
+
+def test_probabilityindexes():
+    die = 2 * d(4)
+    assert die.probabilities[1] == 0
+    assert die.probabilities[2] == 0.0625
 
 def test_eq():
     d4 = d(4)
@@ -26,19 +31,20 @@ def test_inequality():
     assert d4 != d6
     assert d4 != [None, 0.25, 0.25, 0.25, 0.25]
 
-def test_from_probabilities():
-    d4 = d.from_probabilities([None, 0.25, 0.25, 0.25, 0.25])
-    assert d4 == d(4)
-
-def test_iterate_faces():
-    d4 = d(4)
-    assert list(d4.faces) == [1,2,3,4]
-
-def test_d4_plus_float():
+def test_add_float():
     assert d(4) + 2.0 == d(4) + 2
 
-def test_Dice_plus_string():
+def test_add_string():
     assert d(4) + "2" == d(4) + 2
+
+def test_add_two():
+    msg = re.escape("Cannot add 'two' and 'Dice'. (Hint: try using a string which only contains numbers)")
+    with pytest.raises(TypeError, match=msg):
+        d(4) + "two"
+
+def test_add_None():
+    with pytest.raises(TypeError, match="Cannot add 'NoneType' and 'Dice'"):
+        d(4) + None
 
 def test_floatxDice():
     assert 2.0000001 * d(4) == 2*d(4)
@@ -61,14 +67,9 @@ def test_weighted():
 def test_notweighted():
     assert not d(4).weighted
 
-def test_Dice_plus_two():
-    msg = re.escape("Cannot add 'two' and 'Dice'. (Hint: try using a string which only contains numbers)")
-    with pytest.raises(TypeError, match=msg):
-        d(4) + "two"
-
-def test_Dice_plus_None():
-    with pytest.raises(TypeError, match="Cannot add 'NoneType' and 'Dice'"):
-        d(4) + None
+def test_from_probabilities():
+    d4 = d.from_probabilities([None, 0.25, 0.25, 0.25, 0.25])
+    assert d4 == d(4)
 
 def test_invalidprobs_p0_not_None():
     msg = re.escape("First probability, P(0), must be `None`")
