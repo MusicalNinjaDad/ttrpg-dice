@@ -92,7 +92,9 @@ def test_does_not_sum_to_1():
     with pytest.raises(ValueError,match=msg):
         d.from_probabilities([None, 0.5, 1.5], "")
 
-
+@pytest.mark.xfail
+def test_from_contents():
+    assert d.from_contents({2:1, 8:2, 1:3}) == d(2) + (2 * d(8)) + 3
 
 @dataclass
 class DiceTest:
