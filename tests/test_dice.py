@@ -98,13 +98,8 @@ def test_from_contents():
     assert d.from_contents({2:1, 8:2, 1:3}) == d(2) + (2 * d(8)) + 3
 
 def test_unpackcontents():
-    from itertools import repeat
-    c = {2:1, 8:2, 1:3}
-    def _unpack (c):
-        for f,n in c.items():
-                yield from repeat(range(f+1),n)
-    l = list(_unpack(c))
-    assert l == [range(3), range(9), range(9), range(2), range(2), range(2)]
+    contents = {2:1, 8:2, 1:3}
+    assert list(d._unpackcontents(contents)) == [range(3), range(9), range(9), range(2), range(2), range(2)]  # noqa: SLF001
 
 @dataclass
 class DiceTest:

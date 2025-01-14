@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 from collections import defaultdict, deque
-from itertools import product
+from itertools import product, repeat
 from math import isclose
-from typing import TYPE_CHECKING, SupportsInt
+from typing import TYPE_CHECKING, Generator, SupportsInt
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -143,3 +143,9 @@ class Dice:
             msg += " (Hint: try using a string which only contains numbers)"
             raise TypeError(msg) from e
         return other
+    
+    @classmethod
+    def _unpackcontents(cls, contents: dict) -> Generator[range]:
+        """What's in that contents dict?"""
+        for faces, numdice in contents.items():
+            yield from repeat(range(faces+1),numdice)
