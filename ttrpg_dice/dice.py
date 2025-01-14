@@ -87,7 +87,6 @@ class Dice:
         """Adding two Dice to gives the combined roll."""
         try:
             # pytype: disable=attribute-error
-            rolls = [sum(r) for r in product(self.faces, other.faces)]
             contents = defaultdict(
                 int,
                 {
@@ -98,10 +97,9 @@ class Dice:
             # pytype: enable=attribute-error
         except AttributeError:
             other = self._int(other, "add", "and")
-            rolls = [r + other for r in self.faces]
             contents = self.contents
             contents[1] += other
-        return self._from_possiblerolls(rolls, contents)
+        return self.from_contents(contents)
 
     @classmethod
     def _from_possiblerolls(cls, rolls: list[int], contents: defaultdict | None = None) -> Self:
