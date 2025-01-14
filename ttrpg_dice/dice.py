@@ -104,7 +104,6 @@ class Dice:
         die = cls.__new__(cls)
         die.contents = contents
         return die
-
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
 
