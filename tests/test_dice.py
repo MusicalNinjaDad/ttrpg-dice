@@ -92,11 +92,6 @@ def test_does_not_sum_to_1():
     with pytest.raises(ValueError,match=msg):
         d.from_probabilities([None, 0.5, 1.5], "")
 
-@pytest.mark.xfail
-def test_from_contents():
-    die = d.from_contents({2:1, 8:2, 1:3})
-    assert die == d(2) + (2 * d(8)) + 3
-
 def test_unpackcontents():
     contents = {2:1, 4:2, 1:3}
     assert list(d._unpackcontents(contents)) == [[1,2], [1,2,3,4], [1,2,3,4], [1], [1], [1]]  # noqa: SLF001
@@ -169,3 +164,10 @@ def test_str(dietype, description):
 )
 def test_contents(dietype, contents):
     assert dietype.contents == contents
+
+@pytest.mark.parametrize(
+    ["dietype", "contents"],
+    [pytest.param(tc.dice, tc.contents, id=tc.id) for tc in DiceTests],
+)
+def test_fromcontents(dietype: d, contents: dict):
+    assert d.from_contents(contents) == dietype
