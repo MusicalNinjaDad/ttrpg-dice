@@ -5,8 +5,6 @@ from collections import defaultdict, deque
 from itertools import product, repeat
 from typing import TYPE_CHECKING, SupportsInt
 
-from traitlets import default
-
 if TYPE_CHECKING:
     from collections.abc import Generator, Iterator
 
