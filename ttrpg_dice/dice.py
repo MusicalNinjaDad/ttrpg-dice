@@ -132,7 +132,7 @@ class Dice:
     def from_contents(cls, contents: dict) -> Self:
         """Create a new die from a dict of contents."""
         components = cls._unpackcontents(contents)
-        rolls = (sum(r) for r in product(*components))
+        rolls = [sum(r) for r in product(*components)]
         return cls._from_possiblerolls(rolls, contents)
 
     # pytype: enable=invalid-annotation
