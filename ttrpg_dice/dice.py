@@ -129,7 +129,7 @@ class Dice:
         return die
 
     @classmethod
-    def from_contents(cls, contents: dict) -> Self:
+    def from_contents(cls, contents: defaultdict) -> Self:
         """Create a new die from a dict of contents."""
         components = cls._unpackcontents(contents)
         rolls = [sum(r) for r in product(*components)]
