@@ -81,10 +81,7 @@ class Dice:
     def __rmul__(self, other: SupportsInt) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         other = self._int(other, "multiply", "by")
-        rolls = [sum(r) for r in product(self.faces, repeat=other)]
-        return self._from_possiblerolls(
-            rolls, contents=defaultdict(int, {self.numfaces: other}),
-        )
+        return self.from_contents(defaultdict(int, {self.numfaces: other}))
 
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
