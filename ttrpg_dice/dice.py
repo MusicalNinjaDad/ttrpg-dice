@@ -25,7 +25,7 @@ class Dice:
     def probabilities(self) -> list[float | None]:
         """List of P(result) where result is index of list. P(0) = `None`."""
         try:
-            return self._probabilities
+            return self._probabilities # pytype: disable=attribute-error
         except AttributeError:
             components = self._unpackcontents()
             rolls = [sum(r) for r in product(*components)]
