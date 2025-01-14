@@ -10,13 +10,17 @@ import pytest  # noqa: F401, RUF100
 from ttrpg_dice import Dice as d  # noqa: N813
 
 
-def test_contents_not_changed():
+def test_add_no_sideeffects():
     d2 = d(2)
     adv = d2 + 1
-    assert adv.contents == {1:1,2:1}
-    assert d2.contents == {1:0, 2:1} # defaultdict!!!
     assert adv == d(2) + 1
     assert d2 == d(2)
+
+def test_multiply_no_sideeffects():
+    d4 = d(4)
+    roll = 2 * d4
+    assert roll == 2 * d(4)
+    assert d4 == d(4)
 
 def test_probabilityindexes():
     die = 2 * d(4)
