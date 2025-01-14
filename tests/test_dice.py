@@ -10,10 +10,13 @@ import pytest  # noqa: F401, RUF100
 from ttrpg_dice import Dice as d  # noqa: N813
 
 
-def test_faces():
-    d4 = d(4)
-    assert d4.numfaces == 4
-    assert list(d4.faces) == [1,2,3,4]
+def test_contents_not_changed():
+    d2 = d(2)
+    adv = d2 + 1
+    assert adv.contents == {1:1,2:1}
+    assert d2.contents == {2:1}
+    assert adv == d(2) + 1
+    assert d2 == d(2)
 
 def test_probabilityindexes():
     die = 2 * d(4)

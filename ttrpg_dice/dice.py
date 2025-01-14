@@ -42,16 +42,6 @@ class Dice:
         raise AttributeError(msg)
 
     @property
-    def numfaces(self) -> int:
-        """How faces this Dice has."""
-        return len(self.probabilities)-1
-
-    @property
-    def faces(self) -> range:
-        """Range of available faces on this Dice."""
-        return range(1,self.numfaces+1)
-    
-    @property
     def weighted(self) -> bool:
         """Is this Dice weighted, or are all results equally likely?"""
         return min(self.probabilities[1:]) != max(self.probabilities[1:])
@@ -78,7 +68,7 @@ class Dice:
     def __rmul__(self, other: SupportsInt) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         other = self._int(other, "multiply", "by")
-        return self.from_contents(defaultdict(int, {self.numfaces: other}))
+        return self.from_contents(defaultdict(int, {f:n*other for f, n in self.contents.items()}))
 
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
@@ -94,7 +84,7 @@ class Dice:
             # pytype: enable=attribute-error
         except AttributeError:
             other = self._int(other, "add", "and")
-            contents = self.contents
+            contents = self.contents.copy()
             contents[1] += other
         return self.from_contents(contents)
 
