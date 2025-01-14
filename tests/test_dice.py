@@ -74,8 +74,8 @@ def test_cannot_change_probabilities():
         d4.probabilities = [1,2]
 
 def test_unpackcontents():
-    contents = {2:1, 4:2, 1:3}
-    assert list(d._unpackcontents(contents)) == [[1,2], [1,2,3,4], [1,2,3,4], [1], [1], [1]]  # noqa: SLF001
+    die = d.from_contents({2:1, 4:2, 1:3})
+    assert list(die._unpackcontents()) == [[1,2], [1,2,3,4], [1,2,3,4], [1], [1], [1]]  # noqa: SLF001
 
 @dataclass
 class DiceTest:

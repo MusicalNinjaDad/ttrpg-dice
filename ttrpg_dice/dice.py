@@ -27,7 +27,7 @@ class Dice:
         try:
             return self._probabilities
         except AttributeError:
-            components = self._unpackcontents(self.contents)
+            components = self._unpackcontents()
             rolls = [sum(r) for r in product(*components)]
             possibilities = [None] + ([0] * max(rolls))
             for r in rolls:
@@ -107,6 +107,11 @@ class Dice:
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
 
+    def _unpackcontents(self) -> Generator[list, None, None]:
+        """What's in that contents dict?"""
+        for faces, numdice in self.contents.items():
+            yield from repeat(list(range(1,faces+1)),numdice)
+
     @classmethod
     def _int(cls, other: SupportsInt, action: str, conjunction: str) -> int:
         """Attempts to convert `other` to an int for use in arithmetic magic methods."""
@@ -121,8 +126,4 @@ class Dice:
             raise TypeError(msg) from e
         return other
     
-    @classmethod
-    def _unpackcontents(cls, contents: dict) -> Generator[list, None, None]:
-        """What's in that contents dict?"""
-        for faces, numdice in contents.items():
-            yield from repeat(list(range(1,faces+1)),numdice)
+
