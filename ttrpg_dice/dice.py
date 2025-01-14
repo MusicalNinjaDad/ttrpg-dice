@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from collections import defaultdict, deque
 from itertools import product, repeat
-from math import isclose
 from typing import TYPE_CHECKING, SupportsInt
 
 if TYPE_CHECKING:
@@ -20,29 +19,27 @@ class Dice:
 
     def __init__(self, faces: int) -> None:
         """Build a die."""
-        self.probabilities = [None] + faces*[1/faces]
         self.contents = defaultdict(int, {faces:1})
         
     @property
     def probabilities(self) -> list[float | None]:
         """List of P(result) where result is index of list. P(0) = `None`."""
-        return self._probabilities
+        try:
+            return self._probabilities
+        except AttributeError:
+            components = self._unpackcontents(self.contents)
+            rolls = [sum(r) for r in product(*components)]
+            possibilities = [None] + ([0] * max(rolls))
+            for r in rolls:
+                possibilities[r] += 1
+            total_possibilities = sum(possibilities[1:])
+            self._probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
+            return self._probabilities
 
     @probabilities.setter
-    def probabilities(self, value: list[float | None]) -> None:
-        if hasattr(self,"_probabilities"):
-            msg = "You cannot change a Dice's probabilities, create a new Dice instead."
-            raise AttributeError(msg)
-        if value[0] is not None:
-            msg = "First probability, P(0), must be `None`"
-            raise ValueError(msg)
-        if value.count(None) > 1:
-            msg = "Only the first probability, P(0), may be `None`"
-            raise ValueError(msg)
-        if not isclose(sum(value[1:]),1): # isclose required for Python3.11 and below
-            msg = f"Dice probabilities must sum to 1 (not {sum(value[1:])})"
-            raise ValueError(msg)
-        self._probabilities = value
+    def probabilities(self, _: None) -> None:
+        msg = "You cannot change a Dice's probabilities, create a new Dice instead."
+        raise AttributeError(msg)
 
     @property
     def numfaces(self) -> int:
@@ -102,33 +99,11 @@ class Dice:
         return self.from_contents(contents)
 
     @classmethod
-    def _from_possiblerolls(cls, rolls: list[int], contents: defaultdict | None = None) -> Self:
-        """Create a new die from a list of possible rolls."""
-        if contents is None: contents = defaultdict(int)
-        possibilities = [None] + ([0] * max(rolls))
-        for r in rolls:
-            possibilities[r] += 1
-        total_possibilities = sum(possibilities[1:])
-        probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
-        return cls.from_probabilities(probabilities, contents)
-
-    @classmethod
-    def from_probabilities(
-        cls, probabilities: list[float], contents: defaultdict | None = None,
-    ) -> Self:
-        """Create a new die with a given set of probabilities."""
-        if contents is None: contents = defaultdict(int)
-        die = cls.__new__(cls)
-        die.probabilities = probabilities
-        die.contents = contents
-        return die
-
-    @classmethod
     def from_contents(cls, contents: defaultdict) -> Self:
         """Create a new die from a dict of contents."""
-        components = cls._unpackcontents(contents)
-        rolls = [sum(r) for r in product(*components)]
-        return cls._from_possiblerolls(rolls, contents)
+        die = cls.__new__(cls)
+        die.contents = contents
+        return die
 
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below

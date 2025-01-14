@@ -67,30 +67,11 @@ def test_weighted():
 def test_notweighted():
     assert not d(4).weighted
 
-def test_from_probabilities():
-    d4 = d.from_probabilities([None, 0.25, 0.25, 0.25, 0.25])
-    assert d4 == d(4)
-
-def test_invalidprobs_p0_not_None():
-    msg = re.escape("First probability, P(0), must be `None`")
-    with pytest.raises(ValueError, match=msg):
-        d.from_probabilities([0.5,0.5], "")
-
-def test_invalidprobs_px_is_None():
-    msg = re.escape("Only the first probability, P(0), may be `None`")
-    with pytest.raises(ValueError, match=msg):
-        d.from_probabilities([None, 0.5, 0.5, None], "")
-
 def test_cannot_change_probabilities():
     d4 = d(4)
     msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
     with pytest.raises(AttributeError,match=msg):
         d4.probabilities = [1,2]
-
-def test_does_not_sum_to_1():
-    msg = re.escape("Dice probabilities must sum to 1 (not 2.0)")
-    with pytest.raises(ValueError,match=msg):
-        d.from_probabilities([None, 0.5, 1.5], "")
 
 def test_unpackcontents():
     contents = {2:1, 4:2, 1:3}
