@@ -5,6 +5,8 @@ from collections import defaultdict, deque
 from itertools import product, repeat
 from typing import TYPE_CHECKING, SupportsInt
 
+from traitlets import default
+
 if TYPE_CHECKING:
     from collections.abc import Generator, Iterator
 
@@ -73,19 +75,16 @@ class Dice:
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
         try:
-            # pytype: disable=attribute-error
-            contents = defaultdict(
+            othercontents = other.contents # pytype: disable=attribute-error
+        except AttributeError:
+            othercontents = defaultdict(int, {1: self._int(other, "add", "and")})
+        contents = defaultdict(
                 int,
                 {
-                    faces: self.contents[faces] + other.contents[faces]
-                    for faces in self.contents.keys() | other.contents.keys()
+                    faces: self.contents[faces] + othercontents[faces]
+                    for faces in self.contents.keys() | othercontents.keys()
                 },
             )
-            # pytype: enable=attribute-error
-        except AttributeError:
-            other = self._int(other, "add", "and")
-            contents = self.contents.copy()
-            contents[1] += other
         return self.from_contents(contents)
 
     @classmethod

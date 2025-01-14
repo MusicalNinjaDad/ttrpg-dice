@@ -14,7 +14,7 @@ def test_contents_not_changed():
     d2 = d(2)
     adv = d2 + 1
     assert adv.contents == {1:1,2:1}
-    assert d2.contents == {2:1}
+    assert d2.contents == {1:0, 2:1} # defaultdict!!!
     assert adv == d(2) + 1
     assert d2 == d(2)
 
