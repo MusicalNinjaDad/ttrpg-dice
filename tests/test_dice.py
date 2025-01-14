@@ -94,11 +94,12 @@ def test_does_not_sum_to_1():
 
 @pytest.mark.xfail
 def test_from_contents():
-    assert d.from_contents({2:1, 8:2, 1:3}) == d(2) + (2 * d(8)) + 3
+    die = d.from_contents({2:1, 8:2, 1:3})
+    assert die == d(2) + (2 * d(8)) + 3
 
 def test_unpackcontents():
-    contents = {2:1, 8:2, 1:3}
-    assert list(d._unpackcontents(contents)) == [range(3), range(9), range(9), range(2), range(2), range(2)]  # noqa: SLF001
+    contents = {2:1, 4:2, 1:3}
+    assert list(d._unpackcontents(contents)) == [[1,2], [1,2,3,4], [1,2,3,4], [1], [1], [1]]  # noqa: SLF001
 
 @dataclass
 class DiceTest:

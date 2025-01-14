@@ -127,6 +127,14 @@ class Dice:
         die.probabilities = probabilities
         die.contents = contents
         return die
+
+    @classmethod
+    def from_contents(cls, contents: dict) -> Self:
+        """Create a new die from a dict of contents."""
+        components = cls._unpackcontents(contents)
+        rolls = (sum(r) for r in product(*components))
+        return cls._from_possiblerolls(rolls, contents)
+
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
 
@@ -145,7 +153,7 @@ class Dice:
         return other
     
     @classmethod
-    def _unpackcontents(cls, contents: dict) -> Generator[range, None, None]:
+    def _unpackcontents(cls, contents: dict) -> Generator[list, None, None]:
         """What's in that contents dict?"""
         for faces, numdice in contents.items():
-            yield from repeat(range(faces+1),numdice)
+            yield from repeat(list(range(1,faces+1)),numdice)
