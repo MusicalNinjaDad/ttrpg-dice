@@ -130,14 +130,14 @@ DiceTests = [
         id="unsorted addition: two dice",
     ),
     DiceTest(
-        dice=d(4) + (2 * d(2)),
+        dice=(2 * d(2)) + d(4),
         description="2d2 + d4",
         contents={2: 2, 4: 1},
         probabilities=[0, 0, 0.0625, 0.1875, 0.25, 0.25, 0.1875, 0.0625],
-        id="unsorted addition: complex dice",
+        id="addition: complex dice",
     ),
     DiceTest(
-        dice=(2 * d(3)) + d(4) + 1,
+        dice=d(4) + (2 * d(3)) + 1,
         description="2d3 + d4 + 1",
         contents={1: 1, 3: 2, 4: 1},
         probabilities=[
