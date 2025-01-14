@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from itertools import chain
 import re
 from dataclasses import dataclass
 from math import isclose

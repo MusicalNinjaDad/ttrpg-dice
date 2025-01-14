@@ -4,10 +4,10 @@ from __future__ import annotations
 from collections import defaultdict, deque
 from itertools import product, repeat
 from math import isclose
-from typing import TYPE_CHECKING, Generator, SupportsInt
+from typing import TYPE_CHECKING, SupportsInt
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Generator, Iterator
 
 try:
     from typing import Self
@@ -145,7 +145,7 @@ class Dice:
         return other
     
     @classmethod
-    def _unpackcontents(cls, contents: dict) -> Generator[range]:
+    def _unpackcontents(cls, contents: dict) -> Generator[range, None, None]:
         """What's in that contents dict?"""
         for faces, numdice in contents.items():
             yield from repeat(range(faces+1),numdice)
