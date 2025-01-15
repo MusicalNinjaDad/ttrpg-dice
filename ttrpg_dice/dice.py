@@ -56,7 +56,10 @@ class Dice:
             if index != 0: return self.probabilities[index]
         except TypeError:
             try:
-                return [self.probabilities[start,stop,step] for start,stop,step in index.indices(len(self.probabilities))]
+                return [
+                    self.probabilities[start, stop, step]
+                    for start, stop, step in index.indices(len(self.probabilities))
+                ]
             except AttributeError as e:
                 msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
                 raise TypeError(msg) from e
