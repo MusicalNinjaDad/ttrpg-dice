@@ -328,3 +328,18 @@ def test_probability_slicetoend(dietype, probabilities):
     except ValueError: pass
     assert all(check), msg
 
+@pytest.mark.parametrize(
+    ["dietype", "probabilities"],
+    [
+        pytest.param(tc.dice, tc.probabilities, id=tc.id)
+        for tc in DiceTests
+        if tc.probabilities is not None
+    ],
+)
+def test_probability_slicefull(dietype, probabilities):
+    check = [isclose(p,e) for p, e in zip(dietype[:], probabilities[:])]
+    try:
+        mismatch = indexOf(check, False)  # noqa: FBT003
+        msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
+    except ValueError: pass
+    assert all(check), msg
