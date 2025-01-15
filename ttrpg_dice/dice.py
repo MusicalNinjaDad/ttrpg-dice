@@ -54,10 +54,16 @@ class Dice:
         """Get the probability of a specific result."""
         try:
             # pytype: disable=attribute-error
-            if index.start is None:
-                index = slice(1,index.stop,index.step)
-            if (index.start < 1) or (index.stop is not None and index.stop < 1):
-                raise DiceIndexError(self, index)
+            if index.step is None or index.step > 0: # Positive step
+                if index.start is None:
+                    index = slice(1,index.stop,index.step)
+                if (index.start < 1) or (index.stop is not None and index.stop < 1):
+                    raise DiceIndexError(self, index)
+            else: # Negative Step
+                if index.stop is None:
+                    index = slice(index.start, 0, index.step)
+                if (index.stop < 0) or (index.start is not None and index.start < 1):
+                    raise DiceIndexError(self, index)
             # pytype: enable=attribute-error
         except AttributeError:
             pass
