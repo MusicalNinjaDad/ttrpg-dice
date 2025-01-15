@@ -53,13 +53,20 @@ class Dice:
     def __getitem__(self, index: int | slice) -> float | list[float] | None:
         """Get the probability of a specific result."""
         try:
-            if index != 0: return self.probabilities[index]
+            if index.start is None:
+                index = slice(1,index.stop,index.step)
+            if (index.start < 1) or (index.stop is not None and index.stop < 1):
+                raise DiceIndexError(self, index)
+        except AttributeError:
+            pass
+        if index == 0: raise DiceIndexError(self, index)
+        try: 
+            return self.probabilities[index]
         except TypeError as e:
             msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
             raise TypeError(msg) from e
         except IndexError as e:
             raise DiceIndexError(self, index) from e
-        raise DiceIndexError(self, index)
 
     def __eq__(self, value: object) -> bool:
         """Dice are equal if they give the same probabilities."""
