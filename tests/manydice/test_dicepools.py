@@ -1,4 +1,4 @@
-import pytest  # noqa: F401, RUF100
+import pytest # noqa: F401, RUF100
 
 from ttrpg_dice import Dice as d  # noqa: N813
 from ttrpg_dice.manydice import PoolComparison
@@ -45,11 +45,13 @@ chances = {
     },
 }
 
-comparison = PoolComparison(pools, outcomes)
+@pytest.fixture
+def comparison() -> PoolComparison:
+    return PoolComparison(pools, outcomes)
 
 @pytest.mark.parametrize(
     "pool",
     [pytest.param(pool) for pool in pools],
 )
-def test_pools(pool):
+def test_pools(pool, comparison: PoolComparison):
     assert comparison.pools[pool] == pytest.approx(chances[pool])
