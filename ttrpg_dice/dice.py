@@ -22,10 +22,10 @@ class Dice:
         self.contents = defaultdict(int, {faces:1})
         
     @property
-    def probabilities(self) -> list[float | None]:
+    def _probabilities(self) -> list[float | None]:
         """List of P(result) where result is index of list. P(0) = `None`."""
         try:
-            return self._probabilities # pytype: disable=attribute-error
+            return self._probabilitycache # pytype: disable=attribute-error
         except AttributeError:
             components = self._unpackcontents()
             rolls = [sum(r) for r in product(*components)]
@@ -33,11 +33,11 @@ class Dice:
             for r in rolls:
                 possibilities[r] += 1
             total_possibilities = sum(possibilities[1:])
-            self._probabilities = [None] + [n / total_possibilities for n in possibilities[1:]]
-            return self._probabilities
+            self._probabilitycache = [None] + [n / total_possibilities for n in possibilities[1:]]
+            return self._probabilitycache
 
-    @probabilities.setter
-    def probabilities(self, _: None) -> None:
+    @_probabilities.setter
+    def _probabilities(self, _: None) -> None:
         msg = "You cannot change a Dice's probabilities, create a new Dice instead."
         raise AttributeError(msg)
 
@@ -48,7 +48,7 @@ class Dice:
 
     def __iter__(self) -> Iterator:
         """Iterating over a Dice yields the probabilities starting with P(1)."""
-        yield from self.probabilities[1:]
+        yield from self._probabilities[1:]
     
     def __getitem__(self, index: int | slice) -> float | list[float] | None:
         """Get the probability of a specific result."""
@@ -69,7 +69,7 @@ class Dice:
             pass
         if index == 0: raise DiceIndexError(self, index)
         try: 
-            return self.probabilities[index]
+            return self._probabilities[index]
         except TypeError as e:
             msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
             raise TypeError(msg) from e
@@ -79,13 +79,13 @@ class Dice:
     def __eq__(self, value: object) -> bool:
         """Dice are equal if they give the same probabilities."""
         try:
-            return self.probabilities == value.probabilities # pytype: disable=attribute-error
+            return self._probabilities == value._probabilities # pytype: disable=attribute-error
         except AttributeError:
             return False
 
     def __len__(self) -> int:
         """Number of faces."""
-        return len(self.probabilities) - 1
+        return len(self._probabilities) - 1
 
     def __str__(self) -> str:
         """The type of Dice in NdX notation."""

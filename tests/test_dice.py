@@ -22,11 +22,6 @@ def test_multiply_no_sideeffects():
     assert roll == 2 * d(4)
     assert d4 == d(4)
 
-def test_probabilityindexes():
-    die = 2 * d(4)
-    assert die.probabilities[1] == 0
-    assert die.probabilities[2] == 0.0625
-
 def test_eq():
     d4 = d(4)
     assert d4 is not d(4)
@@ -87,7 +82,7 @@ def test_cannot_change_probabilities():
     d4 = d(4)
     msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
     with pytest.raises(AttributeError,match=msg):
-        d4.probabilities = [1,2]
+        d4._probabilities = [1,2]  # noqa: SLF001
 
 def test_unpackcontents():
     die = d.from_contents({2:1, 4:2, 1:3})
