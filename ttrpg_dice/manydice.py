@@ -85,8 +85,8 @@ class LazyRollTable:
 class PoolComparison:
     """Comparison of related dicepools."""
 
-    def __init__(self, pools: dict[str, Dice], outcomes: dict[str, slice]) ->None:
+    def __init__(self, pools: dict[str, Dice], outcomes: dict[str, slice]) -> None:
         """Create comparison based on dict of named pools and dict of named outcomes."""
-        self.pools = {
+        self.pools: dict[str, dict[str, float]] = {
             pool: {outcome: sum(die[index]) for outcome, index in outcomes.items()} for pool, die in pools.items()
         }
