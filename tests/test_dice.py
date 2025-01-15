@@ -68,6 +68,21 @@ def test_NonexDice():
     with pytest.raises(TypeError, match="Cannot multiply 'NoneType' by 'Dice'"):
         None * d(4)
 
+def test_index_lastside():
+    assert (2*d(4))[8] == 0.0625
+
+def test_invalidindextype():
+    with pytest.raises(TypeError, match="Cannot index 'Dice' with 'str'"):
+        d(4)["two"]
+
+def test_invalidindexvalue_too_high():
+    with pytest.raises(IndexError, match="Index out of bounds, this Dice has sides numbered 1 to 4"):
+        d(4)[5]
+
+def test_invalidindexvalue_zero():
+    with pytest.raises(IndexError, match="Index out of bounds, this Dice has sides numbered 1 to 4"):
+        d(4)[0]
+
 def test_cannot_change_probabilities():
     d4 = d(4)
     msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
@@ -264,3 +279,19 @@ def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
 )
 def test_first_probability(dietype, probabilities):
     assert isclose(dietype[1], probabilities[0])
+
+@pytest.mark.parametrize(
+    ["dietype", "probabilities"],
+    [
+        pytest.param(tc.dice, tc.probabilities, id=tc.id)
+        for tc in DiceTests
+        if tc.probabilities is not None
+    ],
+)
+def test_probability_slice(dietype, probabilities):
+    check = [isclose(p,e) for p, e in zip(dietype[1:4], probabilities[:3])]
+    try:
+        mismatch = indexOf(check, False)  # noqa: FBT003
+        msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
+    except ValueError: pass
+    assert all(check), msg

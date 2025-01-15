@@ -50,10 +50,20 @@ class Dice:
         """Iterating over a Dice yields the probabilities starting with P(1)."""
         return iter(self.probabilities[1:])
     
-    def __getitem__(self, index: int) -> float | None:
+    def __getitem__(self, index: int | slice) -> float | None:
         """Get the probability of a specific result."""
-        return self.probabilities[index]
-    
+        try:
+            if index != 0: return self.probabilities[index]
+        except TypeError:
+            try:
+                return [self.probabilities[start,stop,step] for start,stop,step in index.indices(len(self.probabilities))]
+            except AttributeError as e:
+                msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
+                raise TypeError(msg) from e
+        except IndexError as e:
+            raise DiceIndexError(self, index) from e
+        raise DiceIndexError(self, index)
+
     def __eq__(self, value: object) -> bool:
         """Dice are equal if they give the same probabilities."""
         try:
@@ -116,5 +126,33 @@ class Dice:
             msg += " (Hint: try using a string which only contains numbers)"
             raise TypeError(msg) from e
         return other
-    
 
+class DiceIndexError(IndexError):
+    """
+    Exception raised for errors in the indexing of a Dice object.
+
+    Attributes:
+        dice (Dice): The Dice object where the error occurred.
+        index (int): The index that caused the error.
+    """
+
+    def __init__(self, dice: Dice, index: int) -> None:
+        """
+        Initialize the DiceIndexError with the given Dice object and index.
+
+        Args:
+            dice (Dice): The Dice object where the error occurred.
+            index (int): The index that caused the error.
+        """
+        self.dice = dice
+        self.index = index
+        super().__init__(self._error_message())
+
+    def _error_message(self) -> str:
+        """
+        Generate the error message for the exception.
+
+        Returns:
+            str: The error message indicating the index is out of bounds.
+        """
+        return f"Index out of bounds, this Dice has sides numbered 1 to {len(self.dice.probabilities) - 1}"
