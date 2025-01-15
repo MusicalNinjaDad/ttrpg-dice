@@ -76,6 +76,6 @@ class LazyRollTable:
         table_lines = [_formatroll(d, r) for d, r in enumerate(self.rolls)]
         return newline.join([description,"",table_header, *table_lines[1:]])
 
-def evaluatepool(die: Dice, values: dict[str:slice]) -> dict[str:float]:
+def evaluatepool(die: Dice, values: dict[str,slice]) -> dict[str,float]:
     """Evluate the probabilities of a range of values in a given dicepool."""
     return {grp:sum(die[index]) for grp, index in values.items()}
