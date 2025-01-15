@@ -10,84 +10,6 @@ import pytest  # noqa: F401, RUF100
 from ttrpg_dice import Dice as d  # noqa: N813
 
 
-def test_add_no_sideeffects():
-    d2 = d(2)
-    adv = d2 + 1
-    assert adv == d(2) + 1
-    assert d2 == d(2)
-
-def test_multiply_no_sideeffects():
-    d4 = d(4)
-    roll = 2 * d4
-    assert roll == 2 * d(4)
-    assert d4 == d(4)
-
-def test_eq():
-    d4 = d(4)
-    assert d4 is not d(4)
-    assert d4 == d(4)
-
-def test_inequality():
-    d4 = d(4)
-    d6 = d(6)
-    assert d4 != d6
-    assert d4 != [None, 0.25, 0.25, 0.25, 0.25]
-
-def test_add_float():
-    assert d(4) + 2.0 == d(4) + 2
-
-def test_add_string():
-    assert d(4) + "2" == d(4) + 2
-
-def test_add_two():
-    msg = re.escape("Cannot add 'two' and 'Dice'. (Hint: try using a string which only contains numbers)")
-    with pytest.raises(TypeError, match=msg):
-        d(4) + "two"
-
-def test_add_None():
-    with pytest.raises(TypeError, match="Cannot add 'NoneType' and 'Dice'"):
-        d(4) + None
-
-def test_floatxDice():
-    assert 2.0000001 * d(4) == 2*d(4)
-
-def test_stringxDice():
-    assert "2" * d(4) == 2 * d(4)
-
-def test_twoxDice():
-    msg = re.escape("Cannot multiply 'two' by 'Dice'. (Hint: try using a string which only contains numbers)")
-    with pytest.raises(TypeError, match=msg):
-        "two" * d(4)
-
-def test_NonexDice():
-    with pytest.raises(TypeError, match="Cannot multiply 'NoneType' by 'Dice'"):
-        None * d(4)
-
-def test_index_lastside():
-    assert (2*d(4))[8] == 0.0625
-
-def test_invalidindextype():
-    with pytest.raises(TypeError, match="Cannot index 'Dice' with 'str'"):
-        d(4)["two"]
-
-def test_invalidindexvalue_too_high():
-    with pytest.raises(IndexError, match="Index out of bounds, this Dice has sides numbered 1 to 4"):
-        d(4)[5]
-
-def test_invalidindexvalue_zero():
-    with pytest.raises(IndexError, match="Index out of bounds, this Dice has sides numbered 1 to 4"):
-        d(4)[0]
-
-def test_cannot_change_probabilities():
-    d4 = d(4)
-    msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
-    with pytest.raises(AttributeError,match=msg):
-        d4._probabilities = [1,2]  # noqa: SLF001
-
-def test_unpackcontents():
-    die = d.from_contents({2:1, 4:2, 1:3})
-    assert list(die._unpackcontents()) == [[1,2], [1,2,3,4], [1,2,3,4], [1], [1], [1]]  # noqa: SLF001
-
 @dataclass
 class DiceTest:
     dice: d
@@ -97,6 +19,7 @@ class DiceTest:
     weighted: bool
     faces: int
     id: str
+
 
 DiceTests = [
     DiceTest(
@@ -239,17 +162,20 @@ DiceTests = [
     ),
 ]
 
+
 @pytest.mark.parametrize(
     ["dietype", "probabilities"],
     [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests if tc.probabilities is not None],
 )
 def test_probabilities(dietype, probabilities):
-    check = [isclose(p,e) for p, e in zip(list(dietype), probabilities)]
+    check = [isclose(p, e) for p, e in zip(list(dietype), probabilities)]
     try:
         mismatch = indexOf(check, False)  # noqa: FBT003
         msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
-    except ValueError: pass
+    except ValueError:
+        pass
     assert all(check), msg
+
 
 @pytest.mark.parametrize(
     ["dietype", "description"],
@@ -258,12 +184,14 @@ def test_probabilities(dietype, probabilities):
 def test_str(dietype, description):
     assert str(dietype) == description
 
+
 @pytest.mark.parametrize(
     ["dietype", "contents"],
     [pytest.param(tc.dice, tc.contents, id=tc.id) for tc in DiceTests],
 )
 def test_contents(dietype, contents):
     assert dietype.contents == contents
+
 
 @pytest.mark.parametrize(
     ["dietype", "contents"],
@@ -272,6 +200,7 @@ def test_contents(dietype, contents):
 def test_fromcontents(dietype: d, contents: dict):
     assert d.from_contents(contents) == dietype
 
+
 @pytest.mark.parametrize(
     ["dietype", "weighted"],
     [pytest.param(tc.dice, tc.weighted, id=tc.id) for tc in DiceTests],
@@ -279,12 +208,14 @@ def test_fromcontents(dietype: d, contents: dict):
 def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
     assert dietype.weighted == weighted
 
+
 @pytest.mark.parametrize(
     ["dietype", "probabilities"],
     [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests if tc.probabilities is not None],
 )
 def test_first_probability(dietype, probabilities):
     assert isclose(dietype[1], probabilities[0])
+
 
 @pytest.mark.parametrize(
     ["dietype", "faces"],
@@ -301,77 +232,176 @@ class SliceTest:
     probabilities: list
     id: str
 
+
 SliceTests = [
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None,None),
+        sides=slice(None, None),
         probabilities=[0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
         id="full slice",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(2,5),
+        sides=slice(2, 5),
         probabilities=[0.0625, 0.125, 0.1875],
         id="middle section",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None,5),
+        sides=slice(None, 5),
         probabilities=[0, 0.0625, 0.125, 0.1875],
         id="from start",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(3,None),
+        sides=slice(3, None),
         probabilities=[0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
         id="to end",
     ),
-        SliceTest(
+    SliceTest(
         dice=2 * d(4),
-        sides=slice(None,None, -1),
+        sides=slice(None, None, -1),
         probabilities=[0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625, 0],
         id="reverse full slice",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(7,4, -1),
+        sides=slice(7, 4, -1),
         probabilities=[0.125, 0.1875, 0.25],
         id="reverse middle section",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None,3, -1),
+        sides=slice(None, 3, -1),
         probabilities=[0.0625, 0.125, 0.1875, 0.25, 0.1875],
         id="reverse from end",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(5,None, -1),
+        sides=slice(5, None, -1),
         probabilities=[0.25, 0.1875, 0.125, 0.0625, 0],
         id="reverse to start",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(2,None,2),
+        sides=slice(2, None, 2),
         probabilities=[0.0625, 0.1875, 0.1875, 0.0625],
         id="evens",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None,None,2),
+        sides=slice(None, None, 2),
         probabilities=[0, 0.125, 0.25, 0.125],
         id="odds",
     ),
 ]
+
 
 @pytest.mark.parametrize(
     ["dietype", "sides", "probabilities"],
     [pytest.param(tc.dice, tc.sides, tc.probabilities, id=tc.id) for tc in SliceTests],
 )
 def test_slicing(dietype, sides, probabilities):
-    check = [isclose(p,e) for p, e in zip(dietype[sides], probabilities)]
+    check = [isclose(p, e) for p, e in zip(dietype[sides], probabilities)]
     try:
         mismatch = indexOf(check, False)  # noqa: FBT003
         msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
-    except ValueError: pass
+    except ValueError:
+        pass
     assert all(check), msg
+
+
+def test_eq():
+    d4 = d(4)
+    assert d4 is not d(4)
+    assert d4 == d(4)
+
+
+def test_inequality():
+    d4 = d(4)
+    d6 = d(6)
+    assert d4 != d6
+    assert d4 != [None, 0.25, 0.25, 0.25, 0.25]
+
+
+def test_no_sideeffects_add():
+    d2 = d(2)
+    adv = d2 + 1
+    assert adv == d(2) + 1
+    assert d2 == d(2)
+
+
+def test_add_float():
+    assert d(4) + 2.0 == d(4) + 2
+
+
+def test_add_string():
+    assert d(4) + "2" == d(4) + 2
+
+
+def test_add_two():
+    msg = re.escape("Cannot add 'two' and 'Dice'. (Hint: try using a string which only contains numbers)")
+    with pytest.raises(TypeError, match=msg):
+        d(4) + "two"
+
+
+def test_add_None():
+    with pytest.raises(TypeError, match="Cannot add 'NoneType' and 'Dice'"):
+        d(4) + None
+
+
+def test_no_sideeffects_rmul():
+    d4 = d(4)
+    roll = 2 * d4
+    assert roll == 2 * d(4)
+    assert d4 == d(4)
+
+
+def test_floatxDice():
+    assert 2.0000001 * d(4) == 2 * d(4)
+
+
+def test_stringxDice():
+    assert "2" * d(4) == 2 * d(4)
+
+
+def test_twoxDice():
+    msg = re.escape("Cannot multiply 'two' by 'Dice'. (Hint: try using a string which only contains numbers)")
+    with pytest.raises(TypeError, match=msg):
+        "two" * d(4)
+
+
+def test_NonexDice():
+    with pytest.raises(TypeError, match="Cannot multiply 'NoneType' by 'Dice'"):
+        None * d(4)
+
+
+def test_index_lastside():
+    assert (2 * d(4))[8] == 0.0625
+
+
+def test_invalidindextype():
+    with pytest.raises(TypeError, match="Cannot index 'Dice' with 'str'"):
+        d(4)["two"]
+
+
+def test_invalidindexvalue_too_high():
+    with pytest.raises(IndexError, match="Index out of bounds, this Dice has sides numbered 1 to 4"):
+        d(4)[5]
+
+
+def test_invalidindexvalue_zero():
+    with pytest.raises(IndexError, match="Index out of bounds, this Dice has sides numbered 1 to 4"):
+        d(4)[0]
+
+
+def test_cannot_change_probabilities():
+    d4 = d(4)
+    msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
+    with pytest.raises(AttributeError, match=msg):
+        d4._probabilities = [1, 2]  # noqa: SLF001
+
+
+def test_unpackcontents():
+    die = d.from_contents({2: 1, 4: 2, 1: 3})
+    assert list(die._unpackcontents()) == [[1, 2], [1, 2, 3, 4], [1, 2, 3, 4], [1], [1], [1]]  # noqa: SLF001
