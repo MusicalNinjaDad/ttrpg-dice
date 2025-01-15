@@ -52,4 +52,4 @@ comparison = PoolComparison(pools, outcomes)
     [pytest.param(pool) for pool in pools],
 )
 def test_pools(pool):
-    assert comparison._probabilities[pool] == pytest.approx(chances[pool])
+    assert comparison.pools[pool] == pytest.approx(chances[pool])
