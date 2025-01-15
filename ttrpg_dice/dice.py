@@ -50,19 +50,13 @@ class Dice:
         """Iterating over a Dice yields the probabilities starting with P(1)."""
         return iter(self.probabilities[1:])
     
-    def __getitem__(self, index: int | slice) -> float | None:
+    def __getitem__(self, index: int | slice) -> float | list[float] | None:
         """Get the probability of a specific result."""
         try:
             if index != 0: return self.probabilities[index]
-        except TypeError:
-            try:
-                return [
-                    self.probabilities[start, stop, step]
-                    for start, stop, step in index.indices(len(self.probabilities))
-                ]
-            except AttributeError as e:
-                msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
-                raise TypeError(msg) from e
+        except TypeError as e:
+            msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
+            raise TypeError(msg) from e
         except IndexError as e:
             raise DiceIndexError(self, index) from e
         raise DiceIndexError(self, index)
