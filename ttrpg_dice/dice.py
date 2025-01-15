@@ -50,6 +50,10 @@ class Dice:
         """Iterating over a Dice yields the probabilities starting with P(1)."""
         return iter(self.probabilities[1:])
     
+    def __getitem__(self, index: int) -> float | None:
+        """Get the probability of a specific result."""
+        return self.probabilities[index+1]
+    
     def __eq__(self, value: object) -> bool:
         """Dice are equal if they give the same probabilities."""
         try:
