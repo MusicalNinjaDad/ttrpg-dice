@@ -3,19 +3,49 @@ import pytest  # noqa: F401, RUF100
 from ttrpg_dice import Dice as d  # noqa: N813
 from ttrpg_dice import evaluatepool
 
+# Anydice calculation:
+# function: range on DIE:n between LOW:n and HIGH:n {
+# if DIE >= LOW & DIE <= HIGH { result: 1 }
+# result: 0
+# }
 
-def test_pool():
-    chances = {
-            "nicehumanoid": 0.06944444444444445,
-            "neutral": 0.5486111111111112,
-            "nastyhumanoid": 0.2777777777777778,
-            "nastyanimal": 0.06944444444444445,
-    }
-    die = 2 * d(12)
-    encounters = {
-            "nicehumanoid": slice(None, 6),
-            "neutral": slice(6, 15),
-            "nastyhumanoid": slice(15, 20),
-            "nastyanimal": slice(21, None),
-    }
-    assert evaluatepool(die, encounters) == chances
+# POOL: 2d4
+
+# output [range on POOL between 1 and 4]
+# output [range on POOL between 5 and 6]
+# output [range on POOL between 7 and 8]
+
+pools = {
+    "2d4": 2*d(4),
+    "d6 + 2": d(6)+2,
+    "d8": d(8),
+}
+
+outcomes = {
+    "under 4": slice(None, 5),
+    "5 or 6": slice(5,7),
+    "over 6": slice(7,None),
+}
+
+chances = {
+    "2d4": {
+        "under 4": 0.375,
+        "5 or 6": 0.4375,
+        "over 6": 0.1875,
+    },
+    "d6 + 2": {
+        "under 4": 0.33333333333,
+        "5 or 6": 0.33333333333,
+        "over 6": 0.33333333333,
+    },
+    "d8": {
+        "under 4": 0.5,
+        "5 or 6": 0.25,
+        "over 6": 0.25,
+    },
+}
+
+def test_pools():
+    results = evaluatepool(pools, outcomes)
+    for pool, result in results.items():
+        assert result == pytest.approx(chances[pool])
