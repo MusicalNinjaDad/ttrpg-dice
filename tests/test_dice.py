@@ -88,12 +88,54 @@ class DiceTest:
     id: str
 
 DiceTests = [
-    DiceTest(d(4), "d4", {4: 1}, [0.25, 0.25, 0.25, 0.25], False, id="d4"),
-    DiceTest(d(100), "d100", {100: 1}, [0.01] * 100, False, id="d100"),
-    DiceTest(2 * d(4), "2d4", {4: 2}, [0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625], True, id="multiplication"),
-    DiceTest(d(2) + d(4), "d2 + d4", {2: 1, 4: 1}, [0, 0.125, 0.25, 0.25, 0.25, 0.125], True, id="addition"),
-    DiceTest(d(4) + 2, "d4 + 2", {1: 2, 4: 1}, [0, 0, 0.25, 0.25, 0.25, 0.25], True, id="add constant"),
-    DiceTest(d(4) + 1, "d4 + 1", {1: 1, 4: 1}, [0, 0.25, 0.25, 0.25, 0.25], True, id="add 1"),
+    DiceTest(
+        dice=d(4),
+        description="d4",
+        contents={4: 1},
+        probabilities=[0.25, 0.25, 0.25, 0.25],
+        weighted=False,
+        id="d4",
+    ),
+    DiceTest(
+        dice=d(100),
+        description="d100",
+        contents={100: 1},
+        probabilities=[0.01] * 100,
+        weighted=False,
+        id="d100",
+    ),
+    DiceTest(
+        dice=2 * d(4),
+        description="2d4",
+        contents={4: 2},
+        probabilities=[0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
+        weighted=True,
+        id="multiplication",
+    ),
+    DiceTest(
+        dice=d(2) + d(4),
+        description="d2 + d4",
+        contents={2: 1, 4: 1},
+        probabilities=[0, 0.125, 0.25, 0.25, 0.25, 0.125],
+        weighted=True,
+        id="addition",
+    ),
+    DiceTest(
+        dice=d(4) + 2,
+        description="d4 + 2",
+        contents={1: 2, 4: 1},
+        probabilities=[0, 0, 0.25, 0.25, 0.25, 0.25],
+        weighted=True,
+        id="add constant",
+    ),
+    DiceTest(
+        dice=d(4) + 1,
+        description="d4 + 1",
+        contents={1: 1, 4: 1},
+        probabilities=[0, 0.25, 0.25, 0.25, 0.25],
+        weighted=True,
+        id="add 1",
+    ),
     DiceTest(
         dice=d(6) + d(4),
         description="d4 + d6",
@@ -110,7 +152,7 @@ DiceTests = [
             0.0833333333333,
             0.0416666666667,
         ],
-        weighted = True,
+        weighted=True,
         id="unsorted addition: two dice",
     ),
     DiceTest(
@@ -118,7 +160,7 @@ DiceTests = [
         description="2d2 + d4",
         contents={2: 2, 4: 1},
         probabilities=[0, 0, 0.0625, 0.1875, 0.25, 0.25, 0.1875, 0.0625],
-        weighted = True,
+        weighted=True,
         id="addition: complex dice",
     ),
     DiceTest(
@@ -138,7 +180,7 @@ DiceTests = [
             0.0833333333333,
             0.0277777777778,
         ],
-        weighted = True,
+        weighted=True,
         id="combined arithmetic",
     ),
     DiceTest(
@@ -171,7 +213,7 @@ DiceTests = [
             0.005859375,
             0.001953125,
         ],
-        weighted = True,
+        weighted=True,
         id="add similar dice",
     ),
 ]
