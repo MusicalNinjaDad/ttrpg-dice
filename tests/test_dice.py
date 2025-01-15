@@ -289,7 +289,7 @@ def test_first_probability(dietype, probabilities):
     ],
 )
 def test_probability_slice(dietype, probabilities):
-    check = [isclose(p,e) for p, e in zip(dietype[1:5], probabilities[:4])]
+    check = [isclose(p,e) for p, e in zip(dietype[2:5], probabilities[1:4])]
     try:
         mismatch = indexOf(check, False)  # noqa: FBT003
         msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
