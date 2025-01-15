@@ -45,7 +45,9 @@ chances = {
     },
 }
 
-def test_pools():
-    results = evaluatepool(pools, outcomes)
-    for pool, result in results.items():
-        assert result == pytest.approx(chances[pool])
+@pytest.mark.parametrize(
+    "pool",
+    [pytest.param(pool) for pool in pools],
+)
+def test_pools(pool):
+    assert evaluatepool(pools, outcomes)[pool] == pytest.approx(chances[pool])
