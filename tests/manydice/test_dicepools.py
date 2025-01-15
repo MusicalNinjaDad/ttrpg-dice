@@ -1,7 +1,7 @@
 import pytest  # noqa: F401, RUF100
 
 from ttrpg_dice import Dice as d  # noqa: N813
-from ttrpg_dice import evaluatepool
+from ttrpg_dice import evaluatepools
 
 # Anydice calculation:
 # function: range on DIE:n between LOW:n and HIGH:n {
@@ -50,4 +50,4 @@ chances = {
     [pytest.param(pool) for pool in pools],
 )
 def test_pools(pool):
-    assert evaluatepool(pools, outcomes)[pool] == pytest.approx(chances[pool])
+    assert evaluatepools(pools, outcomes)[pool] == pytest.approx(chances[pool])

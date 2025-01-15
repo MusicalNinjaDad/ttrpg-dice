@@ -82,6 +82,6 @@ class LazyRollTable:
         return newline.join([description, "", table_header, *table_lines[1:]])
 
 
-def evaluatepool(pools: dict[str, Dice], outcomes: dict[str, slice]) -> dict[str, dict[str,float]]:
+def evaluatepools(pools: dict[str, Dice], outcomes: dict[str, slice]) -> dict[str, dict[str,float]]:
     """Evluate the probabilities of a range of values in various dicepool."""
     return {pool: {outcome: sum(die[index]) for outcome, index in outcomes.items()} for pool, die in pools.items()}
