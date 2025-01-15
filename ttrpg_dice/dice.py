@@ -48,7 +48,7 @@ class Dice:
 
     def __iter__(self) -> Iterator:
         """Iterating over a Dice yields the probabilities starting with P(1)."""
-        return iter(self.probabilities[1:])
+        yield from self.probabilities[1:]
     
     def __getitem__(self, index: int | slice) -> float | list[float] | None:
         """Get the probability of a specific result."""
