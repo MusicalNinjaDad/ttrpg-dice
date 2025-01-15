@@ -53,10 +53,12 @@ class Dice:
     def __getitem__(self, index: int | slice) -> float | list[float] | None:
         """Get the probability of a specific result."""
         try:
+            # pytype: disable=attribute-error
             if index.start is None:
                 index = slice(1,index.stop,index.step)
             if (index.start < 1) or (index.stop is not None and index.stop < 1):
                 raise DiceIndexError(self, index)
+            # pytype: enable=attribute-error
         except AttributeError:
             pass
         if index == 0: raise DiceIndexError(self, index)
