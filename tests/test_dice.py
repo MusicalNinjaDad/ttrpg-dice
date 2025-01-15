@@ -280,64 +280,82 @@ def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
 def test_first_probability(dietype, probabilities):
     assert isclose(dietype[1], probabilities[0])
 
-@pytest.mark.parametrize(
-    ["dietype", "probabilities"],
-    [
-        pytest.param(tc.dice, tc.probabilities, id=tc.id)
-        for tc in DiceTests
-        if tc.probabilities is not None
-    ],
-)
-def test_probability_slice(dietype, probabilities):
-    check = [isclose(p,e) for p, e in zip(dietype[2:5], probabilities[1:4])]
-    try:
-        mismatch = indexOf(check, False)  # noqa: FBT003
-        msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
-    except ValueError: pass
-    assert all(check), msg
+@dataclass
+class SliceTest:
+    dice: d
+    sides: slice
+    probabilities: list
+    id: str
+
+SliceTests = [
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(None,None),
+        probabilities=[0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
+        id="full slice",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(2,5),
+        probabilities=[0.0625, 0.125, 0.1875],
+        id="middle section",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(None,5),
+        probabilities=[0, 0.0625, 0.125, 0.1875],
+        id="from start",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(3,None),
+        probabilities=[0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
+        id="to end",
+    ),
+        SliceTest(
+        dice=2 * d(4),
+        sides=slice(None,None, -1),
+        probabilities=[0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625, 0],
+        id="reverse full slice",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(7,4, -1),
+        probabilities=[0.125, 0.1875, 0.25],
+        id="reverse middle section",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(None,3, -1),
+        probabilities=[0.0625, 0.125, 0.1875, 0.25, 0.1875],
+        id="reverse from end",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(5,None, -1),
+        probabilities=[0.25, 0.1875, 0.125, 0.0625, 0],
+        id="reverse to start",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(2,None,2),
+        probabilities=[0.0625, 0.1875, 0.1875, 0.0625],
+        id="evens",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(None,None,2),
+        probabilities=[0, 0.125, 0.25, 0.125],
+        id="odds",
+    ),
+]
 
 @pytest.mark.parametrize(
-    ["dietype", "probabilities"],
-    [
-        pytest.param(tc.dice, tc.probabilities, id=tc.id)
-        for tc in DiceTests
-        if tc.probabilities is not None
-    ],
+    ["dietype", "sides", "probabilities"],
+    [pytest.param(tc.dice, tc.sides, tc.probabilities, id=tc.id) for tc in SliceTests],
 )
-def test_probability_slicefromstart(dietype, probabilities):
-    check = [isclose(p,e) for p, e in zip(dietype[:5], probabilities[:4])]
-    try:
-        mismatch = indexOf(check, False)  # noqa: FBT003
-        msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
-    except ValueError: pass
-    assert all(check), msg
-
-@pytest.mark.parametrize(
-    ["dietype", "probabilities"],
-    [
-        pytest.param(tc.dice, tc.probabilities, id=tc.id)
-        for tc in DiceTests
-        if tc.probabilities is not None
-    ],
-)
-def test_probability_slicetoend(dietype, probabilities):
-    check = [isclose(p,e) for p, e in zip(dietype[3:], probabilities[2:])]
-    try:
-        mismatch = indexOf(check, False)  # noqa: FBT003
-        msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
-    except ValueError: pass
-    assert all(check), msg
-
-@pytest.mark.parametrize(
-    ["dietype", "probabilities"],
-    [
-        pytest.param(tc.dice, tc.probabilities, id=tc.id)
-        for tc in DiceTests
-        if tc.probabilities is not None
-    ],
-)
-def test_probability_slicefull(dietype, probabilities):
-    check = [isclose(p,e) for p, e in zip(dietype[:], probabilities[:])]
+def test_slicing(dietype, sides, probabilities):
+    check = [isclose(p,e) for p, e in zip(dietype[sides], probabilities)]
     try:
         mismatch = indexOf(check, False)  # noqa: FBT003
         msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
