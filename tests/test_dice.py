@@ -68,12 +68,6 @@ def test_NonexDice():
     with pytest.raises(TypeError, match="Cannot multiply 'NoneType' by 'Dice'"):
         None * d(4)
 
-def test_weighted():
-    assert (2 * d(4)).weighted
-
-def test_notweighted():
-    assert not d(4).weighted
-
 def test_cannot_change_probabilities():
     d4 = d(4)
     msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
@@ -90,15 +84,16 @@ class DiceTest:
     description: str
     contents: dict
     probabilities: list | None
+    weighted: bool
     id: str
 
 DiceTests = [
-    DiceTest(d(4), "d4", {4: 1}, [0.25, 0.25, 0.25, 0.25], id="d4"),
-    DiceTest(d(100), "d100", {100: 1}, [0.01] * 100, id="d100"),
-    DiceTest(2 * d(4), "2d4", {4: 2}, [0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625], id="multiplication"),
-    DiceTest(d(2) + d(4), "d2 + d4", {2: 1, 4: 1}, [0, 0.125, 0.25, 0.25, 0.25, 0.125], id="addition"),
-    DiceTest(d(4) + 2, "d4 + 2", {1: 2, 4: 1}, [0, 0, 0.25, 0.25, 0.25, 0.25], id="add constant"),
-    DiceTest(d(4) + 1, "d4 + 1", {1: 1, 4: 1}, [0, 0.25, 0.25, 0.25, 0.25], id="add 1"),
+    DiceTest(d(4), "d4", {4: 1}, [0.25, 0.25, 0.25, 0.25], False, id="d4"),
+    DiceTest(d(100), "d100", {100: 1}, [0.01] * 100, False, id="d100"),
+    DiceTest(2 * d(4), "2d4", {4: 2}, [0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625], True, id="multiplication"),
+    DiceTest(d(2) + d(4), "d2 + d4", {2: 1, 4: 1}, [0, 0.125, 0.25, 0.25, 0.25, 0.125], True, id="addition"),
+    DiceTest(d(4) + 2, "d4 + 2", {1: 2, 4: 1}, [0, 0, 0.25, 0.25, 0.25, 0.25], True, id="add constant"),
+    DiceTest(d(4) + 1, "d4 + 1", {1: 1, 4: 1}, [0, 0.25, 0.25, 0.25, 0.25], True, id="add 1"),
     DiceTest(
         dice=d(6) + d(4),
         description="d4 + d6",
@@ -115,6 +110,7 @@ DiceTests = [
             0.0833333333333,
             0.0416666666667,
         ],
+        weighted = True,
         id="unsorted addition: two dice",
     ),
     DiceTest(
@@ -122,6 +118,7 @@ DiceTests = [
         description="2d2 + d4",
         contents={2: 2, 4: 1},
         probabilities=[0, 0, 0.0625, 0.1875, 0.25, 0.25, 0.1875, 0.0625],
+        weighted = True,
         id="addition: complex dice",
     ),
     DiceTest(
@@ -141,6 +138,7 @@ DiceTests = [
             0.0833333333333,
             0.0277777777778,
         ],
+        weighted = True,
         id="combined arithmetic",
     ),
     DiceTest(
@@ -173,6 +171,7 @@ DiceTests = [
             0.005859375,
             0.001953125,
         ],
+        weighted = True,
         id="add similar dice",
     ),
 ]
@@ -209,3 +208,10 @@ def test_contents(dietype, contents):
 )
 def test_fromcontents(dietype: d, contents: dict):
     assert d.from_contents(contents) == dietype
+
+@pytest.mark.parametrize(
+    ["dietype", "weighted"],
+    [pytest.param(tc.dice, tc.weighted, id=tc.id) for tc in DiceTests],
+)
+def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
+    assert dietype.weighted == weighted
