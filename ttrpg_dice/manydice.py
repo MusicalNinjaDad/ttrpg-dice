@@ -8,7 +8,7 @@ from .dice import Dice
 def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
     """
     Calculate equivalent single roll instead of rolling multiple dice targetting the same success value.
-    
+
     Arguments:
         numdice: the number of identical dice to roll
         dicetype: the number of faces on the dice to roll
@@ -33,22 +33,25 @@ def lazyroll(numdice: int, dicetype: int, target: int) -> list[int]:
     if target > dicetype:
         msg = f"Good luck rolling {target} on a d{dicetype}!"
         raise ValueError(msg)
+
     def _p(hits: int) -> float:
         """Calculates the probability of an exact number of hits."""
         misses = numdice - hits
-        p_successes = (target/dicetype) ** hits
-        p_fails = (1-(target/dicetype)) ** (misses)
+        p_successes = (target / dicetype) ** hits
+        p_fails = (1 - (target / dicetype)) ** (misses)
         return p_successes * p_fails * comb(numdice, hits)
-    probs = [_p(hits) for hits in range(numdice+1)]
+
+    probs = [_p(hits) for hits in range(numdice + 1)]
     return [round(sum(probs[i:]) * dicetype) for i, _ in enumerate(probs)]
 
-class LazyRollTable:    
+
+class LazyRollTable:
     """Table of values for lazyrolls of varying numbers of goblins."""
 
     def __init__(self, maxdice: int, dicetype: int, target: int) -> None:
         """Create a table of lazyrolls for up to `maxdice`."""
         self._maxdice = maxdice
-        self._maxdicerange = range(maxdice+1)
+        self._maxdicerange = range(maxdice + 1)
         """use to iterate from `0` to `maxdice` rolls `for i in self._maxdicerange`"""
         self._dicetype = dicetype
         self._target = target
@@ -59,23 +62,26 @@ class LazyRollTable:
         """Compare self.rolls if `value` is not another `LazyRollTable`."""
         if not isinstance(value, LazyRollTable):
             return self.rolls == value
-        return self.rolls== value.rolls
-    
+        return self.rolls == value.rolls
+
     def __repr__(self) -> str:  # noqa: D105
         return f"LazyRollTable for up to {self._maxdice}d{self._dicetype} targeting {self._target}: {self.rolls}"
-    
+
     def __str__(self) -> str:
         """Format as a nice table ignoring zero dice and zero hits."""
         tab = "\t"
         newline = "\n"
+
         def _formatroll(numdice: int, rolls: list[int]) -> str:
             lazytargets = tab.join(str(lazytarget) for lazytarget in rolls[1:])
-            return tab.join([str(numdice),lazytargets])
+            return tab.join([str(numdice), lazytargets])
+
         description = f"Lazyroll table for up to {self._maxdice}d{self._dicetype} targeting {self._target} for success:"
         table_header = f"\tHITS\n\t{tab.join(str(i) for i in self._maxdicerange[1:])}"
         table_lines = [_formatroll(d, r) for d, r in enumerate(self.rolls)]
-        return newline.join([description,"",table_header, *table_lines[1:]])
+        return newline.join([description, "", table_header, *table_lines[1:]])
 
-def evaluatepool(pools: dict[str: Dice], outcomes: dict[str,slice]) -> dict[str,float]:
+
+def evaluatepool(pools: dict[str, Dice], outcomes: dict[str, slice]) -> dict[str, dict[str,float]]:
     """Evluate the probabilities of a range of values in various dicepool."""
-    return {pool:{outcome:sum(die[index]) for outcome, index in outcomes.items()} for pool,die in pools.items()}
+    return {pool: {outcome: sum(die[index]) for outcome, index in outcomes.items()} for pool, die in pools.items()}
