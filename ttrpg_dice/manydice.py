@@ -82,6 +82,11 @@ class LazyRollTable:
         return newline.join([description, "", table_header, *table_lines[1:]])
 
 
-def evaluatepools(pools: dict[str, Dice], outcomes: dict[str, slice]) -> dict[str, dict[str,float]]:
-    """Evluate the probabilities of a range of values in various dicepool."""
-    return {pool: {outcome: sum(die[index]) for outcome, index in outcomes.items()} for pool, die in pools.items()}
+class PoolComparison:
+    """Comparison of related dicepools."""
+
+    def __init__(self, pools: dict[str, Dice], outcomes: dict[str, slice]) ->None:
+        """Create comparison based on dict of named pools and dict of named outcomes."""
+        self._probabilities = {
+            pool: {outcome: sum(die[index]) for outcome, index in outcomes.items()} for pool, die in pools.items()
+        }
