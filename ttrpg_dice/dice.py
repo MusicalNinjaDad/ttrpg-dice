@@ -23,7 +23,14 @@ class Dice:
         
     @property
     def _probabilities(self) -> list[float | None]:
-        """List of P(result) where result is index of list. P(0) = `None`."""
+        """
+        Use Dice[index] to get the probability(-ies) of a given (set of) roll(s) NOT _probabilities.
+        
+        If for some reason you MUST access the underlying probabilities list use this property and not
+        Dice._probabilitycache which is created lazily on the first call to this method.
+        
+        Returns a list of P(result) with _probabilities[0] = `None`.
+        """
         try:
             return self._probabilitycache # pytype: disable=attribute-error
         except AttributeError:
