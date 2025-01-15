@@ -263,4 +263,4 @@ def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
     [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests if tc.probabilities is not None],
 )
 def test_first_probability(dietype, probabilities):
-    assert isclose(dietype[1], probabilities[1])
+    assert isclose(dietype[1], probabilities[0])

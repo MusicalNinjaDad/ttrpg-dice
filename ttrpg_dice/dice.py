@@ -52,7 +52,7 @@ class Dice:
     
     def __getitem__(self, index: int) -> float | None:
         """Get the probability of a specific result."""
-        return self.probabilities[index+1]
+        return self.probabilities[index]
     
     def __eq__(self, value: object) -> bool:
         """Dice are equal if they give the same probabilities."""
