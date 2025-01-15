@@ -82,7 +82,11 @@ class Dice:
             return self.probabilities == value.probabilities # pytype: disable=attribute-error
         except AttributeError:
             return False
-        
+
+    def __len__(self) -> int:
+        """Number of faces."""
+        return len(self.probabilities) - 1
+
     def __str__(self) -> str:
         """The type of Dice in NdX notation."""
         sortedcontents = deque(sorted(self.contents.items()))
@@ -167,4 +171,4 @@ class DiceIndexError(IndexError):
         Returns:
             str: The error message indicating the index is out of bounds.
         """
-        return f"Index out of bounds, this Dice has sides numbered 1 to {len(self.dice.probabilities) - 1}"
+        return f"Index out of bounds, this Dice has sides numbered 1 to {len(self.dice)}"

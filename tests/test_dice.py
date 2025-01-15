@@ -100,6 +100,7 @@ class DiceTest:
     contents: dict
     probabilities: list | None
     weighted: bool
+    faces: int
     id: str
 
 DiceTests = [
@@ -109,6 +110,7 @@ DiceTests = [
         contents={4: 1},
         probabilities=[0.25, 0.25, 0.25, 0.25],
         weighted=False,
+        faces=4,
         id="d4",
     ),
     DiceTest(
@@ -117,6 +119,7 @@ DiceTests = [
         contents={100: 1},
         probabilities=[0.01] * 100,
         weighted=False,
+        faces=100,
         id="d100",
     ),
     DiceTest(
@@ -125,6 +128,7 @@ DiceTests = [
         contents={4: 2},
         probabilities=[0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
         weighted=True,
+        faces=8,
         id="multiplication",
     ),
     DiceTest(
@@ -133,6 +137,7 @@ DiceTests = [
         contents={2: 1, 4: 1},
         probabilities=[0, 0.125, 0.25, 0.25, 0.25, 0.125],
         weighted=True,
+        faces=6,
         id="addition",
     ),
     DiceTest(
@@ -141,6 +146,7 @@ DiceTests = [
         contents={1: 2, 4: 1},
         probabilities=[0, 0, 0.25, 0.25, 0.25, 0.25],
         weighted=True,
+        faces=6,
         id="add constant",
     ),
     DiceTest(
@@ -149,6 +155,7 @@ DiceTests = [
         contents={1: 1, 4: 1},
         probabilities=[0, 0.25, 0.25, 0.25, 0.25],
         weighted=True,
+        faces=5,
         id="add 1",
     ),
     DiceTest(
@@ -168,6 +175,7 @@ DiceTests = [
             0.0416666666667,
         ],
         weighted=True,
+        faces=10,
         id="unsorted addition: two dice",
     ),
     DiceTest(
@@ -176,6 +184,7 @@ DiceTests = [
         contents={2: 2, 4: 1},
         probabilities=[0, 0, 0.0625, 0.1875, 0.25, 0.25, 0.1875, 0.0625],
         weighted=True,
+        faces=8,
         id="addition: complex dice",
     ),
     DiceTest(
@@ -196,6 +205,7 @@ DiceTests = [
             0.0277777777778,
         ],
         weighted=True,
+        faces=11,
         id="combined arithmetic",
     ),
     DiceTest(
@@ -229,6 +239,7 @@ DiceTests = [
             0.001953125,
         ],
         weighted=True,
+        faces=24,
         id="add similar dice",
     ),
 ]
@@ -279,6 +290,14 @@ def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
 )
 def test_first_probability(dietype, probabilities):
     assert isclose(dietype[1], probabilities[0])
+
+@pytest.mark.parametrize(
+    ["dietype", "faces"],
+    [pytest.param(tc.dice, tc.faces, id=tc.id) for tc in DiceTests],
+)
+def test_faces(dietype: d, faces: int):
+    assert len(dietype) == faces
+
 
 @dataclass
 class SliceTest:
