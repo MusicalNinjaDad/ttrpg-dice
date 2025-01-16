@@ -16,7 +16,9 @@
         "Natural Language :: English",
     ]
     dependencies = [
-        "typing-extensions; python_version < '3.11'"
+        "tabulate2",
+        
+        "typing-extensions; python_version < '3.11'",
     ]
 
 [project.urls]

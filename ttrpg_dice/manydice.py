@@ -95,21 +95,35 @@ class PoolComparison:
     def __init__(self, pools: dict[str, Dice] | Iterable[Dice], outcomes: dict[str, slice]) -> None:
         """Create comparison based on dict of named pools and dict of named outcomes."""
         try:
-            # pylint: disable=attribute-error
-            self.pools: dict[str, dict[str, float]] = {
-                pool: {outcome: sum(die[index]) for outcome, index in outcomes.items()} for pool, die in pools.items()
+            # pytype: disable=attribute-error
+            self.pools = {
+                pool: {
+                    outcome: sum(die[index])
+                    for outcome, index in outcomes.items()
+                }
+                for pool, die in pools.items()
             }
-            self.outcomes: dict[str, dict[str, float]] = {
-                outcome: {pool: self.pools[pool][outcome] for pool in pools}
+            self.outcomes = {
+                outcome: {
+                    pool: self.pools[pool][outcome]
+                    for pool in pools
+                }
                 for outcome in outcomes
             }
-            # pylint: enable=attribute-error
+            # pytype: enable=attribute-error
         except AttributeError:
-            self.pools: dict[str, dict[str, float]] = {
-                die: {outcome: sum(die[index]) for outcome, index in outcomes.items()} for die in pools
+            self.pools = {
+                die: {
+                    outcome: sum(die[index])
+                    for outcome, index in outcomes.items()
+                }
+                for die in pools
             }
-            self.outcomes: dict[str, dict[str, float]] = {
-                outcome: {die: self.pools[die][outcome] for die in pools}
+            self.outcomes = {
+                outcome: {
+                    die: self.pools[die][outcome]
+                    for die in pools
+                }
                 for outcome in outcomes
             }
 
