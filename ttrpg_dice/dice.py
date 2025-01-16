@@ -84,11 +84,16 @@ class Dice:
             raise DiceIndexError(self, index) from e
 
     def __eq__(self, value: object) -> bool:
-        """Dice are equal if they give the same probabilities."""
+        """Dice are equal if they give the same probabilities, even with different contents."""
         try:
             return self._probabilities == value._probabilities # pytype: disable=attribute-error
         except AttributeError:
             return False
+
+    def __hash__(self) -> int:
+        """Use contents for hashing - but NOT equality."""
+        contents = tuple(sorted([(d,n) for d,n in self.contents.items()]))
+        return hash(contents)
 
     def __len__(self) -> int:
         """Number of faces."""

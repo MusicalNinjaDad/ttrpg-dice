@@ -15,6 +15,7 @@ class DiceTest:
     dice: d
     description: str
     contents: dict
+    hashed: int
     probabilities: list | None
     weighted: bool
     faces: int
@@ -26,6 +27,7 @@ DiceTests = [
         dice=d(4),
         description="d4",
         contents={4: 1},
+        hashed=hash(((4,1),)),
         probabilities=[0.25, 0.25, 0.25, 0.25],
         weighted=False,
         faces=4,
@@ -35,6 +37,7 @@ DiceTests = [
         dice=d(100),
         description="d100",
         contents={100: 1},
+        hashed = hash(((100,1),)),
         probabilities=[0.01] * 100,
         weighted=False,
         faces=100,
@@ -44,6 +47,7 @@ DiceTests = [
         dice=2 * d(4),
         description="2d4",
         contents={4: 2},
+        hashed=hash(((4,2),)),
         probabilities=[0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
         weighted=True,
         faces=8,
@@ -53,6 +57,7 @@ DiceTests = [
         dice=d(2) + d(4),
         description="d2 + d4",
         contents={2: 1, 4: 1},
+        hashed=hash(((2,1),(4,1))),
         probabilities=[0, 0.125, 0.25, 0.25, 0.25, 0.125],
         weighted=True,
         faces=6,
@@ -62,6 +67,7 @@ DiceTests = [
         dice=d(4) + 2,
         description="d4 + 2",
         contents={1: 2, 4: 1},
+        hashed=hash(((1,2),(4,1))),
         probabilities=[0, 0, 0.25, 0.25, 0.25, 0.25],
         weighted=True,
         faces=6,
@@ -71,6 +77,7 @@ DiceTests = [
         dice=d(4) + 1,
         description="d4 + 1",
         contents={1: 1, 4: 1},
+        hashed=hash(((1,1),(4,1))),
         probabilities=[0, 0.25, 0.25, 0.25, 0.25],
         weighted=True,
         faces=5,
@@ -80,6 +87,7 @@ DiceTests = [
         dice=d(6) + d(4),
         description="d4 + d6",
         contents={4: 1, 6: 1},
+        hashed=hash(((4,1),(6,1))),
         probabilities=[
             0,
             0.0416666666667,
@@ -100,6 +108,7 @@ DiceTests = [
         dice=(2 * d(2)) + d(4),
         description="2d2 + d4",
         contents={2: 2, 4: 1},
+        hashed=hash(((2,2),(4,1))),
         probabilities=[0, 0, 0.0625, 0.1875, 0.25, 0.25, 0.1875, 0.0625],
         weighted=True,
         faces=8,
@@ -109,6 +118,7 @@ DiceTests = [
         dice=d(4) + (2 * d(3)) + 1,
         description="2d3 + d4 + 1",
         contents={1: 1, 3: 2, 4: 1},
+        hashed=hash(((1,1),(3,2),(4,1))),
         probabilities=[
             0,
             0,
@@ -130,6 +140,7 @@ DiceTests = [
         dice=d(8) + (2 * d(8)),
         description="3d8",
         contents={8: 3},
+        hashed=hash(((8,3),)),
         probabilities=[
             0,
             0,
@@ -192,6 +203,12 @@ def test_str(dietype, description):
 def test_contents(dietype, contents):
     assert dietype.contents == contents
 
+@pytest.mark.parametrize(
+    ["dietype", "hashed"],
+    [pytest.param(tc.dice, tc.hashed, id=tc.id) for tc in DiceTests],
+)
+def test_hash(dietype, hashed):
+    assert hash(dietype) == hashed
 
 @pytest.mark.parametrize(
     ["dietype", "contents"],
@@ -405,3 +422,9 @@ def test_cannot_change_probabilities():
 def test_unpackcontents():
     die = d.from_contents({2: 1, 4: 2, 1: 3})
     assert list(die._unpackcontents()) == [[1, 2], [1, 2, 3, 4], [1, 2, 3, 4], [1], [1], [1]]  # noqa: SLF001
+
+
+# TO-DO 
+# - add hash tests for edge cases including defaultdict adding extra entries,
+# - make contents immutable (how? not just the container but also the contents of contents).
+# - Or raise an error on hashing if contents changed vs previously cached tuple of tuples?
