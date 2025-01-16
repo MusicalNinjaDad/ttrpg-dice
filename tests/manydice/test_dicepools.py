@@ -99,5 +99,19 @@ d6 + 2      33.33     33.33     33.33
 d8          50.00     25.00     25.00\
 """
 
-def test_format(named_pools_comparison: PoolComparison):
+def test_format_named(named_pools_comparison: PoolComparison):
     assert str(named_pools_comparison) == formatted
+
+formatted = """\
+pool      under 4    5 or 6    over 6
+2d4         37.50     43.75     18.75
+d6 + 2      33.33     33.33     33.33
+d8          50.00     25.00     25.00\
+"""
+
+def test_format_unnamed(unnamed_pools_comparison: PoolComparison):
+    assert str(unnamed_pools_comparison) == formatted
+
+# TO-DO
+#
+# Revamp the test cases to give pools names which are not same as Dice
