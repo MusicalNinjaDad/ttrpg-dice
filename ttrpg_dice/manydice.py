@@ -2,6 +2,8 @@
 
 from math import comb
 
+from tabulate2 import tabulate
+
 from .dice import Dice
 
 
@@ -90,3 +92,13 @@ class PoolComparison:
         self.pools: dict[str, dict[str, float]] = {
             pool: {outcome: sum(die[index]) for outcome, index in outcomes.items()} for pool, die in pools.items()
         }
+        self.outcomes: dict[str, dict[str, float]] = {
+            outcome: {pool: self.pools[pool][outcome] for pool in pools}
+            for outcome in outcomes
+        }
+
+    def __str__(self) -> str:
+        """Nicely formatted table."""
+        data = [[pool] + [chance * 100 for chance in outcomes.values()] for pool, outcomes in self.pools.items()]
+        headers = ["pool", *self.outcomes]
+        return tabulate(data, headers=headers, tablefmt="plain", floatfmt=".2f")
