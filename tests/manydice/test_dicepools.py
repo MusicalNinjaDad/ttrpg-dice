@@ -64,22 +64,33 @@ chances_transposed = {
 }
 
 @pytest.fixture
-def comparison() -> PoolComparison:
+def named_pools_comparison() -> PoolComparison:
     return PoolComparison(pools, outcomes)
+
+@pytest.fixture
+def unnamed_pools_comparison() -> PoolComparison:
+    return PoolComparison(pools.values(), outcomes)
 
 @pytest.mark.parametrize(
     "pool",
     [pytest.param(pool) for pool in pools],
 )
-def test_pools(pool, comparison: PoolComparison):
-    assert comparison.pools[pool] == pytest.approx(chances[pool])
+def test_named_pools(pool, named_pools_comparison: PoolComparison):
+    assert named_pools_comparison.pools[pool] == pytest.approx(chances[pool])
+
+@pytest.mark.parametrize(
+    "die",
+    [pytest.param(die, id=testid) for testid, die in pools.items()],
+)
+def test_unnamed_pools(die, unnamed_pools_comparison: PoolComparison):
+    assert unnamed_pools_comparison.pools[die] == pytest.approx(chances[str(die)])
 
 @pytest.mark.parametrize(
     "outcome",
     [pytest.param(outcome) for outcome in outcomes],
 )
-def test_outcomes(outcome, comparison: PoolComparison):
-    assert comparison.outcomes[outcome] == pytest.approx(chances_transposed[outcome])
+def test_outcomes(outcome, named_pools_comparison: PoolComparison):
+    assert named_pools_comparison.outcomes[outcome] == pytest.approx(chances_transposed[outcome])
 
 formatted = """\
 pool      under 4    5 or 6    over 6
@@ -88,5 +99,5 @@ d6 + 2      33.33     33.33     33.33
 d8          50.00     25.00     25.00\
 """
 
-def test_format(comparison: PoolComparison):
-    assert str(comparison) == formatted
+def test_format(named_pools_comparison: PoolComparison):
+    assert str(named_pools_comparison) == formatted
