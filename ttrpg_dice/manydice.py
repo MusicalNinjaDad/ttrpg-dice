@@ -96,32 +96,32 @@ class PoolComparison:
         """Create comparison based on dict of named pools and dict of named outcomes."""
         try:
             # pytype: disable=attribute-error
-            self.pools = {
+            self.chances_bypool = {
                 pool: {
                     outcome: sum(die[index])
                     for outcome, index in outcomes.items()
                 }
                 for pool, die in pools.items()
             }
-            self.outcomes = {
+            self.chances_byoutcome = {
                 outcome: {
-                    pool: self.pools[pool][outcome]
+                    pool: self.chances_bypool[pool][outcome]
                     for pool in pools
                 }
                 for outcome in outcomes
             }
             # pytype: enable=attribute-error
         except AttributeError:
-            self.pools = {
+            self.chances_bypool = {
                 die: {
                     outcome: sum(die[index])
                     for outcome, index in outcomes.items()
                 }
                 for die in pools
             }
-            self.outcomes = {
+            self.chances_byoutcome = {
                 outcome: {
-                    die: self.pools[die][outcome]
+                    die: self.chances_bypool[die][outcome]
                     for die in pools
                 }
                 for outcome in outcomes
@@ -129,6 +129,8 @@ class PoolComparison:
 
     def __str__(self) -> str:
         """Nicely formatted table."""
-        data = [[pool] + [chance * 100 for chance in outcomes.values()] for pool, outcomes in self.pools.items()]
-        headers = ["pool", *self.outcomes]
+        data = [
+            [pool] + [chance * 100 for chance in outcomes.values()] for pool, outcomes in self.chances_bypool.items()
+        ]
+        headers = ["pool", *self.chances_byoutcome]
         return tabulate(data, headers=headers, tablefmt="plain", floatfmt=".2f")

@@ -15,13 +15,13 @@ from ttrpg_dice.manydice import PoolComparison
 # output [range on POOL between 5 and 6]
 # output [range on POOL between 7 and 8]
 
-pools = {
+namedpools = {
     "2d4": 2*d(4),
     "d6 + 2": d(6)+2,
     "d8": d(8),
 }
 
-outcomes = {
+namedoutcomes = {
     "under 4": slice(None, 5),
     "5 or 6": slice(5,7),
     "over 6": slice(7,None),
@@ -65,32 +65,39 @@ chances_transposed = {
 
 @pytest.fixture
 def named_pools_comparison() -> PoolComparison:
-    return PoolComparison(pools, outcomes)
+    return PoolComparison(namedpools, namedoutcomes)
 
 @pytest.fixture
 def unnamed_pools_comparison() -> PoolComparison:
-    return PoolComparison(pools.values(), outcomes)
+    return PoolComparison(namedpools.values(), namedoutcomes)
+
+# ==== New API =======
+
+
+
+
+# ==== Old API =======
 
 @pytest.mark.parametrize(
     "pool",
-    [pytest.param(pool) for pool in pools],
+    [pytest.param(pool) for pool in namedpools],
 )
 def test_named_pools(pool, named_pools_comparison: PoolComparison):
-    assert named_pools_comparison.pools[pool] == pytest.approx(chances[pool])
+    assert named_pools_comparison.chances_bypool[pool] == pytest.approx(chances[pool])
 
 @pytest.mark.parametrize(
     "die",
-    [pytest.param(die, id=testid) for testid, die in pools.items()],
+    [pytest.param(die, id=testid) for testid, die in namedpools.items()],
 )
 def test_unnamed_pools(die, unnamed_pools_comparison: PoolComparison):
-    assert unnamed_pools_comparison.pools[die] == pytest.approx(chances[str(die)])
+    assert unnamed_pools_comparison.chances_bypool[die] == pytest.approx(chances[str(die)])
 
 @pytest.mark.parametrize(
     "outcome",
-    [pytest.param(outcome) for outcome in outcomes],
+    [pytest.param(outcome) for outcome in namedoutcomes],
 )
 def test_outcomes(outcome, named_pools_comparison: PoolComparison):
-    assert named_pools_comparison.outcomes[outcome] == pytest.approx(chances_transposed[outcome])
+    assert named_pools_comparison.chances_byoutcome[outcome] == pytest.approx(chances_transposed[outcome])
 
 formatted = """\
 pool      under 4    5 or 6    over 6
