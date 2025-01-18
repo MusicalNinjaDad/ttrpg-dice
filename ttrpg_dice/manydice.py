@@ -100,38 +100,6 @@ class PoolComparison:
         else:
             self.pools = {pool: pool for pool in pools}
         self.outcomes = outcomes
-        try:
-            # pytype: disable=attribute-error
-            self.chances_bypool = {
-                pool: {
-                    outcome: sum(die[index])
-                    for outcome, index in outcomes.items()
-                }
-                for pool, die in pools.items()
-            }
-            self.chances_byoutcome = {
-                outcome: {
-                    pool: self.chances_bypool[pool][outcome]
-                    for pool in pools
-                }
-                for outcome in outcomes
-            }
-            # pytype: enable=attribute-error
-        except AttributeError:
-            self.chances_bypool = {
-                die: {
-                    outcome: sum(die[index])
-                    for outcome, index in outcomes.items()
-                }
-                for die in pools
-            }
-            self.chances_byoutcome = {
-                outcome: {
-                    die: self.chances_bypool[die][outcome]
-                    for die in pools
-                }
-                for outcome in outcomes
-            }
 
     def __str__(self) -> str:
         """Nicely formatted table."""
@@ -140,3 +108,26 @@ class PoolComparison:
         ]
         headers = ["pool", *self.chances_byoutcome]
         return tabulate(data, headers=headers, tablefmt="plain", floatfmt=".2f")
+    
+    @property
+    def chances_bypool(self) -> dict[str | Dice, dict[str, float]]:
+        """Chance of each outcome indexed by [pool][outcome]."""
+        return {
+                pool: {
+                    outcome: sum(die[index])
+                    for outcome, index in self.outcomes.items()
+                }
+                for pool, die in self.pools.items()
+            }
+    
+    @property
+    def chances_byoutcome(self) -> dict[str, dict[str | Dice, float]]:
+        """Chance of each outcome indexed by [outcome][pool]."""
+        return {
+                outcome: {
+                    pool: self.chances_bypool[pool][outcome]
+                    for pool in self.pools
+                }
+                for outcome in self.outcomes
+            }
+            
