@@ -21,6 +21,9 @@ namedpools = {
     "d8": d(8),
 }
 
+unnamedpools = [2*d(4), d(6)+2, d(8)]
+unnamedpools_set = {2*d(4), d(6)+2, d(8)}
+
 namedoutcomes = {
     "under 4": slice(None, 5),
     "5 or 6": slice(5,7),
@@ -73,9 +76,16 @@ def unnamed_pools_comparison() -> PoolComparison:
 
 # ==== New API =======
 
-def test_instatiation():
-    comparison = PoolComparison(namedpools, namedoutcomes)
-    assert comparison.pools == namedpools
+@pytest.mark.parametrize(
+    ["inputpool", "storedpool"],
+    [
+        pytest.param(namedpools, namedpools, id="named pools"),
+        pytest.param(unnamedpools, unnamedpools_set, id="unnamend pools"),
+    ],
+)
+def test_instatiation(inputpool, storedpool):
+    comparison = PoolComparison(inputpool, namedoutcomes)
+    assert comparison.pools == storedpool
     assert comparison.outcomes == namedoutcomes
 
 # ==== Old API =======
