@@ -94,6 +94,8 @@ class PoolComparison:
 
     def __init__(self, pools: dict[str, Dice] | Iterable[Dice], outcomes: dict[str, slice]) -> None:
         """Create comparison based on dict of named pools and dict of named outcomes."""
+        self.pools = pools
+        self.outcomes = outcomes
         try:
             # pytype: disable=attribute-error
             self.chances_bypool = {

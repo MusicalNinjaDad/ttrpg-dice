@@ -73,8 +73,10 @@ def unnamed_pools_comparison() -> PoolComparison:
 
 # ==== New API =======
 
-
-
+def test_instatiation():
+    comparison = PoolComparison(namedpools, namedoutcomes)
+    assert comparison.pools == namedpools
+    assert comparison.outcomes == namedoutcomes
 
 # ==== Old API =======
 
