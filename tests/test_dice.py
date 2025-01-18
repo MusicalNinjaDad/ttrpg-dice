@@ -14,6 +14,7 @@ from ttrpg_dice import Dice as d  # noqa: N813
 class DiceTest:
     dice: d
     description: str
+    repr_: str
     contents: dict
     hashed: int
     probabilities: list | None
@@ -22,10 +23,12 @@ class DiceTest:
     id: str
 
 
+
 DiceTests = [
     DiceTest(
         dice=d(4),
         description="d4",
+        repr_="Dice: d4 ({4: 1})",
         contents={4: 1},
         hashed=hash(((4,1),)),
         probabilities=[0.25, 0.25, 0.25, 0.25],
@@ -36,6 +39,7 @@ DiceTests = [
     DiceTest(
         dice=d(100),
         description="d100",
+        repr_="Dice: d100 ({100: 1})",
         contents={100: 1},
         hashed = hash(((100,1),)),
         probabilities=[0.01] * 100,
@@ -46,6 +50,7 @@ DiceTests = [
     DiceTest(
         dice=2 * d(4),
         description="2d4",
+        repr_="Dice: 2d4 ({4: 2})",
         contents={4: 2},
         hashed=hash(((4,2),)),
         probabilities=[0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
@@ -56,6 +61,7 @@ DiceTests = [
     DiceTest(
         dice=d(2) + d(4),
         description="d2 + d4",
+        repr_="Dice: d2 + d4 ({2: 1, 4: 1})",
         contents={2: 1, 4: 1},
         hashed=hash(((2,1),(4,1))),
         probabilities=[0, 0.125, 0.25, 0.25, 0.25, 0.125],
@@ -66,6 +72,7 @@ DiceTests = [
     DiceTest(
         dice=d(4) + 2,
         description="d4 + 2",
+        repr_="Dice: d4 + 2 ({1: 2, 4: 1})",
         contents={1: 2, 4: 1},
         hashed=hash(((1,2),(4,1))),
         probabilities=[0, 0, 0.25, 0.25, 0.25, 0.25],
@@ -76,6 +83,7 @@ DiceTests = [
     DiceTest(
         dice=d(4) + 1,
         description="d4 + 1",
+        repr_="Dice: d4 + 1 ({1: 1, 4: 1})",
         contents={1: 1, 4: 1},
         hashed=hash(((1,1),(4,1))),
         probabilities=[0, 0.25, 0.25, 0.25, 0.25],
@@ -86,6 +94,7 @@ DiceTests = [
     DiceTest(
         dice=d(6) + d(4),
         description="d4 + d6",
+        repr_="Dice: d4 + d6 ({4: 1, 6: 1})",
         contents={4: 1, 6: 1},
         hashed=hash(((4,1),(6,1))),
         probabilities=[
@@ -107,6 +116,7 @@ DiceTests = [
     DiceTest(
         dice=(2 * d(2)) + d(4),
         description="2d2 + d4",
+        repr_="Dice: 2d2 + d4 ({2: 2, 4: 1})",
         contents={2: 2, 4: 1},
         hashed=hash(((2,2),(4,1))),
         probabilities=[0, 0, 0.0625, 0.1875, 0.25, 0.25, 0.1875, 0.0625],
@@ -117,6 +127,7 @@ DiceTests = [
     DiceTest(
         dice=d(4) + (2 * d(3)) + 1,
         description="2d3 + d4 + 1",
+        repr_="Dice: 2d3 + d4 + 1 ({1: 1, 3: 2, 4: 1})",
         contents={1: 1, 3: 2, 4: 1},
         hashed=hash(((1,1),(3,2),(4,1))),
         probabilities=[
@@ -139,6 +150,7 @@ DiceTests = [
     DiceTest(
         dice=d(8) + (2 * d(8)),
         description="3d8",
+        repr_="Dice: 3d8 ({8: 3})",
         contents={8: 3},
         hashed=hash(((8,3),)),
         probabilities=[
@@ -194,6 +206,13 @@ def test_probabilities(dietype, probabilities):
 )
 def test_str(dietype, description):
     assert str(dietype) == description
+
+@pytest.mark.parametrize(
+    ["dietype", "repr_"],
+    [pytest.param(tc.dice, tc.repr_, id=tc.id) for tc in DiceTests],
+)
+def test_repr(dietype, repr_):
+    assert repr(dietype) == repr_
 
 
 @pytest.mark.parametrize(

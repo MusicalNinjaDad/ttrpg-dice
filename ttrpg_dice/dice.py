@@ -105,6 +105,11 @@ class Dice:
         if sortedcontents[0][0] == 1: sortedcontents.rotate(-1)
         return " + ".join(f"{n if n > 1 or x == 1 else ''}d{x if x > 1 else ''}" for x, n in sortedcontents).rstrip("d")
 
+    def __repr__(self) -> str:
+        """Classname: ndX (contents)."""
+        contents = ", ".join([f"{d}: {n}" for d, n in self.contents.items()])
+        return f"{type(self).__name__}: {self} ({{{contents}}})"
+
     # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
     # pytype: disable=invalid-annotation
     def __rmul__(self, other: SupportsInt) -> Self:
