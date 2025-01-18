@@ -22,7 +22,7 @@ namedpools = {
 }
 
 unnamedpools = [2*d(4), d(6)+2, d(8)]
-unnamedpools_set = {2*d(4), d(6)+2, d(8)}
+unnamedpools_dict = {2*d(4): 2*d(4), d(6)+2: d(6)+2, d(8): d(8)}
 
 namedoutcomes = {
     "under 4": slice(None, 5),
@@ -80,7 +80,7 @@ def unnamed_pools_comparison() -> PoolComparison:
     ["inputpool", "storedpool"],
     [
         pytest.param(namedpools, namedpools, id="named pools"),
-        pytest.param(unnamedpools, unnamedpools_set, id="unnamend pools"),
+        pytest.param(unnamedpools, unnamedpools_dict, id="unnamend pools"),
     ],
 )
 def test_instatiation(inputpool, storedpool):

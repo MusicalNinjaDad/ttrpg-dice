@@ -98,7 +98,7 @@ class PoolComparison:
         if isinstance(pools, Mapping):
             self.pools = pools
         else:
-            self.pools = set(pools)
+            self.pools = {pool: pool for pool in pools}
         self.outcomes = outcomes
         try:
             # pytype: disable=attribute-error
