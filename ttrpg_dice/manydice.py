@@ -100,6 +100,9 @@ class PoolComparison:
         else:
             self.pools = {pool: pool for pool in pools}
         self.outcomes = outcomes
+        self.chances = {
+            (pool, outcome): sum(die[index]) for pool, die in pools.items() for outcome, index in outcomes.items()
+        }
 
     def __str__(self) -> str:
         """Nicely formatted table."""

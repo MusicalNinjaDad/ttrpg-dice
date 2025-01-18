@@ -31,6 +31,18 @@ namedoutcomes = {
 }
 
 chances = {
+    ("2d4", "under 4"): 0.375,
+    ("2d4", "5 or 6"): 0.4375,
+    ("2d4", "over 6"): 0.1875,
+    ("d6 + 2", "under 4"): 0.33333333333,
+    ("d6 + 2", "5 or 6"): 0.33333333333,
+    ("d6 + 2", "over 6"): 0.33333333333,
+    ("d8", "under 4"): 0.5,
+    ("d8", "5 or 6"): 0.25,
+    ("d8", "over 6"): 0.25,
+}
+
+chances_bypool = {
     "2d4": {
         "under 4": 0.375,
         "5 or 6": 0.4375,
@@ -48,7 +60,7 @@ chances = {
     },
 }
 
-chances_transposed = {
+chances_byoutcome = {
     "under 4": {
         "2d4": 0.375,
         "d6 + 2": 0.33333333333,
@@ -88,6 +100,18 @@ def test_instatiation(inputpool, storedpool):
     assert comparison.pools == storedpool
     assert comparison.outcomes == namedoutcomes
 
+
+def test_chances_no_extra_entries(named_pools_comparison):
+    assert named_pools_comparison.chances.keys() == chances.keys()
+
+
+@pytest.mark.parametrize(
+    ["combo", "chance"],
+    [pytest.param(combo, chance) for combo, chance in chances.items()],
+)
+def test_chances(named_pools_comparison, combo, chance):
+    assert named_pools_comparison.chances[combo] == pytest.approx(chance)
+
 # ==== Old API =======
 
 @pytest.mark.parametrize(
@@ -95,21 +119,21 @@ def test_instatiation(inputpool, storedpool):
     [pytest.param(pool) for pool in namedpools],
 )
 def test_named_pools(pool, named_pools_comparison: PoolComparison):
-    assert named_pools_comparison.chances_bypool[pool] == pytest.approx(chances[pool])
+    assert named_pools_comparison.chances_bypool[pool] == pytest.approx(chances_bypool[pool])
 
 @pytest.mark.parametrize(
     "die",
     [pytest.param(die, id=testid) for testid, die in namedpools.items()],
 )
 def test_unnamed_pools(die, unnamed_pools_comparison: PoolComparison):
-    assert unnamed_pools_comparison.chances_bypool[die] == pytest.approx(chances[str(die)])
+    assert unnamed_pools_comparison.chances_bypool[die] == pytest.approx(chances_bypool[str(die)])
 
 @pytest.mark.parametrize(
     "outcome",
     [pytest.param(outcome) for outcome in namedoutcomes],
 )
 def test_outcomes(outcome, named_pools_comparison: PoolComparison):
-    assert named_pools_comparison.chances_byoutcome[outcome] == pytest.approx(chances_transposed[outcome])
+    assert named_pools_comparison.chances_byoutcome[outcome] == pytest.approx(chances_byoutcome[outcome])
 
 formatted = """\
 pool      under 4    5 or 6    over 6
