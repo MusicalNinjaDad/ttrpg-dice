@@ -16,6 +16,7 @@
         "Natural Language :: English",
     ]
     dependencies = [
+        "matplotlib",
         "tabulate2",
         
         "typing-extensions; python_version < '3.11'",
@@ -69,7 +70,6 @@
     dev = [
         "ttrpg-dice[lint,typing,test,cov,doc]",
         "jupyter",
-        "matplotlib",
     ]
 
 [tool.pytest.ini_options]
