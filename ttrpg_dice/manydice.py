@@ -141,5 +141,4 @@ class PoolComparison:
     
     def plot(self) -> Axes3D:
         """Plot as a 3d Bar with matplotlib and return the Axes."""
-        fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-        return ax
+        return plt.subplots(subplot_kw={"projection": "3d"})
