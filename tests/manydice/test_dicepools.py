@@ -112,9 +112,14 @@ def test_chances_no_extra_entries(named_pools_comparison):
 def test_chances(named_pools_comparison, combo, chance):
     assert named_pools_comparison.chances[combo] == pytest.approx(chance)
 
-def test_plot(named_pools_comparison: PoolComparison):
+def test_plot_poollabels(named_pools_comparison: PoolComparison):
     fig, ax = named_pools_comparison.plot()
     assert [label.get_text() for label in ax.get_ymajorticklabels()] == ["2d4","d6 + 2","d8"]
+    assert list(ax.get_yticks()) == [0.5,1.5,2.5]
+
+def test_plot_outcomelabels(named_pools_comparison: PoolComparison):
+    fig, ax = named_pools_comparison.plot()
+    assert [label.get_text() for label in ax.get_xmajorticklabels()] == ["under 4", "5 or 6", "over 6"]
     assert list(ax.get_yticks()) == [0.5,1.5,2.5]
 
 # ==== Old API =======
