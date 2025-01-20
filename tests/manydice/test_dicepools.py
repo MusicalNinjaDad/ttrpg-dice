@@ -1,5 +1,3 @@
-import matplotlib as mpl
-import mpl_toolkits
 import pytest  # noqa: F401, RUF100
 
 from ttrpg_dice import Dice as d  # noqa: N813
