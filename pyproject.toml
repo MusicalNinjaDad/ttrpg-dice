@@ -70,7 +70,6 @@
         "ttrpg-dice[lint,typing,test,cov,doc]",
         "jupyter",
         "matplotlib",
-        "pyvista",
     ]
 
 [tool.pytest.ini_options]
