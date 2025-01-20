@@ -5,10 +5,13 @@ from collections.abc import Mapping
 from math import comb
 from typing import TYPE_CHECKING
 
+from matplotlib import pyplot as plt
 from tabulate2 import tabulate
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+    from mpl_toolkits.mplot3d.axes3d import Axes3D
 
     from .dice import Dice
 
@@ -135,4 +138,8 @@ class PoolComparison:
                 }
                 for outcome in self.outcomes
             }
-            
+    
+    def plot(self) -> Axes3D:
+        """Plot as a 3d Bar with matplotlib and return the Axes."""
+        fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+        return ax
