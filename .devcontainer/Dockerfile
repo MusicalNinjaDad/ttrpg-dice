@@ -54,6 +54,12 @@ RUN dnf -y --setopt=install_weak_deps=False install \
     python3.12 \
     python3.12-devel
 
+# libX and openGL for PyVista
+RUN dnf -y --setopt=install_weak_deps=False install \
+    libX11-devel \
+    libXrender-devel \
+    mesa-libGL-devel
+    
 # ---
 # Final setup steps
 # ---
