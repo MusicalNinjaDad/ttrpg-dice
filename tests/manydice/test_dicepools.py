@@ -115,6 +115,7 @@ def test_chances(named_pools_comparison, combo, chance):
 def test_plot(named_pools_comparison: PoolComparison):
     fig, ax = named_pools_comparison.plot()
     assert [label.get_text() for label in ax.get_ymajorticklabels()] == ["2d4","d6 + 2","d8"]
+    assert list(ax.get_yticks()) == [0.5,1.5,2.5]
 
 # ==== Old API =======
 

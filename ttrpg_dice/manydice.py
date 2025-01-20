@@ -143,5 +143,5 @@ class PoolComparison:
     def plot(self) -> tuple[Figure, Axes3D]:
         """Plot as a 3d Bar with matplotlib and return the Axes."""
         fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-        ax.set_yticks(range(len(self.pools)), [f"{pool}" for pool in self.pools])
+        ax.set_yticks([y + 0.5 for y, _ in enumerate(self.pools)], [str(pool) for pool in self.pools])
         return fig, ax
