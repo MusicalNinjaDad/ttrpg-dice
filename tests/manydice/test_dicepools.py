@@ -116,8 +116,7 @@ def test_chances(named_pools_comparison, combo, chance):
 
 def test_plot(named_pools_comparison: PoolComparison):
     fig, ax = named_pools_comparison.plot()
-    assert isinstance(ax, mpl_toolkits.mplot3d.axes3d.Axes3D)
-    assert isinstance(fig, mpl.figure.Figure)
+    assert [label.get_text() for label in ax.get_ymajorticklabels()] == ["2d4","d6 + 2","d8"]
 
 # ==== Old API =======
 
