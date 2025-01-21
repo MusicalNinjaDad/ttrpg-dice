@@ -109,6 +109,7 @@ class PoolComparison:
             for pool, die in self.pools.items()
             for outcome, index in self.outcomes.items()
         }
+        """Dict of chances indexed by (pool, outcome)"""
 
     def __str__(self) -> str:
         """Nicely formatted table."""
@@ -149,5 +150,19 @@ class PoolComparison:
 
     def plotable(self) -> tuple:
         """Return bar location and sizes suitable for passing directly to matplotlib bar3d()."""
-        x = y = z = dx = dy = dz = None
-        return x, y, z, dx, dy, dz
+        x_locations = []
+        y_locations = []
+        z_locations = []
+        dx_widths = []
+        dy_widths = []
+        dz_heights = []
+        for x, outcome in enumerate(self.outcomes.keys()):
+            for y, pool in enumerate(self.pools.keys()):
+                x_locations.append(x)
+                y_locations.append(y)
+                z_locations.append(0)
+                dx_widths.append(1)
+                dy_widths.append(1)
+                dz_heights.append(self.chances[(pool,outcome)])
+                
+        return x_locations, y_locations, z_locations, dx_widths, dy_widths, dz_heights

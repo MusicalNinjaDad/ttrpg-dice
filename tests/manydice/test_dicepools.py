@@ -124,6 +124,15 @@ def test_plot_outcomelabels(named_pools_comparison: PoolComparison):
 
 def test_plotable_data(named_pools_comparison: PoolComparison):
     x,y,z,dx,dy,dz = named_pools_comparison.plotable()
+    assert x == [0,0,0,1,1,1,2,2,2] # Outcomes on x
+    assert y == [0,1,2] * 3 # Pools on y
+    assert z == [0] * 9
+    assert dx == [1] * 9
+    assert dy == [1] * 9
+    assert dz == pytest.approx(
+        [0.375, 0.33333333333, 0.5, 0.4375, 0.33333333333, 0.25, 0.1875, 0.33333333333, 0.25],
+    )  # Grouped by outcomes then pools
+
 
 # ==== Old API =======
 
