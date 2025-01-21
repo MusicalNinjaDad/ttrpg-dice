@@ -122,6 +122,9 @@ def test_plot_outcomelabels(named_pools_comparison: PoolComparison):
     assert [label.get_text() for label in ax.get_xmajorticklabels()] == ["under 4", "5 or 6", "over 6"]
     assert list(ax.get_yticks()) == [0.5,1.5,2.5]
 
+def test_plotable_data(named_pools_comparison: PoolComparison):
+    x,y,z,dx,dy,dz = named_pools_comparison.plotable()
+
 # ==== Old API =======
 
 @pytest.mark.parametrize(

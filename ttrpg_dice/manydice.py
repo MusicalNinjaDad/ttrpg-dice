@@ -146,3 +146,8 @@ class PoolComparison:
         ax.set_yticks([y + 0.5 for y, _ in enumerate(self.pools)], [str(pool) for pool in self.pools])
         ax.set_xticks([x + 0.5 for x, _ in enumerate(self.outcomes)], [str(outcome) for outcome in self.outcomes])
         return fig, ax
+
+    def plotable(self) -> tuple:
+        """Return bar location and sizes suitable for passing directly to matplotlib bar3d()."""
+        x = y = z = dx = dy = dz = None
+        return x, y, z, dx, dy, dz
