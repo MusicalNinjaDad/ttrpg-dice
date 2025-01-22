@@ -164,7 +164,9 @@ class PoolComparison:
                 dx_widths.append(1)
                 dy_widths.append(1)
                 dz_heights.append(self.chances[(pool,outcome)])
-                colours.extend(zip_longest(poolcolours[y % len(poolcolours)], alphas, fillvalue=poolcolours[y]))
+                colours.extend(
+                    zip_longest(poolcolours[y % len(poolcolours)], alphas, fillvalue=poolcolours[y % len(poolcolours)]),
+                )
 
         return {
             "x": x_locations,

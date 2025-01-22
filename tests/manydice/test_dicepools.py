@@ -24,14 +24,14 @@ from ttrpg_dice.manydice import PoolComparison
 @dataclass
 class PoolTestCase:
     pools: dict[Any, d] | list[d]
-    poolnames: list[str]
-    poolsdict: dict[Any, d]
     outcomes: dict[Any, slice]
-    outcomenames: list[str]
-    chances: dict[tuple[Any, Any], float]
-    table: str
-    plotabledata: dict[str, list]
-    plotformating: dict[str, Any]
+    poolnames: list[str] | None = None
+    poolsdict: dict[Any, d] | None = None
+    outcomenames: list[str] | None = None
+    chances: dict[tuple[Any, Any], float] | None = None
+    table: str | None = None
+    plotabledata: dict[str, list] | None = None
+    plotformating: dict[str, Any] | None = None
 
 
 # fmt: off
@@ -183,10 +183,86 @@ d8           50.00     25.00     25.00\
 )
 # fmt: on
 
+# fmt: off
+manypools = PoolTestCase(
+    pools=[d(4), d(6), d(8), d(10), d(12), d(20), d(100)],
+    outcomes={
+        "odds": slice(1, None, 2),
+        "evens": slice(2, None, 2),
+    },
+    poolnames=["d4", "d6", "d8", "d10", "d12", "d20", "d100"],
+    poolsdict={
+        "d4": d(4),
+        "d6": d(6),
+        "d8": d(8),
+        "d10": d(10),
+        "d12": d(12),
+        "d20": d(20),
+        "d100": d(100),
+    },
+    outcomenames=["odds", "evens"],
+    chances={
+        (d(4), "odds"): 0.5,
+        (d(4), "evens"): 0.5,
+        (d(6), "odds"): 0.5,
+        (d(6), "evens"): 0.5,
+        (d(8), "odds"): 0.5,
+        (d(8), "evens"): 0.5,
+        (d(10), "odds"): 0.5,
+        (d(10), "evens"): 0.5,
+        (d(12), "odds"): 0.5,
+        (d(12), "evens"): 0.5,
+        (d(20), "odds"): 0.5,
+        (d(20), "evens"): 0.5,
+        (d(100), "odds"): 0.5,
+        (d(100), "evens"): 0.5,
+    },
+    table="""\
+pool      odds    evens
+d4       50.00    50.00
+d6       50.00    50.00
+d8       50.00    50.00
+d10      50.00    50.00
+d12      50.00    50.00
+d20      50.00    50.00
+d100     50.00    50.00\
+""",
+    plotabledata={
+        "x": [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],  # Outcomes on x
+        "y": [0, 1, 2, 3, 4, 5, 6] * 2,  # Pools on y
+        "z": [0] * 14,
+        "dx": [1] * 14,
+        "dy": [1] * 14,
+        "dz": pytest.approx([0.5] * 14),  # Grouped by outcomes then pools
+        "color": [
+            ("b", 0), ("b", 1), ("b", 0), ("b", 0), ("b", 0.2), ("b", 0.2),  # d4, odds
+            ("g", 0), ("g", 1), ("g", 0), ("g", 0), ("g", 0.2), ("g", 0.2),  # d6, odds
+            ("r", 0), ("r", 1), ("r", 0), ("r", 0), ("r", 0.2), ("r", 0.2),  # d8, odds
+            ("c", 0), ("c", 1), ("c", 0), ("c", 0), ("c", 0.2), ("c", 0.2),  # d10, odds
+            ("m", 0), ("m", 1), ("m", 0), ("m", 0), ("m", 0.2), ("m", 0.2),  # d12, odds
+            ("y", 0), ("y", 1), ("y", 0), ("y", 0), ("y", 0.2), ("y", 0.2),  # d20, odds
+            ("b", 0), ("b", 1), ("b", 0), ("b", 0), ("b", 0.2), ("b", 0.2),  # 100, odds
+            ("b", 0), ("b", 1), ("b", 0), ("b", 0), ("b", 0.2), ("b", 0.2),  # d4, evens
+            ("g", 0), ("g", 1), ("g", 0), ("g", 0), ("g", 0.2), ("g", 0.2),  # d6, evens
+            ("r", 0), ("r", 1), ("r", 0), ("r", 0), ("r", 0.2), ("r", 0.2),  # d8, evens
+            ("c", 0), ("c", 1), ("c", 0), ("c", 0), ("c", 0.2), ("c", 0.2),  # d10, evens
+            ("m", 0), ("m", 1), ("m", 0), ("m", 0), ("m", 0.2), ("m", 0.2),  # d12, evens
+            ("y", 0), ("y", 1), ("y", 0), ("y", 0), ("y", 0.2), ("y", 0.2),  # d20, evens
+            ("b", 0), ("b", 1), ("b", 0), ("b", 0), ("b", 0.2), ("b", 0.2),  # 100, evens
+        ],
+    },
+    plotformating={
+        "xticks": [0.5, 1.5],  # Outcomes
+        "yticks": [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5],  # Pools
+    },
+)
+# fmt: on
+
 
 PoolTests = {
     "namedpools": namedpools,
     "unnamedpools": unnamedpools,
+    "more pools than colours": manypools,
 }
 
 @pytest.mark.parametrize(
