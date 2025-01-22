@@ -113,3 +113,11 @@ PoolTests = {
 def test_chances(pools, outcomes, chances):
     pool = PoolComparison(pools, outcomes)
     assert pool.chances == pytest.approx(chances)
+
+@pytest.mark.parametrize(
+    ["pools", "outcomes", "table"],
+    [pytest.param(test.pools, test.outcomes, test.table, id=testid) for testid, test in PoolTests.items()],
+)
+def test_table(pools, outcomes, table):
+    pool = PoolComparison(pools, outcomes)
+    assert str(pool) == table
