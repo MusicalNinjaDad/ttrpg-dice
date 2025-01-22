@@ -24,11 +24,14 @@ from ttrpg_dice.manydice import PoolComparison
 @dataclass
 class PoolTestCase:
     pools: dict[Any, d] | list[d]
+    poolnames: list[str]
     poolsdict: dict[Any, d]
     outcomes: dict[Any, slice]
+    outcomenames: list[str]
     chances: dict[tuple[Any, Any], float]
     table: str
     plotabledata: dict[str, list]
+    plotformating: dict[str, Any]
 
 
 # fmt: off
@@ -39,6 +42,7 @@ namedpools = PoolTestCase(
         "one dice plus": d(6)+2,
         "one dice": d(8),
     },
+    poolnames=["two dice plus", "two dice", "one dice plus", "one dice"],
     poolsdict={
         "two dice plus": (2*d(3)) + 2,
         "two dice": 2*d(4),
@@ -50,6 +54,7 @@ namedpools = PoolTestCase(
         "5 or 6": slice(5,7),
         "over 6": slice(7,None),
     },
+    outcomenames=["under 4", "5 or 6", "over 6"],
     chances = {
         ("two dice plus", "under 4"): 0.111111111111,
         ("two dice plus", "5 or 6"): 0.555555555556,
@@ -99,6 +104,10 @@ one dice           50.00     25.00     25.00\
             ("c", 0), ("c", 1), ("c", 0), ("c", 0), ("c", 0.2), ("c", 0.2), # one dice, over 6
         ],
     },
+    plotformating={
+        "xticks": [0.5, 1.5, 2.5], # Outcomes
+        "yticks": [0.5, 1.5, 2.5, 3.5], # Pools
+    },
 )
 # fmt: on
 
@@ -129,3 +138,26 @@ def test_table(pools, outcomes, table):
 def test_plotabledata(pools, outcomes, plotabledata):
     pool = PoolComparison(pools, outcomes)
     assert pool.plotable() == plotabledata
+
+@pytest.mark.parametrize(
+    ["pools", "outcomes", "poolnames", "outcomenames", "xticks", "yticks"],
+    [
+        pytest.param(
+            test.pools,
+            test.outcomes,
+            test.poolnames,
+            test.outcomenames,
+            test.plotformating["xticks"],
+            test.plotformating["yticks"],
+            id=testid,
+        )
+        for testid, test in PoolTests.items()
+    ],
+)
+def test_plot(pools, outcomes, poolnames, outcomenames, xticks, yticks):  # noqa: PLR0913
+    pool = PoolComparison(pools, outcomes)
+    fig, ax = pool.plot()
+    assert [label.get_text() for label in ax.get_xmajorticklabels()] == outcomenames
+    assert list(ax.get_xticks()) == xticks
+    assert [label.get_text() for label in ax.get_ymajorticklabels()] == poolnames
+    assert list(ax.get_yticks()) == yticks
