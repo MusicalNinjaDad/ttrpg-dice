@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from itertools import cycle, zip_longest
 from math import comb
 from typing import TYPE_CHECKING
 
@@ -141,9 +142,7 @@ class PoolComparison:
                 for outcome in self.outcomes
             }
     
-    def plot(self) -> tuple[Figure, Axes3D]:
-        """Plot as a 3d Bar with matplotlib and return the Axes."""
-        fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+    def _colourcycle(self) -> list[tuple[str,int]]:
         alphas = [
             0, # -Z
             1, # +Z (top)
@@ -151,10 +150,15 @@ class PoolComparison:
             0, # +Y
             0.2, # -X
             0.2, # +X
-        ] * len(self.chances)
-        basecolours = ["b"] * 6 * len(self.chances)
-        colours = list(zip(basecolours,alphas))
-        ax.bar3d(*self.plotable(), color=colours, shade=True)
+        ]
+        basecolours = "bgrcmy"
+        poolcolours = [list(zip_longest(colour, alphas, fillvalue=colour)) for colour in basecolours]
+        return [facecolour for poolcolour in poolcolours for facecolour in poolcolour]
+
+    def plot(self) -> tuple[Figure, Axes3D]:
+        """Plot as a 3d Bar with matplotlib and return the Axes."""
+        fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+        ax.bar3d(*self.plotable(), shade=True)
         ax.set_yticks([y + 0.5 for y, _ in enumerate(self.pools)], [str(pool) for pool in self.pools])
         ax.set_xticks([x + 0.5 for x, _ in enumerate(self.outcomes)], [str(outcome) for outcome in self.outcomes])
         return fig, ax
@@ -167,6 +171,16 @@ class PoolComparison:
         dx_widths = []
         dy_widths = []
         dz_heights = []
+        colours = []
+        alphas = [
+            0, # -Z
+            1, # +Z (top)
+            0, # -Y
+            0, # +Y
+            0.2, # -X
+            0.2, # +X
+        ]
+        poolcolours = "bgrcmy" * ((len(self.chances) // 6) + 1)
         for x, outcome in enumerate(self.outcomes.keys()):
             for y, pool in enumerate(self.pools.keys()):
                 x_locations.append(x)
@@ -175,5 +189,14 @@ class PoolComparison:
                 dx_widths.append(1)
                 dy_widths.append(1)
                 dz_heights.append(self.chances[(pool,outcome)])
-                
-        return x_locations, y_locations, z_locations, dx_widths, dy_widths, dz_heights
+                colours.extend(zip_longest(poolcolours[y], alphas, fillvalue=poolcolours[y]))
+
+        return {
+            "x": x_locations,
+            "y": y_locations,
+            "z": z_locations,
+            "dx": dx_widths,
+            "dy": dy_widths,
+            "dz": dz_heights,
+            "color": colours,
+        }

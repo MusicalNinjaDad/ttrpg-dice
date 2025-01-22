@@ -123,16 +123,36 @@ def test_plot_outcomelabels(named_pools_comparison: PoolComparison):
     assert list(ax.get_yticks()) == [0.5,1.5,2.5]
 
 def test_plotable_data(named_pools_comparison: PoolComparison):
-    x,y,z,dx,dy,dz = named_pools_comparison.plotable()
-    assert x == [0,0,0,1,1,1,2,2,2] # Outcomes on x
-    assert y == [0,1,2] * 3 # Pools on y
-    assert z == [0] * 9
-    assert dx == [1] * 9
-    assert dy == [1] * 9
-    assert dz == pytest.approx(
+    data = named_pools_comparison.plotable()
+    assert data["x"] == [0,0,0,1,1,1,2,2,2] # Outcomes on x
+    assert data["y"] == [0,1,2] * 3 # Pools on y
+    assert data["z"] == [0] * 9
+    assert data["dx"] == [1] * 9
+    assert data["dy"] == [1] * 9
+    assert data["dz"] == pytest.approx(
         [0.375, 0.33333333333, 0.5, 0.4375, 0.33333333333, 0.25, 0.1875, 0.33333333333, 0.25],
     )  # Grouped by outcomes then pools
+    assert data["color"] == [
+        ("b",0),("b",1),("b",0),("b",0),("b",0.2),("b",0.2),
+        ("g",0),("g",1),("g",0),("g",0),("g",0.2),("g",0.2),
+        ("r",0),("r",1),("r",0),("r",0),("r",0.2),("r",0.2),
+        ("b",0),("b",1),("b",0),("b",0),("b",0.2),("b",0.2),
+        ("g",0),("g",1),("g",0),("g",0),("g",0.2),("g",0.2),
+        ("r",0),("r",1),("r",0),("r",0),("r",0.2),("r",0.2),
+        ("b",0),("b",1),("b",0),("b",0),("b",0.2),("b",0.2),
+        ("g",0),("g",1),("g",0),("g",0),("g",0.2),("g",0.2),
+        ("r",0),("r",1),("r",0),("r",0),("r",0.2),("r",0.2),
+    ]
 
+def test_colourcycle(named_pools_comparison: PoolComparison):
+    assert named_pools_comparison._colourcycle() == [  # noqa: SLF001
+        ("b",0),("b",1),("b",0),("b",0),("b",0.2),("b",0.2),
+        ("g",0),("g",1),("g",0),("g",0),("g",0.2),("g",0.2),
+        ("r",0),("r",1),("r",0),("r",0),("r",0.2),("r",0.2),
+        ("c",0),("c",1),("c",0),("c",0),("c",0.2),("c",0.2),
+        ("m",0),("m",1),("m",0),("m",0),("m",0.2),("m",0.2),
+        ("y",0),("y",1),("y",0),("y",0),("y",0.2),("y",0.2),
+    ]
 
 # ==== Old API =======
 
