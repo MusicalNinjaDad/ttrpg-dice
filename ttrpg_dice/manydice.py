@@ -180,7 +180,7 @@ class PoolComparison:
             0.2, # -X
             0.2, # +X
         ]
-        poolcolours = "bgrcmy" * ((len(self.chances) // 6) + 1)
+        poolcolours = "bgrcmy"
         for x, outcome in enumerate(self.outcomes.keys()):
             for y, pool in enumerate(self.pools.keys()):
                 x_locations.append(x)
@@ -189,7 +189,7 @@ class PoolComparison:
                 dx_widths.append(1)
                 dy_widths.append(1)
                 dz_heights.append(self.chances[(pool,outcome)])
-                colours.extend(zip_longest(poolcolours[y], alphas, fillvalue=poolcolours[y]))
+                colours.extend(zip_longest(poolcolours[y % len(poolcolours)], alphas, fillvalue=poolcolours[y]))
 
         return {
             "x": x_locations,
