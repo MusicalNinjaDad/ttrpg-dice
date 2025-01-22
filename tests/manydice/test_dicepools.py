@@ -72,11 +72,11 @@ one dice plus      33.33     33.33     33.33
 one dice           50.00     25.00     25.00\
 """,
     plotabledata = {
-        "x": [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],  # Outcomes on x
-        "y": [0, 1, 2, 3] * 4,  # Pools on y
-        "z": [0] * 16,
-        "dx": [1] * 16,
-        "dy": [1] * 16,
+        "x": [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2],  # Outcomes on x
+        "y": [0, 1, 2, 3] * 3,  # Pools on y
+        "z": [0] * 12,
+        "dx": [1] * 12,
+        "dy": [1] * 12,
         "dz": pytest.approx(
             [
                 0.111111111111, 0.375, 0.33333333333, 0.5, # under 4
@@ -121,3 +121,11 @@ def test_chances(pools, outcomes, chances):
 def test_table(pools, outcomes, table):
     pool = PoolComparison(pools, outcomes)
     assert str(pool) == table
+
+@pytest.mark.parametrize(
+    ["pools", "outcomes", "plotabledata"],
+    [pytest.param(test.pools, test.outcomes, test.plotabledata, id=testid) for testid, test in PoolTests.items()],
+)
+def test_plotabledata(pools, outcomes, plotabledata):
+    pool = PoolComparison(pools, outcomes)
+    assert pool.plotable() == plotabledata
