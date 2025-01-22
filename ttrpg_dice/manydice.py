@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from itertools import cycle, zip_longest
+from itertools import zip_longest
 from math import comb
 from typing import TYPE_CHECKING
 
@@ -141,19 +141,6 @@ class PoolComparison:
                 }
                 for outcome in self.outcomes
             }
-    
-    def _colourcycle(self) -> list[tuple[str,int]]:
-        alphas = [
-            0, # -Z
-            1, # +Z (top)
-            0, # -Y
-            0, # +Y
-            0.2, # -X
-            0.2, # +X
-        ]
-        basecolours = "bgrcmy"
-        poolcolours = [list(zip_longest(colour, alphas, fillvalue=colour)) for colour in basecolours]
-        return [facecolour for poolcolour in poolcolours for facecolour in poolcolour]
 
     def plot(self) -> tuple[Figure, Axes3D]:
         """Plot as a 3d Bar with matplotlib and return the Axes."""
@@ -163,7 +150,7 @@ class PoolComparison:
         ax.set_xticks([x + 0.5 for x, _ in enumerate(self.outcomes)], [str(outcome) for outcome in self.outcomes])
         return fig, ax
 
-    def plotable(self) -> tuple:
+    def plotable(self) -> dict[str, list]:
         """Return bar location and sizes suitable for passing directly to matplotlib bar3d()."""
         x_locations = []
         y_locations = []
@@ -181,6 +168,15 @@ class PoolComparison:
             0.2, # +X
         ]
         poolcolours = "bgrcmy"
+
+        # Basic Colour Cycle (per pool)
+        # ("b",0),("b",1),("b",0),("b",0),("b",0.2),("b",0.2),
+        # ("g",0),("g",1),("g",0),("g",0),("g",0.2),("g",0.2),
+        # ("r",0),("r",1),("r",0),("r",0),("r",0.2),("r",0.2),
+        # ("c",0),("c",1),("c",0),("c",0),("c",0.2),("c",0.2),
+        # ("m",0),("m",1),("m",0),("m",0),("m",0.2),("m",0.2),
+        # ("y",0),("y",1),("y",0),("y",0),("y",0.2),("y",0.2),
+
         for x, outcome in enumerate(self.outcomes.keys()):
             for y, pool in enumerate(self.pools.keys()):
                 x_locations.append(x)

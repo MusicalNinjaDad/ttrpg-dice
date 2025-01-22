@@ -144,16 +144,6 @@ def test_plotable_data(named_pools_comparison: PoolComparison):
         ("r",0),("r",1),("r",0),("r",0),("r",0.2),("r",0.2),
     ]
 
-def test_colourcycle(named_pools_comparison: PoolComparison):
-    assert named_pools_comparison._colourcycle() == [  # noqa: SLF001
-        ("b",0),("b",1),("b",0),("b",0),("b",0.2),("b",0.2),
-        ("g",0),("g",1),("g",0),("g",0),("g",0.2),("g",0.2),
-        ("r",0),("r",1),("r",0),("r",0),("r",0.2),("r",0.2),
-        ("c",0),("c",1),("c",0),("c",0),("c",0.2),("c",0.2),
-        ("m",0),("m",1),("m",0),("m",0),("m",0.2),("m",0.2),
-        ("y",0),("y",1),("y",0),("y",0),("y",0.2),("y",0.2),
-    ]
-
 # ==== Old API =======
 
 @pytest.mark.parametrize(
