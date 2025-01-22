@@ -115,33 +115,12 @@ class PoolComparison:
     def __str__(self) -> str:
         """Nicely formatted table."""
         data = [
-            [pool] + [chance * 100 for chance in outcomes.values()] for pool, outcomes in self.chances_bypool.items()
+            [pool] + [self.chances[pool, outcome] * 100 for outcome in self.outcomes]
+            for pool in self.pools
         ]
-        headers = ["pool", *self.chances_byoutcome]
+        headers = ["pool", *self.outcomes]
         return tabulate(data, headers=headers, tablefmt="plain", floatfmt=".2f")
     
-    @property
-    def chances_bypool(self) -> dict[str | Dice, dict[str, float]]:
-        """Chance of each outcome indexed by [pool][outcome]."""
-        return {
-                pool: {
-                    outcome: sum(die[index])
-                    for outcome, index in self.outcomes.items()
-                }
-                for pool, die in self.pools.items()
-            }
-    
-    @property
-    def chances_byoutcome(self) -> dict[str, dict[str | Dice, float]]:
-        """Chance of each outcome indexed by [outcome][pool]."""
-        return {
-                outcome: {
-                    pool: self.chances_bypool[pool][outcome]
-                    for pool in self.pools
-                }
-                for outcome in self.outcomes
-            }
-
     def plot(self) -> tuple[Figure, Axes3D]:
         """Plot as a 3d Bar with matplotlib and return the Axes."""
         fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
