@@ -147,10 +147,10 @@ class PoolComparison:
         colors = [
             "none", # -Z
             "b", # +Z (top)
-            ("b", 0.5), # -Y
-            ("b", 0.5), # +Y
-            "none", # -X
-            "none", # +X
+            "none", # -Y
+            "none", # +Y
+            ("b",0.2), # -X
+            ("b",0.2), # +X
         ] * len(self.chances)
         ax.bar3d(*self.plotable(), color = colors, shade=True)
         ax.set_yticks([y + 0.5 for y, _ in enumerate(self.pools)], [str(pool) for pool in self.pools])
