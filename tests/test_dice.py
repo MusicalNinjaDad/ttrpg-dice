@@ -457,8 +457,3 @@ def test_no_unwanted_mutations():
     assert d4.contents[5] == 0
     assert len(d4.contents) == 1
     assert hash(d4) == cached_hash
-
-# TO-DO 
-# - add hash tests for edge cases including defaultdict adding extra entries,
-# - make contents immutable (how? not just the container but also the contents of contents).
-# - Or raise an error on hashing if contents changed vs previously cached tuple of tuples?
