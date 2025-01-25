@@ -21,7 +21,7 @@ class Dice:
         """Dice Contents are immutable after creation and return `0` if queried for a missing entry."""
 
         def __init__(self, *args, **kwargs) -> None:  # noqa: ANN002, ANN003, D107
-            super().__init__(*args, **kwargs)
+            super().__init__(int, *args, **kwargs)
             self._frozen = True
 
         def __setitem__(self, key: int, value: int):  # noqa: ANN204, D105
@@ -39,7 +39,7 @@ class Dice:
 
     def __init__(self, faces: int) -> None:
         """Build a die."""
-        self.contents = self.Contents(int, {faces:1})
+        self.contents = self.Contents({faces:1})
         
     @property
     def _probabilities(self) -> list[float | None]:
@@ -155,7 +155,7 @@ class Dice:
     def from_contents(cls, contents: defaultdict) -> Self:
         """Create a new die from a dict of contents."""
         die = cls.__new__(cls)
-        die.contents = cls.Contents(int, contents)
+        die.contents = cls.Contents(contents)
         return die
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
