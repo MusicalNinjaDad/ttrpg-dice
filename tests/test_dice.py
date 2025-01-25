@@ -450,6 +450,14 @@ def test_immutable():
         d4.contents[4] = 2
     assert d4.contents[4] == 1
 
+def test_no_unwanted_mutations():
+    d4 = d(4)
+    assert len(d4.contents) == 1
+    cached_hash = hash(d4)
+    assert d4.contents[5] == 0
+    assert len(d4.contents) == 1
+    assert hash(d4) == cached_hash
+
 # TO-DO 
 # - add hash tests for edge cases including defaultdict adding extra entries,
 # - make contents immutable (how? not just the container but also the contents of contents).
