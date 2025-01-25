@@ -33,6 +33,10 @@ class Dice:
             if self._frozen: return self.default_factory()
             return super().__missing__(key)
 
+        def __hash__(self) -> int:
+            """Hash contents as tuple of sorted (key, value) tuples."""
+            return hash(tuple(sorted(self.items())))
+
     def __init__(self, faces: int) -> None:
         """Build a die."""
         self.contents = self.Contents(int, {faces:1})
@@ -108,8 +112,7 @@ class Dice:
 
     def __hash__(self) -> int:
         """Use contents for hashing - but NOT equality."""
-        contents = tuple(sorted(self.contents.items()))
-        return hash(contents)
+        return hash(self.contents)
 
     def __len__(self) -> int:
         """Number of faces."""
@@ -152,7 +155,7 @@ class Dice:
     def from_contents(cls, contents: defaultdict) -> Self:
         """Create a new die from a dict of contents."""
         die = cls.__new__(cls)
-        die.contents = contents
+        die.contents = cls.Contents(int, contents)
         return die
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
