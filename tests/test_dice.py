@@ -13,14 +13,14 @@ from ttrpg_dice import Dice as d  # noqa: N813
 @dataclass
 class DiceTest:
     dice: d
-    description: str
-    repr_: str
-    contents: dict
-    hashed: int
-    probabilities: list | None
-    weighted: bool
-    faces: int
     id: str
+    description: str | None = None
+    repr_: str | None = None
+    contents: dict | None = None
+    hashed: int | None = None
+    probabilities: list  | None = None
+    weighted: bool | None = None
+    faces: int | None = None
 
 
 
@@ -457,3 +457,16 @@ def test_no_unwanted_mutations():
     assert d4.contents[5] == 0
     assert len(d4.contents) == 1
     assert hash(d4) == cached_hash
+
+@pytest.mark.parametrize(
+    "die",
+    [
+        pytest.param("foo", id = "str"),
+        pytest.param(0, id="zero"),
+        pytest.param(-1, id="negative"),
+        pytest.param(1.5, id="float"),
+    ],
+)
+def test_invalid_dice(die):
+    with pytest.raises(TypeError, match="Invalid face"):
+        d(die)

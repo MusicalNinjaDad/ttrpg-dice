@@ -22,6 +22,9 @@ class Dice:
 
         def __init__(self, *args, **kwargs) -> None:  # noqa: ANN002, ANN003
             super().__init__(int, *args, **kwargs)
+            if not all(isinstance(face, int) and face > 0 for face in self.keys()):
+                msg = "Invalid face"
+                raise TypeError(msg)
             self._frozen = True
 
         def __setitem__(self, key: int, value: int):  # noqa: ANN204
