@@ -53,7 +53,7 @@ check:
 
 #run coverage analysis on python code
 cov:
-  {{venv}}/bin/pytest --cov --cov-report html:pycov --cov-report term
+  {{venv}}/bin/pytest --cov --cov-report html:pycov --cov-report term --cov-context=test
 
 # serve python coverage results on localhost:8000 (doesn't run coverage analysis)
 show-cov:

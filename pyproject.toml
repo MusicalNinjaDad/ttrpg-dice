@@ -85,7 +85,6 @@
 [tool.coverage.run]
     branch = true
     omit = ["tests/*"]
-    dynamic_context = "test_function"
 
 [tool.coverage.report]
 exclude_also = [
@@ -93,6 +92,9 @@ exclude_also = [
     "if TYPE_CHECKING:",
     "except ImportError:",
     ]
+
+[tool.coverage.html]
+    show_contexts = true
 
 [tool.pytype]
 inputs = ["ttrpg_dice"]
