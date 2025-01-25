@@ -443,6 +443,13 @@ def test_unpackcontents():
     assert list(die._unpackcontents()) == [[1, 2], [1, 2, 3, 4], [1, 2, 3, 4], [1], [1], [1]]  # noqa: SLF001
 
 
+def test_immutable():
+    d4 = d(4)
+    assert d4.contents[4] == 1
+    with pytest.raises(TypeError, match="Dice contents cannot be changed"):
+        d4.contents[4] = 2
+    assert d4.contents[4] == 1
+
 # TO-DO 
 # - add hash tests for edge cases including defaultdict adding extra entries,
 # - make contents immutable (how? not just the container but also the contents of contents).
