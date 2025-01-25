@@ -92,7 +92,7 @@ class Dice:
 
     def __hash__(self) -> int:
         """Use contents for hashing - but NOT equality."""
-        contents = tuple(sorted([(d,n) for d,n in self.contents.items()]))
+        contents = tuple(sorted(self.contents.items()))
         return hash(contents)
 
     def __len__(self) -> int:
