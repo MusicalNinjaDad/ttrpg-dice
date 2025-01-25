@@ -90,7 +90,8 @@
 [tool.coverage.report]
 exclude_also = [
     "def __repr__",
-    "if TYPE_CHECKING:"
+    "if TYPE_CHECKING:",
+    "except ImportError:",
     ]
 
 [tool.pytype]
