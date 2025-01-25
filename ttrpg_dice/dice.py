@@ -25,7 +25,7 @@ class Dice:
             self._frozen = True
 
         def __setitem__(self, key: int, value: int):  # noqa: ANN204, D105
-            if self._frozen: raise TypeError("Dice contents cannot be changed")
+            if self._frozen: raise TypeError("Dice contents cannot be changed")  # noqa: EM101, TRY003
             return super().__setitem__(key, value)
 
         def __missing__(self, key):  # noqa: ANN001, ANN204
