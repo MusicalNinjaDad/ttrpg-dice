@@ -134,7 +134,7 @@ class Dice:
     def __rmul__(self, other: SupportsInt) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         other = self._int(other, "multiply", "by")
-        return self.from_contents(defaultdict(int, {f:n*other for f, n in self.contents.items()}))
+        return self.from_contents({f:n*other for f, n in self.contents.items()})
 
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
@@ -142,17 +142,14 @@ class Dice:
             othercontents = other.contents # pytype: disable=attribute-error
         except AttributeError:
             othercontents = defaultdict(int, {1: self._int(other, "add", "and")})
-        contents = defaultdict(
-                int,
-                {
+        contents = {
                     faces: self.contents[faces] + othercontents[faces]
                     for faces in self.contents.keys() | othercontents.keys()
-                },
-            )
+                }
         return self.from_contents(contents)
 
     @classmethod
-    def from_contents(cls, contents: defaultdict) -> Self:
+    def from_contents(cls, contents: dict) -> Self:
         """Create a new die from a dict of contents."""
         die = cls.__new__(cls)
         die.contents = cls._Contents(contents)
