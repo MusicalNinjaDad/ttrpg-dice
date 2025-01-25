@@ -17,14 +17,14 @@ except ImportError:
 class Dice:
     """A Dice class."""
 
-    class Contents(defaultdict):
+    class _Contents(defaultdict):
         """Dice Contents are immutable after creation and return `0` if queried for a missing entry."""
 
-        def __init__(self, *args, **kwargs) -> None:  # noqa: ANN002, ANN003, D107
+        def __init__(self, *args, **kwargs) -> None:  # noqa: ANN002, ANN003
             super().__init__(int, *args, **kwargs)
             self._frozen = True
 
-        def __setitem__(self, key: int, value: int):  # noqa: ANN204, D105
+        def __setitem__(self, key: int, value: int):  # noqa: ANN204
             if self._frozen: raise TypeError("Dice contents cannot be changed")  # noqa: EM101, TRY003
             return super().__setitem__(key, value)
 
@@ -39,7 +39,7 @@ class Dice:
 
     def __init__(self, faces: int) -> None:
         """Build a die."""
-        self.contents = self.Contents({faces:1})
+        self.contents = self._Contents({faces:1})
         
     @property
     def _probabilities(self) -> list[float | None]:
@@ -155,7 +155,7 @@ class Dice:
     def from_contents(cls, contents: defaultdict) -> Self:
         """Create a new die from a dict of contents."""
         die = cls.__new__(cls)
-        die.contents = cls.Contents(contents)
+        die.contents = cls._Contents(contents)
         return die
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
