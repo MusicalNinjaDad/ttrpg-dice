@@ -1,4 +1,5 @@
 """A Dice class."""
+
 from __future__ import annotations
 
 from collections import defaultdict, deque
@@ -27,40 +28,52 @@ class Dice:
             self._frozen = True
 
         def _validate(self) -> None:
-            """Dice._probabilities() is called lazily and will be very hard to debug if contents are not valid."""
-            # range(1,faces) requires positive `int`
-            ints = {faces: isinstance(faces, int) for faces in self.keys()}
-            if not all(ints.values()):
-                invalid = ", ".join(sorted(type(faces).__name__ for faces, isint in ints.items() if not isint))
+            """
+            `Dice._probabilities()` is called lazily and will be very hard to debug if contents are not valid.
+
+            - `range(1,faces)` requires positive `int`
+            - `repeat(...,numdice)` requires postive `int`
+            """
+            int_faces = {faces: isinstance(faces, int) for faces in self.keys()}
+            if not all(int_faces.values()):
+                invalid = ", ".join(sorted(type(faces).__name__ for faces, isint in int_faces.items() if not isint))
                 msg = f"Number of faces must be a positive integer, not {invalid}"
                 raise TypeError(msg)
-            positive = {faces: faces > 0 for faces in self.keys()}
-            if not all(positive.values()):
-                invalid = ", ".join(str(faces) for faces, ispositive in sorted(positive.items()) if not ispositive)
+
+            positive_faces = {faces: faces > 0 for faces in self.keys()}
+            if not all(positive_faces.values()):
+                invalid = ", ".join(
+                    str(faces) for faces, ispositive in sorted(positive_faces.items()) if not ispositive
+                )
                 msg = f"Number of faces must be a positive integer, not {invalid}"
                 raise ValueError(msg)
 
-            # repeat(...,numdice) requires postive `int`
-            ints = {faces: isinstance(numdice, int) for faces, numdice in self.items()}
-            if not all(ints.values()):
-                invalid = ", ".join(type(self[faces]).__name__ for faces, isint in sorted(ints.items()) if not isint)
+            int_numdice = {faces: isinstance(numdice, int) for faces, numdice in self.items()}
+            if not all(int_numdice.values()):
+                invalid = ", ".join(
+                    type(self[faces]).__name__ for faces, isint in sorted(int_numdice.items()) if not isint
+                )
                 msg = f"Number of Dice must be a positive integer, not {invalid}"
                 raise TypeError(msg)
-            positive = {faces: numdice > 0 for faces, numdice in self.items()}
-            if not all(positive.values()):
+
+            positive_numdice = {faces: numdice > 0 for faces, numdice in self.items()}
+            if not all(positive_numdice.values()):
                 invalid = ", ".join(
-                    str(self[faces]) for faces, ispositive in sorted(positive.items()) if not ispositive
+                    str(self[faces]) for faces, ispositive in sorted(positive_numdice.items()) if not ispositive
                 )
                 msg = f"Number of Dice must be a positive integer, not {invalid}"
                 raise ValueError(msg)
 
         def __setitem__(self, key: int, value: int):  # noqa: ANN204
-            if self._frozen: raise TypeError("Dice contents cannot be changed")  # noqa: EM101, TRY003
+            if self._frozen:
+                msg = "Dice contents cannot be changed"
+                raise TypeError(msg)
             return super().__setitem__(key, value)
 
         def __missing__(self, key):  # noqa: ANN001, ANN204
             """Does not set new entry if Contents are frozen."""
-            if self._frozen: return self.default_factory()
+            if self._frozen:
+                return self.default_factory()
             return super().__missing__(key)
 
         def __hash__(self) -> int:
@@ -69,20 +82,20 @@ class Dice:
 
     def __init__(self, faces: int) -> None:
         """Build a die."""
-        self.contents = self._Contents({faces:1})
-        
+        self.contents = self._Contents({faces: 1})
+
     @property
     def _probabilities(self) -> list[float | None]:
         """
         Use Dice[index] to get the probability(-ies) of a given (set of) roll(s) NOT _probabilities.
-        
+
         If for some reason you MUST access the underlying probabilities list use this property and not
         Dice._probabilitycache which is created lazily on the first call to this method.
-        
+
         Returns a list of P(result) with _probabilities[0] = `None`.
         """
         try:
-            return self._probabilitycache # pytype: disable=attribute-error
+            return self._probabilitycache  # pytype: disable=attribute-error
         except AttributeError:
             components = self._unpackcontents()
             rolls = [sum(r) for r in product(*components)]
@@ -106,17 +119,17 @@ class Dice:
     def __iter__(self) -> Iterator:
         """Iterating over a Dice yields the probabilities starting with P(1)."""
         yield from self._probabilities[1:]
-    
+
     def __getitem__(self, index: int | slice) -> float | list[float] | None:
         """Get the probability of a specific result."""
         try:
             # pytype: disable=attribute-error
-            if index.step is None or index.step > 0: # Positive step
+            if index.step is None or index.step > 0:  # Positive step
                 if index.start is None:
-                    index = slice(1,index.stop,index.step)
+                    index = slice(1, index.stop, index.step)
                 if (index.start < 1) or (index.stop is not None and index.stop < 1):
                     raise DiceIndexError(self, index)
-            else: # Negative Step
+            else:  # Negative Step
                 if index.stop is None:
                     index = slice(index.start, 0, index.step)
                 if (index.stop < 0) or (index.start is not None and index.start < 1):
@@ -124,8 +137,9 @@ class Dice:
             # pytype: enable=attribute-error
         except AttributeError:
             pass
-        if index == 0: raise DiceIndexError(self, index)
-        try: 
+        if index == 0:
+            raise DiceIndexError(self, index)
+        try:
             return self._probabilities[index]
         except TypeError as e:
             msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
@@ -136,7 +150,7 @@ class Dice:
     def __eq__(self, value: object) -> bool:
         """Dice are equal if they give the same probabilities, even with different contents."""
         try:
-            return self._probabilities == value._probabilities # pytype: disable=attribute-error
+            return self._probabilities == value._probabilities  # pytype: disable=attribute-error
         except AttributeError:
             return False
 
@@ -151,7 +165,8 @@ class Dice:
     def __str__(self) -> str:
         """The type of Dice in NdX notation."""
         sortedcontents = deque(sorted(self.contents.items()))
-        if sortedcontents[0][0] == 1: sortedcontents.rotate(-1)
+        if sortedcontents[0][0] == 1:
+            sortedcontents.rotate(-1)
         return " + ".join(f"{n if n > 1 or x == 1 else ''}d{x if x > 1 else ''}" for x, n in sortedcontents).rstrip("d")
 
     def __repr__(self) -> str:
@@ -159,23 +174,24 @@ class Dice:
         contents = ", ".join([f"{d}: {n}" for d, n in self.contents.items()])
         return f"{type(self).__name__}: {self} ({{{contents}}})"
 
+    # =================
     # Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
     # pytype: disable=invalid-annotation
+
     def __rmul__(self, other: SupportsInt) -> Self:
         """2 * Dice(4) returns a Dice with probabilities for 2d4."""
         other = self._int(other, "multiply", "by")
-        return self.from_contents({f:n*other for f, n in self.contents.items()})
+        return self.from_contents({f: n * other for f, n in self.contents.items()})
 
     def __add__(self, other: Self | SupportsInt) -> Self:
         """Adding two Dice to gives the combined roll."""
         try:
-            othercontents = other.contents # pytype: disable=attribute-error
+            othercontents = other.contents  # pytype: disable=attribute-error
         except AttributeError:
             othercontents = defaultdict(int, {1: self._int(other, "add", "and")})
         contents = {
-                    faces: self.contents[faces] + othercontents[faces]
-                    for faces in self.contents.keys() | othercontents.keys()
-                }
+            faces: self.contents[faces] + othercontents[faces] for faces in self.contents.keys() | othercontents.keys()
+        }
         return self.from_contents(contents)
 
     @classmethod
@@ -184,13 +200,15 @@ class Dice:
         die = cls.__new__(cls)
         die.contents = cls._Contents(contents)
         return die
+
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
+    # =================
 
     def _unpackcontents(self) -> Generator[list, None, None]:
         """What's in that contents dict?"""
         for faces, numdice in self.contents.items():
-            yield from repeat(list(range(1,faces+1)),numdice)
+            yield from repeat(list(range(1, faces + 1)), numdice)
 
     @classmethod
     def _int(cls, other: SupportsInt, action: str, conjunction: str) -> int:
@@ -198,13 +216,14 @@ class Dice:
         try:
             other = int(other)
         except TypeError as e:
-            msg=f"Cannot {action} '{type(other).__name__}' {conjunction} '{cls.__name__}'"
+            msg = f"Cannot {action} '{type(other).__name__}' {conjunction} '{cls.__name__}'"
             raise TypeError(msg) from e
         except ValueError as e:
             msg = f"Cannot {action} '{other}' {conjunction} '{cls.__name__}'."
             msg += " (Hint: try using a string which only contains numbers)"
             raise TypeError(msg) from e
         return other
+
 
 class DiceIndexError(IndexError):
     """

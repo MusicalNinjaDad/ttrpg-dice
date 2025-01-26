@@ -1,4 +1,5 @@
 """Rolling multiple dice."""
+
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -114,13 +115,10 @@ class PoolComparison:
 
     def __str__(self) -> str:
         """Nicely formatted table."""
-        data = [
-            [pool] + [self.chances[pool, outcome] * 100 for outcome in self.outcomes]
-            for pool in self.pools
-        ]
+        data = [[pool] + [self.chances[pool, outcome] * 100 for outcome in self.outcomes] for pool in self.pools]
         headers = ["pool", *self.outcomes]
         return tabulate(data, headers=headers, tablefmt="plain", floatfmt=".2f")
-    
+
     def plot(self) -> tuple[Figure, Axes3D]:
         """Plot as a 3d Bar with matplotlib and return the Axes."""
         fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
@@ -139,12 +137,12 @@ class PoolComparison:
         dz_heights = []
         colours = []
         alphas = [
-            0, # -Z
-            1, # +Z (top)
-            0, # -Y
-            0, # +Y
-            0.2, # -X
-            0.2, # +X
+            0,  # -Z
+            1,  # +Z (top)
+            0,  # -Y
+            0,  # +Y
+            0.2,  # -X
+            0.2,  # +X
         ]
         poolcolours = "bgrcmy"
 
@@ -163,7 +161,7 @@ class PoolComparison:
                 z_locations.append(0)
                 dx_widths.append(1)
                 dy_widths.append(1)
-                dz_heights.append(self.chances[(pool,outcome)])
+                dz_heights.append(self.chances[(pool, outcome)])
                 colours.extend(
                     zip_longest(poolcolours[y % len(poolcolours)], alphas, fillvalue=poolcolours[y % len(poolcolours)]),
                 )

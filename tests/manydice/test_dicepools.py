@@ -265,6 +265,7 @@ PoolTests = {
     "more pools than colours": manypools,
 }
 
+
 @pytest.mark.parametrize(
     ["pools", "outcomes", "chances"],
     [pytest.param(test.pools, test.outcomes, test.chances, id=testid) for testid, test in PoolTests.items()],
@@ -272,6 +273,7 @@ PoolTests = {
 def test_chances(pools, outcomes, chances):
     pool = PoolComparison(pools, outcomes)
     assert pool.chances == pytest.approx(chances)
+
 
 @pytest.mark.parametrize(
     ["pools", "outcomes", "table"],
@@ -281,6 +283,7 @@ def test_table(pools, outcomes, table):
     pool = PoolComparison(pools, outcomes)
     assert str(pool) == table
 
+
 @pytest.mark.parametrize(
     ["pools", "outcomes", "plotabledata"],
     [pytest.param(test.pools, test.outcomes, test.plotabledata, id=testid) for testid, test in PoolTests.items()],
@@ -288,6 +291,7 @@ def test_table(pools, outcomes, table):
 def test_plotabledata(pools, outcomes, plotabledata):
     pool = PoolComparison(pools, outcomes)
     assert pool.plotable() == plotabledata
+
 
 @pytest.mark.parametrize(
     ["pools", "outcomes", "poolnames", "outcomenames", "xticks", "yticks"],

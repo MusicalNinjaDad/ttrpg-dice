@@ -466,9 +466,11 @@ def test_no_unwanted_mutations():
     assert len(d4.contents) == 1
     assert hash(d4) == cached_hash
 
+
 def test_remove_zeros():
-    dice = d.from_contents({1:0, 4:1, 3:0, 6:2, 8:0})
-    assert dice.contents == {4:1, 6:2}
+    dice = d.from_contents({1: 0, 4: 1, 3: 0, 6: 2, 8: 0})
+    assert dice.contents == {4: 1, 6: 2}
+
 
 @dataclass
 class InvalidContentsTestCase:
@@ -477,6 +479,7 @@ class InvalidContentsTestCase:
     id: str
     contents: dict | None = None
     faces: Any | None = None
+
 
 # fmt: off
 invalid_contents_cases = [
@@ -572,6 +575,7 @@ invalid_contents_cases = [
     ),
 ]
 # fmt: on
+
 
 @pytest.mark.parametrize(
     ["contents", "errortype", "errormsg"],
