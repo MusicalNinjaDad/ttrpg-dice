@@ -483,6 +483,7 @@ def test_invalid_dice(die):
 @dataclass
 class InvalidContentsTestCase:
     contents: dict
+    errortype: Exception
     errormsg: str
     id: str
 
@@ -491,56 +492,67 @@ class InvalidContentsTestCase:
 invalid_contents_cases = [
     InvalidContentsTestCase(
         contents={1: "2"},
+        errortype=TypeError,
         errormsg="Invalid number of Dice",
         id="numdice: str",
     ),
     InvalidContentsTestCase(
         contents={1: -1},
+        errortype=ValueError,
         errormsg="Invalid number of Dice",
         id="numdice: negative",
     ),
     InvalidContentsTestCase(
         contents={1: 2.0},
+        errortype=TypeError,
         errormsg="Invalid number of Dice",
         id="numdice: float",
     ),
     InvalidContentsTestCase(
         contents={"foo": 1},
+        errortype=TypeError,
         errormsg="Invalid face",
         id="faces: str",
     ),
     InvalidContentsTestCase(
         contents={0: 1},
+        errortype=ValueError,
         errormsg="Invalid face",
         id="faces: zero",
     ),
     InvalidContentsTestCase(
         contents={-1: 1},
+        errortype=ValueError,
         errormsg="Invalid face",
         id="faces: negative",
     ),
     InvalidContentsTestCase(
         contents={1.5: 1},
+        errortype=TypeError,
         errormsg="Invalid face",
         id="faces: float",
     ),
     InvalidContentsTestCase(
         contents={4: 3, 1: "2"},
+        errortype=TypeError,
         errormsg="Invalid number of Dice",
         id="numdice: partially valid types",
     ),
     InvalidContentsTestCase(
         contents={4: 3, 1: -2},
+        errortype=ValueError,
         errormsg="Invalid number of Dice",
         id="numdice: partially valid values",
     ),
     InvalidContentsTestCase(
         contents={5: 2, "-1": 1, 1: 2},
+        errortype=TypeError,
         errormsg="Invalid face",
         id="faces: partially valid types",
     ),
     InvalidContentsTestCase(
         contents={5: 2, -1: 1, 1: 2},
+        errortype=ValueError,
         errormsg="Invalid face",
         id="faces: partially valid values",
     ),
@@ -549,9 +561,9 @@ invalid_contents_cases = [
 
 
 @pytest.mark.parametrize(
-    ["contents", "errormsg"],
-    [pytest.param(case.contents, case.errormsg, id=case.id) for case in invalid_contents_cases],
+    ["contents", "errortype", "errormsg"],
+    [pytest.param(case.contents, case.errortype, case.errormsg, id=case.id) for case in invalid_contents_cases],
 )
-def test_invalid_from_contents(contents, errormsg):
-    with pytest.raises(TypeError, match=errormsg):
+def test_invalid_from_contents(contents, errortype, errormsg):
+    with pytest.raises(errortype, match=errormsg):
         d.from_contents(contents)
