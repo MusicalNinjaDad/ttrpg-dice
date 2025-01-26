@@ -32,28 +32,19 @@ class Dice:
             # range(1,faces) requires positive `int`
             ints = {faces: isinstance(faces, int) for faces in self.keys()}
             if not all(ints.values()):
-                invalid = ", ".join(sorted(
-                    type(faces).__name__
-                    for faces, isint in ints.items()
-                    if not isint
-                ))
+                invalid = ", ".join(sorted(type(faces).__name__ for faces, isint in ints.items() if not isint))
                 msg = f"Number of faces must be a positive integer, not {invalid}"
                 raise TypeError(msg)
             positive = {faces: faces > 0 for faces in self.keys()}
             if not all(positive.values()):
-                invalid = ", ".join(
-                    str(faces) for faces, ispositive in sorted(positive.items())
-                    if not ispositive
-                )
+                invalid = ", ".join(str(faces) for faces, ispositive in sorted(positive.items()) if not ispositive)
                 msg = f"Number of faces must be a positive integer, not {invalid}"
                 raise ValueError(msg)
-            
+
             # repeat(...,numdice) requires postive `int`
             ints = {faces: isinstance(numdice, int) for faces, numdice in self.items()}
             if not all(ints.values()):
-                invalid = ", ".join(
-                    type(self[faces]).__name__ for faces, isint in sorted(ints.items()) if not isint
-                )
+                invalid = ", ".join(type(self[faces]).__name__ for faces, isint in sorted(ints.items()) if not isint)
                 msg = f"Number of Dice must be a positive integer, not {invalid}"
                 raise TypeError(msg)
             positive = {faces: numdice > 0 for faces, numdice in self.items()}
