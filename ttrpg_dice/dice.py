@@ -21,14 +21,13 @@ class Dice:
         """Dice Contents are immutable after creation and return `0` if queried for a missing entry."""
 
         def __init__(self, *args, **kwargs) -> None:  # noqa: ANN002, ANN003
-            super().__init__(int, *args, **kwargs)
+            tempdict = dict(*args, **kwargs)
+            super().__init__(int, {faces: numdice for faces, numdice in tempdict.items() if numdice != 0})
             self._validate()
             self._frozen = True
 
         def _validate(self) -> None:
             """Dice._probabilities() is called lazily and will be very hard to debug if contents are not valid."""
-            # TODO remove entries with zero numfaces
-
             # range(1,faces) requires positive `int`
             ints = {faces: isinstance(faces, int) for faces in self.keys()}
             if not all(ints.values()):
