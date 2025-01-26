@@ -516,7 +516,7 @@ invalid_contents_cases = [
     InvalidContentsTestCase(
         contents={1: -1},
         errortype=ValueError,
-        errormsg="Invalid number of Dice",
+        errormsg="Number of Dice must be a positive integer, not -1",
         id="numdice: negative",
     ),
     InvalidContentsTestCase(
@@ -550,9 +550,9 @@ invalid_contents_cases = [
         id="numdice: partially valid types",
     ),
     InvalidContentsTestCase(
-        contents={4: 3, 1: -2},
+        contents={4: 3, 2: -1, 1: -2},
         errortype=ValueError,
-        errormsg="Invalid number of Dice",
+        errormsg="Number of Dice must be a positive integer, not -2, -1",
         id="numdice: partially valid values",
     ),
     InvalidContentsTestCase(
@@ -578,7 +578,7 @@ invalid_contents_cases = [
         if tc.contents is not None
     ],
 )
-def test_invalid_dice(contents, errortype, errormsg):
+def test_invalid_from_contents(contents, errortype, errormsg):
     with pytest.raises(errortype, match=errormsg):
         d.from_contents(contents)
 
@@ -591,6 +591,6 @@ def test_invalid_dice(contents, errortype, errormsg):
         if tc.faces is not None
     ],
 )
-def test_invalid_from_contents(faces, errortype, errormsg):
+def test_invalid_die(faces, errortype, errormsg):
     with pytest.raises(errortype, match=errormsg):
         d(faces)

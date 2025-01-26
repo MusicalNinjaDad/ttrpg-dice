@@ -46,7 +46,10 @@ class Dice:
                 msg = f"Number of Dice must be a positive integer, not {invalid}"
                 raise TypeError(msg)
             if not all(numdice > 0 for numdice in self.values()):
-                msg = "Invalid number of Dice"
+                invalid = ", ".join(
+                    str(numdice) for _, numdice in sorted(self.items()) if not numdice > 0
+                )
+                msg = f"Number of Dice must be a positive integer, not {invalid}"
                 raise ValueError(msg)
 
         def __setitem__(self, key: int, value: int):  # noqa: ANN204
