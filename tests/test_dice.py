@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass
 from math import isclose
 from operator import indexOf
+from typing import Any
 
 import pytest  # noqa: F401, RUF100
 
@@ -466,35 +467,51 @@ def test_no_unwanted_mutations():
     assert hash(d4) == cached_hash
 
 
-@pytest.mark.parametrize(
-    "die",
-    [
-        pytest.param("foo", id="str"),
-        pytest.param(0, id="zero"),
-        pytest.param(-1, id="negative"),
-        pytest.param(1.5, id="float"),
-    ],
-)
-def test_invalid_dice(die):
-    with pytest.raises(TypeError, match="Invalid face"):
-        d(die)
-
-
 @dataclass
 class InvalidContentsTestCase:
-    contents: dict
     errortype: Exception
     errormsg: str
     id: str
-
+    contents: dict | None = None
+    faces: Any | None = None
 
 # fmt: off
 invalid_contents_cases = [
     InvalidContentsTestCase(
+        faces=0,
+        errortype=ValueError,
+        errormsg="Invalid face",
+        id="zero",
+    ),
+    InvalidContentsTestCase(
+        faces=-1,
+        errortype=ValueError,
+        errormsg="Invalid face",
+        id="negative",
+    ),
+    InvalidContentsTestCase(
+        faces="foo",
+        errortype=TypeError,
+        errormsg="Invalid face",
+        id="str",
+    ),
+    InvalidContentsTestCase(
+        faces=1.5,
+        errortype=TypeError,
+        errormsg="Invalid face",
+        id="float",
+    ),
+    InvalidContentsTestCase(
         contents={1: "2"},
         errortype=TypeError,
-        errormsg="Invalid number of Dice",
+        errormsg="Number of Dice must be a positive integer, not str",
         id="numdice: str",
+    ),
+    InvalidContentsTestCase(
+        contents={1: 2.0},
+        errortype=TypeError,
+        errormsg="Number of Dice must be a positive integer, not float",
+        id="numdice: float",
     ),
     InvalidContentsTestCase(
         contents={1: -1},
@@ -503,16 +520,16 @@ invalid_contents_cases = [
         id="numdice: negative",
     ),
     InvalidContentsTestCase(
-        contents={1: 2.0},
-        errortype=TypeError,
-        errormsg="Invalid number of Dice",
-        id="numdice: float",
-    ),
-    InvalidContentsTestCase(
         contents={"foo": 1},
         errortype=TypeError,
         errormsg="Invalid face",
         id="faces: str",
+    ),
+    InvalidContentsTestCase(
+        contents={1.5: 1},
+        errortype=TypeError,
+        errormsg="Invalid face",
+        id="faces: float",
     ),
     InvalidContentsTestCase(
         contents={0: 1},
@@ -527,15 +544,9 @@ invalid_contents_cases = [
         id="faces: negative",
     ),
     InvalidContentsTestCase(
-        contents={1.5: 1},
-        errortype=TypeError,
-        errormsg="Invalid face",
-        id="faces: float",
-    ),
-    InvalidContentsTestCase(
         contents={4: 3, 1: "2"},
         errortype=TypeError,
-        errormsg="Invalid number of Dice",
+        errormsg="Number of Dice must be a positive integer, not str",
         id="numdice: partially valid types",
     ),
     InvalidContentsTestCase(
@@ -559,11 +570,27 @@ invalid_contents_cases = [
 ]
 # fmt: on
 
-
 @pytest.mark.parametrize(
     ["contents", "errortype", "errormsg"],
-    [pytest.param(case.contents, case.errortype, case.errormsg, id=case.id) for case in invalid_contents_cases],
+    [
+        pytest.param(tc.contents, tc.errortype, tc.errormsg, id=tc.id)
+        for tc in invalid_contents_cases
+        if tc.contents is not None
+    ],
 )
-def test_invalid_from_contents(contents, errortype, errormsg):
+def test_invalid_dice(contents, errortype, errormsg):
     with pytest.raises(errortype, match=errormsg):
         d.from_contents(contents)
+
+
+@pytest.mark.parametrize(
+    ["faces", "errortype", "errormsg"],
+    [
+        pytest.param(tc.faces, tc.errortype, tc.errormsg, id=tc.id)
+        for tc in invalid_contents_cases
+        if tc.faces is not None
+    ],
+)
+def test_invalid_from_contents(faces, errortype, errormsg):
+    with pytest.raises(errortype, match=errormsg):
+        d(faces)
