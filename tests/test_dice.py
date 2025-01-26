@@ -477,6 +477,11 @@ def test_invalid_dice(die):
         pytest.param({1:"2"}, "Invalid number of Dice", id = "numdice: str"),
         pytest.param({1:-1}, "Invalid number of Dice", id = "numdice: negative"),
         pytest.param({1:2.0}, "Invalid number of Dice", id = "numdice: float"),
+        pytest.param({"foo":1}, "Invalid face", id = "faces: str"),
+        pytest.param({0:1}, "Invalid face", id="faces: zero"),
+        pytest.param({-1:1}, "Invalid face", id="faces: negative"),
+        pytest.param({1.5:1}, "Invalid face", id="faces: float"),
+        # TODO Extend to cover, longer contents dicts
     ],
 )
 def test_invalid_from_contents(contents, errormsg):
