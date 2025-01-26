@@ -28,10 +28,14 @@ class Dice:
         def _validate(self) -> None:
             """Dice._probabilities() is called lazily and will be very hard to debug if contents are not valid."""
             # TODO remove entries with zero numfaces
-            if not all(isinstance(face, int) and face > 0 for face in self.keys()): # range(1,faces) requires `int`
+
+            # range(1,faces) requires `int`
+            if not all(isinstance(face, int) and face > 0 for face in self.keys()):
                 msg = "Invalid face"
                 raise TypeError(msg)
-            if not all(isinstance(numdice, int) for numdice in self.values()): # repeat(...,numdice) requires `int`
+            
+            # repeat(...,numdice) requires `int`
+            if not all(isinstance(numdice, int) and numdice > 0 for numdice in self.values()):
                 msg = "Invalid number of Dice"
                 raise TypeError(msg)
 

@@ -471,6 +471,14 @@ def test_invalid_dice(die):
     with pytest.raises(TypeError, match="Invalid face"):
         d(die)
 
-def test_invalid_from_contents():
-    with pytest.raises(TypeError, match="Invalid number of Dice"):
-        d.from_contents({1:"2"})
+@pytest.mark.parametrize(
+    ["contents", "errormsg"],
+    [
+        pytest.param({1:"2"}, "Invalid number of Dice", id = "numdice: str"),
+        pytest.param({1:-1}, "Invalid number of Dice", id = "numdice: negative"),
+        pytest.param({1:2.0}, "Invalid number of Dice", id = "numdice: float"),
+    ],
+)
+def test_invalid_from_contents(contents, errormsg):
+    with pytest.raises(TypeError, match=errormsg):
+        d.from_contents(contents)
