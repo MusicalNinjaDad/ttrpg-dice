@@ -481,7 +481,10 @@ def test_invalid_dice(die):
         pytest.param({0:1}, "Invalid face", id="faces: zero"),
         pytest.param({-1:1}, "Invalid face", id="faces: negative"),
         pytest.param({1.5:1}, "Invalid face", id="faces: float"),
-        # TODO Extend to cover, longer contents dicts
+        pytest.param({4:3, 1:"2"}, "Invalid number of Dice", id = "numdice: partially valid types"),
+        pytest.param({4:3, 1:-2}, "Invalid number of Dice", id = "numdice: partially valid values"),
+        pytest.param({5:2, "-1":1, 1:2}, "Invalid face", id="faces: partially valid types"),
+        pytest.param({5:2, -1:1, 1:2}, "Invalid face", id="faces: partially valid values"),
     ],
 )
 def test_invalid_from_contents(contents, errormsg):
