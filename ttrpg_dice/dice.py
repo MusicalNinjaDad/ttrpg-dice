@@ -22,10 +22,14 @@ class Dice:
 
         def __init__(self, *args, **kwargs) -> None:  # noqa: ANN002, ANN003
             super().__init__(int, *args, **kwargs)
-            if not all(isinstance(face, int) and face > 0 for face in self.keys()):
+            self._validate()
+            self._frozen = True
+
+        def _validate(self) -> None:
+            """Dice._probabilities() is called lazily and will be very hard to debug if contents are not valid."""
+            if not all(isinstance(face, int) and face > 0 for face in self.keys()): # range(1,faces) requires `int`
                 msg = "Invalid face"
                 raise TypeError(msg)
-            self._frozen = True
 
         def __setitem__(self, key: int, value: int):  # noqa: ANN204
             if self._frozen: raise TypeError("Dice contents cannot be changed")  # noqa: EM101, TRY003
