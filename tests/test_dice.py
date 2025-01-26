@@ -18,12 +18,12 @@ class DiceTest:
     repr_: str | None = None
     contents: dict | None = None
     hashed: int | None = None
-    probabilities: list  | None = None
+    probabilities: list | None = None
     weighted: bool | None = None
     faces: int | None = None
 
 
-
+# fmt: off
 DiceTests = [
     DiceTest(
         dice=d(4),
@@ -184,6 +184,7 @@ DiceTests = [
         id="add similar dice",
     ),
 ]
+# fmt: on
 
 
 @pytest.mark.parametrize(
@@ -207,6 +208,7 @@ def test_probabilities(dietype, probabilities):
 def test_str(dietype, description):
     assert str(dietype) == description
 
+
 @pytest.mark.parametrize(
     ["dietype", "repr_"],
     [pytest.param(tc.dice, tc.repr_, id=tc.id) for tc in DiceTests],
@@ -222,12 +224,14 @@ def test_repr(dietype, repr_):
 def test_contents(dietype, contents):
     assert dietype.contents == contents
 
+
 @pytest.mark.parametrize(
     ["dietype", "hashed"],
     [pytest.param(tc.dice, tc.hashed, id=tc.id) for tc in DiceTests],
 )
 def test_hash(dietype, hashed):
     assert hash(dietype) == hashed
+
 
 @pytest.mark.parametrize(
     ["dietype", "contents"],
@@ -269,6 +273,7 @@ class SliceTest:
     id: str
 
 
+# fmt: off
 SliceTests = [
     SliceTest(
         dice=2 * d(4),
@@ -331,6 +336,7 @@ SliceTests = [
         id="odds",
     ),
 ]
+# fmt: on
 
 
 @pytest.mark.parametrize(
@@ -450,6 +456,7 @@ def test_immutable():
         d4.contents[4] = 2
     assert d4.contents[4] == 1
 
+
 def test_no_unwanted_mutations():
     d4 = d(4)
     assert len(d4.contents) == 1
@@ -458,10 +465,11 @@ def test_no_unwanted_mutations():
     assert len(d4.contents) == 1
     assert hash(d4) == cached_hash
 
+
 @pytest.mark.parametrize(
     "die",
     [
-        pytest.param("foo", id = "str"),
+        pytest.param("foo", id="str"),
         pytest.param(0, id="zero"),
         pytest.param(-1, id="negative"),
         pytest.param(1.5, id="float"),
@@ -471,21 +479,78 @@ def test_invalid_dice(die):
     with pytest.raises(TypeError, match="Invalid face"):
         d(die)
 
+
+@dataclass
+class InvalidContentsTestCase:
+    contents: dict
+    errormsg: str
+    id: str
+
+
+# fmt: off
+invalid_contents_cases = [
+    InvalidContentsTestCase(
+        contents={1: "2"},
+        errormsg="Invalid number of Dice",
+        id="numdice: str",
+    ),
+    InvalidContentsTestCase(
+        contents={1: -1},
+        errormsg="Invalid number of Dice",
+        id="numdice: negative",
+    ),
+    InvalidContentsTestCase(
+        contents={1: 2.0},
+        errormsg="Invalid number of Dice",
+        id="numdice: float",
+    ),
+    InvalidContentsTestCase(
+        contents={"foo": 1},
+        errormsg="Invalid face",
+        id="faces: str",
+    ),
+    InvalidContentsTestCase(
+        contents={0: 1},
+        errormsg="Invalid face",
+        id="faces: zero",
+    ),
+    InvalidContentsTestCase(
+        contents={-1: 1},
+        errormsg="Invalid face",
+        id="faces: negative",
+    ),
+    InvalidContentsTestCase(
+        contents={1.5: 1},
+        errormsg="Invalid face",
+        id="faces: float",
+    ),
+    InvalidContentsTestCase(
+        contents={4: 3, 1: "2"},
+        errormsg="Invalid number of Dice",
+        id="numdice: partially valid types",
+    ),
+    InvalidContentsTestCase(
+        contents={4: 3, 1: -2},
+        errormsg="Invalid number of Dice",
+        id="numdice: partially valid values",
+    ),
+    InvalidContentsTestCase(
+        contents={5: 2, "-1": 1, 1: 2},
+        errormsg="Invalid face",
+        id="faces: partially valid types",
+    ),
+    InvalidContentsTestCase(
+        contents={5: 2, -1: 1, 1: 2},
+        errormsg="Invalid face",
+        id="faces: partially valid values",
+    ),
+]
+# fmt: on
+
+
 @pytest.mark.parametrize(
     ["contents", "errormsg"],
-    [
-        pytest.param({1:"2"}, "Invalid number of Dice", id = "numdice: str"),
-        pytest.param({1:-1}, "Invalid number of Dice", id = "numdice: negative"),
-        pytest.param({1:2.0}, "Invalid number of Dice", id = "numdice: float"),
-        pytest.param({"foo":1}, "Invalid face", id = "faces: str"),
-        pytest.param({0:1}, "Invalid face", id="faces: zero"),
-        pytest.param({-1:1}, "Invalid face", id="faces: negative"),
-        pytest.param({1.5:1}, "Invalid face", id="faces: float"),
-        pytest.param({4:3, 1:"2"}, "Invalid number of Dice", id = "numdice: partially valid types"),
-        pytest.param({4:3, 1:-2}, "Invalid number of Dice", id = "numdice: partially valid values"),
-        pytest.param({5:2, "-1":1, 1:2}, "Invalid face", id="faces: partially valid types"),
-        pytest.param({5:2, -1:1, 1:2}, "Invalid face", id="faces: partially valid values"),
-    ],
+    [pytest.param(case.contents, case.errormsg, id=case.id) for case in invalid_contents_cases],
 )
 def test_invalid_from_contents(contents, errormsg):
     with pytest.raises(TypeError, match=errormsg):
