@@ -544,9 +544,9 @@ invalid_contents_cases = [
         id="faces: negative",
     ),
     InvalidContentsTestCase(
-        contents={4: 3, 1: "2"},
+        contents={4: 3, 2: 3.2, 1: "2"},
         errortype=TypeError,
-        errormsg="Number of Dice must be a positive integer, not str",
+        errormsg="Number of Dice must be a positive integer, not str, float",
         id="numdice: partially valid types",
     ),
     InvalidContentsTestCase(

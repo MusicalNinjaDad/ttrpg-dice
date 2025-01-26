@@ -40,7 +40,7 @@ class Dice:
             
             # repeat(...,numdice) requires postive `int`
             if not all(isinstance(numdice, int) for numdice in self.values()):
-                invalid = ",".join(
+                invalid = ", ".join(
                     type(numdice).__name__ for _, numdice in sorted(self.items()) if not isinstance(numdice, int)
                 )
                 msg = f"Number of Dice must be a positive integer, not {invalid}"
