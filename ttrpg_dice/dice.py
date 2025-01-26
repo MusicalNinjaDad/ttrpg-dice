@@ -25,7 +25,6 @@ class Dice:
             tempdict = dict(*args, **kwargs)
             super().__init__(int, {faces: numdice for faces, numdice in tempdict.items() if numdice != 0})
             self._validate()
-            self._frozen = True
 
         def _validate(self) -> None:
             """
@@ -65,16 +64,12 @@ class Dice:
                 raise ValueError(msg)
 
         def __setitem__(self, key: int, value: int):  # noqa: ANN204
-            if self._frozen:
-                msg = "Dice contents cannot be changed"
-                raise TypeError(msg)
-            return super().__setitem__(key, value)
+            msg = "Dice contents cannot be changed"
+            raise TypeError(msg)
 
         def __missing__(self, key):  # noqa: ANN001, ANN204
             """Does not set new entry if Contents are frozen."""
-            if self._frozen:
-                return self.default_factory()
-            return super().__missing__(key)
+            return self.default_factory()
 
         def __hash__(self) -> int:
             """Hash contents as tuple of sorted (key, value) tuples."""
