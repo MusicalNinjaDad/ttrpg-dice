@@ -127,6 +127,11 @@ inputs = ["ttrpg_dice"]
         "D408",   # Section underline should be in the line following the section's name (No underlines)
         "D409",   # Section underline should match the length of its name (No underlines)
         "D413",   # Missing blank line after last section (Not required)
+        "TD",     # TODOs don't need to include github issue etc. until merging to `main`
+        "FIX002", # TODOs are fine in general
+    ]
+    extend-select = [
+        "TD005",  # TODOs need a description, even outside of `main`
     ]
 
 [tool.ruff.lint.per-file-ignores]
