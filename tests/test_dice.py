@@ -470,3 +470,7 @@ def test_no_unwanted_mutations():
 def test_invalid_dice(die):
     with pytest.raises(TypeError, match="Invalid face"):
         d(die)
+
+def test_invalid_from_contents():
+    with pytest.raises(TypeError, match="Invalid number of Dice"):
+        d.from_contents({1:"2"})
