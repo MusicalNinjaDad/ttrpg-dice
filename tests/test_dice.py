@@ -492,13 +492,13 @@ invalid_contents_cases = [
     InvalidContentsTestCase(
         faces="foo",
         errortype=TypeError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not str",
         id="str",
     ),
     InvalidContentsTestCase(
         faces=1.5,
         errortype=TypeError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not float",
         id="float",
     ),
     InvalidContentsTestCase(
@@ -522,13 +522,13 @@ invalid_contents_cases = [
     InvalidContentsTestCase(
         contents={"foo": 1},
         errortype=TypeError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not str",
         id="faces: str",
     ),
     InvalidContentsTestCase(
         contents={1.5: 1},
         errortype=TypeError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not float",
         id="faces: float",
     ),
     InvalidContentsTestCase(
@@ -556,9 +556,9 @@ invalid_contents_cases = [
         id="numdice: partially valid values",
     ),
     InvalidContentsTestCase(
-        contents={5: 2, "-1": 1, 1: 2},
+        contents={5: 2, "-1": 1, 1: 2, 3.2: 4},
         errortype=TypeError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not float, str",
         id="faces: partially valid types",
     ),
     InvalidContentsTestCase(

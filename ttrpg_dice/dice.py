@@ -32,7 +32,8 @@ class Dice:
 
             # range(1,faces) requires positive `int`
             if not all(isinstance(faces, int) for faces in self.keys()):
-                msg = "Invalid face"
+                invalid = ", ".join(sorted(type(faces).__name__ for faces in self.keys() if not isinstance(faces, int)))
+                msg = f"Number of faces must be a positive integer, not {invalid}"
                 raise TypeError(msg)
             if not all(faces > 0 for faces in self.keys()):
                 invalid = ", ".join(
