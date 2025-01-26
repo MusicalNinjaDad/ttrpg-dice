@@ -445,9 +445,9 @@ def test_cannot_change_probabilities():
         d4._probabilities = [1, 2]  # noqa: SLF001
 
 
-def test_unpackcontents():
+def test_individualrolls():
     die = d.from_contents({2: 1, 4: 2, 1: 3})
-    assert list(die._unpackcontents()) == [[1, 2], [1, 2, 3, 4], [1, 2, 3, 4], [1], [1], [1]]  # noqa: SLF001
+    assert list(die._individual_dice_rolls()) == [[1, 2], [1, 2, 3, 4], [1, 2, 3, 4], [1], [1], [1]]  # noqa: SLF001
 
 
 def test_immutable():

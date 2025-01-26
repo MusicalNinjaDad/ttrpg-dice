@@ -97,13 +97,10 @@ class Dice:
         try:
             return self._probabilitycache  # pytype: disable=attribute-error
         except AttributeError:
-            components = self._unpackcontents()
-            rolls = [sum(r) for r in product(*components)]
-            possibilities = [None] + ([0] * max(rolls))
-            for r in rolls:
-                possibilities[r] += 1
-            total_possibilities = sum(possibilities[1:])
-            self._probabilitycache = [None] + [n / total_possibilities for n in possibilities[1:]]
+            combined_rolls = [sum(r) for r in product(*self._individual_dice_rolls())]
+            ways_to_roll = {roll: combined_rolls.count(roll) for roll in range(1,max(combined_rolls)+1)}
+            number_possible_rolls = sum(ways_to_roll.values())
+            self._probabilitycache = [None] + [n / number_possible_rolls for _, n in sorted(ways_to_roll.items())]
             return self._probabilitycache
 
     @_probabilities.setter
@@ -205,8 +202,25 @@ class Dice:
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below
     # =================
 
-    def _unpackcontents(self) -> Generator[list, None, None]:
-        """What's in that contents dict?"""
+    def _individual_dice_rolls(self) -> Generator[list, None, None]:
+        """
+        Yields a series of lists, each containing the valid faces of the individual dice contained within this `Dice`.
+        
+        Examples:
+            For a simple d4:
+            ```
+            >>> list(Dice(4)._individual_dice_rolls())
+            [[1, 2, 3, 4]]
+            ```
+
+            For 2d4 + d6 + 2:
+            ```
+            >>> from ttrpg_dice import Dice as d
+            >>> dice = (2*d(4)) + d(6) + 2
+            >>> list(dice._individual_dice_rolls())
+            [[1], [1], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4, 5, 6]]
+            ```
+        """
         for faces, numdice in self.contents.items():
             yield from repeat(list(range(1, faces + 1)), numdice)
 
