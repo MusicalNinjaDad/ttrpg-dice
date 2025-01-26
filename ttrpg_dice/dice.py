@@ -28,30 +28,38 @@ class Dice:
         def _validate(self) -> None:
             """Dice._probabilities() is called lazily and will be very hard to debug if contents are not valid."""
             # TODO remove entries with zero numfaces
-            # TODO use ValueError for invalid values
 
             # range(1,faces) requires positive `int`
-            if not all(isinstance(faces, int) for faces in self.keys()):
-                invalid = ", ".join(sorted(type(faces).__name__ for faces in self.keys() if not isinstance(faces, int)))
+            ints = {faces: isinstance(faces, int) for faces in self.keys()}
+            if not all(ints.values()):
+                invalid = ", ".join(sorted(
+                    type(faces).__name__
+                    for faces, isint in ints.items()
+                    if not isint
+                ))
                 msg = f"Number of faces must be a positive integer, not {invalid}"
                 raise TypeError(msg)
-            if not all(faces > 0 for faces in self.keys()):
+            positive = {faces: faces > 0 for faces in self.keys()}
+            if not all(positive.values()):
                 invalid = ", ".join(
-                    str(faces) for faces in sorted(self.keys()) if not faces > 0
+                    str(faces) for faces, ispositive in sorted(positive.items())
+                    if not ispositive
                 )
                 msg = f"Number of faces must be a positive integer, not {invalid}"
                 raise ValueError(msg)
             
             # repeat(...,numdice) requires postive `int`
-            if not all(isinstance(numdice, int) for numdice in self.values()):
+            ints = {faces: isinstance(numdice, int) for faces, numdice in self.items()}
+            if not all(ints.values()):
                 invalid = ", ".join(
-                    type(numdice).__name__ for _, numdice in sorted(self.items()) if not isinstance(numdice, int)
+                    type(self[faces]).__name__ for faces, isint in sorted(ints.items()) if not isint
                 )
                 msg = f"Number of Dice must be a positive integer, not {invalid}"
                 raise TypeError(msg)
-            if not all(numdice > 0 for numdice in self.values()):
+            positive = {faces: numdice > 0 for faces, numdice in self.items()}
+            if not all(positive.values()):
                 invalid = ", ".join(
-                    str(numdice) for _, numdice in sorted(self.items()) if not numdice > 0
+                    str(self[faces]) for faces, ispositive in sorted(positive.items()) if not ispositive
                 )
                 msg = f"Number of Dice must be a positive integer, not {invalid}"
                 raise ValueError(msg)
