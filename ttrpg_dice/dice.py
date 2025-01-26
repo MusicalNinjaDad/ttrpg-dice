@@ -35,7 +35,10 @@ class Dice:
                 msg = "Invalid face"
                 raise TypeError(msg)
             if not all(faces > 0 for faces in self.keys()):
-                msg = "Invalid face"
+                invalid = ", ".join(
+                    str(faces) for faces in sorted(self.keys()) if not faces > 0
+                )
+                msg = f"Number of faces must be a positive integer, not {invalid}"
                 raise ValueError(msg)
             
             # repeat(...,numdice) requires postive `int`

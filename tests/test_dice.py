@@ -480,13 +480,13 @@ invalid_contents_cases = [
     InvalidContentsTestCase(
         faces=0,
         errortype=ValueError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not 0",
         id="zero",
     ),
     InvalidContentsTestCase(
         faces=-1,
         errortype=ValueError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not -1",
         id="negative",
     ),
     InvalidContentsTestCase(
@@ -534,13 +534,13 @@ invalid_contents_cases = [
     InvalidContentsTestCase(
         contents={0: 1},
         errortype=ValueError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not 0",
         id="faces: zero",
     ),
     InvalidContentsTestCase(
         contents={-1: 1},
         errortype=ValueError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not -1",
         id="faces: negative",
     ),
     InvalidContentsTestCase(
@@ -562,9 +562,9 @@ invalid_contents_cases = [
         id="faces: partially valid types",
     ),
     InvalidContentsTestCase(
-        contents={5: 2, -1: 1, 1: 2},
+        contents={5: 2, -1: 1, 1: 2, -2: 3},
         errortype=ValueError,
-        errormsg="Invalid face",
+        errormsg="Number of faces must be a positive integer, not -2, -1",
         id="faces: partially valid values",
     ),
 ]
