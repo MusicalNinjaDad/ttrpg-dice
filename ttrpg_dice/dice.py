@@ -128,24 +128,24 @@ class Dice:
                 if index.start is None:
                     index = slice(1, index.stop, index.step)
                 if (index.start < 1) or (index.stop is not None and index.stop < 1):
-                    raise DiceIndexError(self, index)
+                    raise DiceIndexError(self)
             else:  # Negative Step
                 if index.stop is None:
                     index = slice(index.start, 0, index.step)
                 if (index.stop < 0) or (index.start is not None and index.start < 1):
-                    raise DiceIndexError(self, index)
+                    raise DiceIndexError(self)
             # pytype: enable=attribute-error
         except AttributeError:
             pass
         if index == 0:
-            raise DiceIndexError(self, index)
+            raise DiceIndexError(self)
         try:
             return self._probabilities[index]
         except TypeError as e:
             msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
             raise TypeError(msg) from e
         except IndexError as e:
-            raise DiceIndexError(self, index) from e
+            raise DiceIndexError(self) from e
 
     def __eq__(self, value: object) -> bool:
         """Dice are equal if they give the same probabilities, even with different contents."""
@@ -231,26 +231,14 @@ class DiceIndexError(IndexError):
 
     Attributes:
         dice (Dice): The Dice object where the error occurred.
-        index (int): The index that caused the error.
     """
 
-    def __init__(self, dice: Dice, index: int) -> None:
+    def __init__(self, dice: Dice) -> None:
         """
-        Initialize the DiceIndexError with the given Dice object and index.
+        Initialize the DiceIndexError for the given Dice object.
 
         Args:
             dice (Dice): The Dice object where the error occurred.
-            index (int): The index that caused the error.
         """
-        self.dice = dice
-        self.index = index
-        super().__init__(self._error_message())
-
-    def _error_message(self) -> str:
-        """
-        Generate the error message for the exception.
-
-        Returns:
-            str: The error message indicating the index is out of bounds.
-        """
-        return f"Index out of bounds, this Dice has sides numbered 1 to {len(self.dice)}"
+        msg = f"Index out of bounds, this Dice has sides numbered 1 to {len(dice)}"
+        super().__init__(msg)
