@@ -328,11 +328,17 @@ SliceTests = [
         dice=2 * d(4),
         sides=slice(2, None, 2),
         probabilities=[0.0625, 0.1875, 0.1875, 0.0625],
-        id="evens",
+        id="explicit evens",
     ),
     SliceTest(
         dice=2 * d(4),
         sides=slice(None, None, 2),
+        probabilities=[0.0625, 0.1875, 0.1875, 0.0625],
+        id="implicit evens",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        sides=slice(1, None, 2),
         probabilities=[0, 0.125, 0.25, 0.125],
         id="odds",
     ),

@@ -118,7 +118,7 @@ class Dice:
             # pytype: disable=attribute-error
             if index.step is None or index.step > 0:  # Positive step
                 if index.start is None:
-                    index = slice(1, index.stop, index.step)
+                    index = slice(1 if index.step is None else index.step, index.stop, index.step)
             else:  # Negative Step  # noqa: PLR5501
                 if index.stop is None:
                     index = slice(index.start, 0, index.step)
