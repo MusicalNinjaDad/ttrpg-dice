@@ -113,7 +113,31 @@ class Dice:
         yield from self._probabilities[1:]
 
     def __getitem__(self, index: int | slice) -> float | list[float] | None:
-        """Get the probability of a specific result."""
+        """
+        Get the probability of a specific result, or a list of probabilities in the case of a slice.
+        
+        This handles the fact that dice faces are numbered from 1, not 0. Slicing with a step > 1 will
+        return the probabilities of results beginning with the given step, not beginning with 1.
+
+        Example:
+        ```
+        >>> from ttrpg_dice import Dice as d
+        >>> dice = 2 * d(2)
+        >>> list(dice)
+        [0.0, 0.25, 0.5, 0.25]
+
+        >>> dice[:]
+        [0.0, 0.25, 0.5, 0.25]
+
+        >>> dice[1]
+        0.0
+
+        >>> dice[::2] # evens
+        [0.25, 0.25]
+
+        >>> dice[1::2] # odds
+        [0.0, 0.5]
+        """
         try:
             # pytype: disable=attribute-error
             if index.step is None or index.step > 0:  # Positive step
