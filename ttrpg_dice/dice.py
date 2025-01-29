@@ -212,9 +212,12 @@ class Dice:
             othercontents = other.contents  # pytype: disable=attribute-error
         except AttributeError:
             othercontents = defaultdict(int, {1: self._int(other, "add", "and")})
+
         contents = {
-            faces: self.contents[faces] + othercontents[faces] for faces in self.contents.keys() | othercontents.keys()
+            face: self.contents[face] + othercontents[face]
+            for face in set(self.contents.keys() | othercontents.keys())
         }
+
         return self.from_contents(contents)
 
     @classmethod
