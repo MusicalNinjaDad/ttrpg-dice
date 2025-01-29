@@ -270,8 +270,7 @@ def test_faces(dietype: d, faces: int):
 class SliceTest:
     id: str
     dice: d
-    sides: slice | None = None
-    side: int | None = None
+    sides: slice | int | None = None
     probabilities: list | None = None
 
 
@@ -366,31 +365,31 @@ IndexTests = [
     SliceTest(
         id = "1",
         dice = 2 * d(4),
-        side = 1,
+        sides = 1,
         probabilities = 0,
     ),
     SliceTest(
         id ="2",
         dice = 2 * d(4),
-        side = 2,
+        sides = 2,
         probabilities = 0.0625,
     ),
     SliceTest(
         id = "-1",
         dice = 2 * d(4),
-        side = -1,
+        sides = -1,
         probabilities = 0.0625,
     ),
     SliceTest(
         id = "-2",
         dice = 2 * d(4),
-        side = -2,
+        sides = -2,
         probabilities = 0.125,
     ),
     SliceTest(
         id = "8 of 8",
         dice = 2 * d(4),
-        side = 8,
+        sides = 8,
         probabilities = 0.0625,
     ),
 ]
@@ -399,7 +398,7 @@ IndexTests = [
 
 @pytest.mark.parametrize(
     ["dietype", "side", "probability"],
-    [pytest.param(tc.dice, tc.side, tc.probabilities, id=tc.id) for tc in IndexTests],
+    [pytest.param(tc.dice, tc.sides, tc.probabilities, id=tc.id) for tc in IndexTests],
 )
 def test_indexing(dietype, side, probability):
     assert dietype[side] == pytest.approx(probability)
