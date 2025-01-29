@@ -14,13 +14,13 @@ from ttrpg_dice import Dice as d  # noqa: N813
 class DiceTest:
     dice: d
     id: str
-    description: str | None = None
-    repr_: str | None = None
-    contents: dict | None = None
-    hashed: int | None = None
-    probabilities: list | None = None
-    weighted: bool | None = None
-    faces: int | None = None
+    description: str
+    repr_: str
+    contents: dict
+    hashed: int
+    probabilities: list
+    weighted: bool
+    faces: int
 
 
 # fmt: off
@@ -189,7 +189,7 @@ DiceTests = [
 
 @pytest.mark.parametrize(
     ["dietype", "probabilities"],
-    [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests if tc.probabilities is not None],
+    [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests],
 )
 def test_probabilities(dietype, probabilities):
     check = [isclose(p, e) for p, e in zip(list(dietype), probabilities)]
@@ -251,7 +251,7 @@ def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
 
 @pytest.mark.parametrize(
     ["dietype", "probabilities"],
-    [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests if tc.probabilities is not None],
+    [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests],
 )
 def test_first_probability(dietype, probabilities):
     assert isclose(dietype[1], probabilities[0])
@@ -266,7 +266,7 @@ def test_faces(dietype: d, faces: int):
 
 
 @dataclass
-class InvalidContentsTestCase:
+class InvalidDiceTestCase:
     errortype: Exception
     errormsg: str
     id: str
@@ -275,92 +275,95 @@ class InvalidContentsTestCase:
 
 
 # fmt: off
-invalid_contents_cases = [
-    InvalidContentsTestCase(
+invalid_faces_cases = [
+    InvalidDiceTestCase(
         faces=0,
         errortype=ValueError,
         errormsg="Number of faces must be a positive integer, not 0",
         id="zero",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         faces=-1,
         errortype=ValueError,
         errormsg="Number of faces must be a positive integer, not -1",
         id="negative",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         faces="foo",
         errortype=TypeError,
         errormsg="Number of faces must be a positive integer, not str",
         id="str",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         faces=1.5,
         errortype=TypeError,
         errormsg="Number of faces must be a positive integer, not float",
         id="float",
     ),
-    InvalidContentsTestCase(
+]
+
+invalid_contents_cases = [
+    InvalidDiceTestCase(
         contents={1: "2"},
         errortype=TypeError,
         errormsg="Number of Dice must be a positive integer, not str",
         id="numdice: str",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={1: 2.0},
         errortype=TypeError,
         errormsg="Number of Dice must be a positive integer, not float",
         id="numdice: float",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={1: -1},
         errortype=ValueError,
         errormsg="Number of Dice must be a positive integer, not -1",
         id="numdice: negative",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={"foo": 1},
         errortype=TypeError,
         errormsg="Number of faces must be a positive integer, not str",
         id="faces: str",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={1.5: 1},
         errortype=TypeError,
         errormsg="Number of faces must be a positive integer, not float",
         id="faces: float",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={0: 1},
         errortype=ValueError,
         errormsg="Number of faces must be a positive integer, not 0",
         id="faces: zero",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={-1: 1},
         errortype=ValueError,
         errormsg="Number of faces must be a positive integer, not -1",
         id="faces: negative",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={4: 3, 2: 3.2, 1: "2"},
         errortype=TypeError,
         errormsg="Number of Dice must be a positive integer, not str, float",
         id="numdice: partially valid types",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={4: 3, 2: -1, 1: -2},
         errortype=ValueError,
         errormsg="Number of Dice must be a positive integer, not -2, -1",
         id="numdice: partially valid values",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={5: 2, "-1": 1, 1: 2, 3.2: 4},
         errortype=TypeError,
         errormsg="Number of faces must be a positive integer, not float, str",
         id="faces: partially valid types",
     ),
-    InvalidContentsTestCase(
+    InvalidDiceTestCase(
         contents={5: 2, -1: 1, 1: 2, -2: 3},
         errortype=ValueError,
         errormsg="Number of faces must be a positive integer, not -2, -1",
@@ -371,26 +374,18 @@ invalid_contents_cases = [
 
 
 @pytest.mark.parametrize(
-    ["contents", "errortype", "errormsg"],
-    [
-        pytest.param(tc.contents, tc.errortype, tc.errormsg, id=tc.id)
-        for tc in invalid_contents_cases
-        if tc.contents is not None
-    ],
-)
-def test_invalid_from_contents(contents, errortype, errormsg):
-    with pytest.raises(errortype, match=errormsg):
-        d.from_contents(contents)
-
-
-@pytest.mark.parametrize(
     ["faces", "errortype", "errormsg"],
-    [
-        pytest.param(tc.faces, tc.errortype, tc.errormsg, id=tc.id)
-        for tc in invalid_contents_cases
-        if tc.faces is not None
-    ],
+    [pytest.param(tc.faces, tc.errortype, tc.errormsg, id=tc.id) for tc in invalid_faces_cases],
 )
 def test_invalid_die(faces, errortype, errormsg):
     with pytest.raises(errortype, match=errormsg):
         d(faces)
+
+
+@pytest.mark.parametrize(
+    ["contents", "errortype", "errormsg"],
+    [pytest.param(tc.contents, tc.errortype, tc.errormsg, id=tc.id) for tc in invalid_contents_cases],
+)
+def test_invalid_from_contents(contents, errortype, errormsg):
+    with pytest.raises(errortype, match=errormsg):
+        d.from_contents(contents)
