@@ -449,6 +449,13 @@ InvalidIndexTests = [
         errortype = TypeError,
         errormsg = "Cannot index 'Dice' with 'str'.",
     ),
+    SliceTest(
+        id = "slice from zero",
+        index = slice(0,None,None),
+        dice = d(10),
+        errortype = IndexError,
+        errormsg = "Invalid side: This Dice has sides numbered 1 to 10.",
+    ),
 ]
 # fmt: on
 

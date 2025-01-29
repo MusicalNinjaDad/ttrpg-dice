@@ -143,6 +143,8 @@ class Dice:
             if index.step is None or index.step > 0:  # Positive step
                 if index.start is None:
                     index = slice(1 if index.step is None else index.step, index.stop, index.step)
+                elif index.start == 0: # To avoid possible confusion by slicing [0:]
+                    raise DiceIndexError(self)
             else:  # Negative Step  # noqa: PLR5501
                 if index.stop is None:
                     index = slice(index.start, 0, index.step)
