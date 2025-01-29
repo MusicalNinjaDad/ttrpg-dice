@@ -92,9 +92,9 @@ class Dice:
         try:
             return self._probabilitycache  # pytype: disable=attribute-error
         except AttributeError:
-            combined_rolls = [sum(r) for r in product(*self._individual_dice_rolls())]
-            ways_to_roll = {roll: combined_rolls.count(roll) for roll in range(1,max(combined_rolls)+1)}
-            number_possible_rolls = sum(ways_to_roll.values())
+            all_possible_rolls = [sum(r) for r in product(*self._individual_dice_rolls())]
+            ways_to_roll = {roll: all_possible_rolls.count(roll) for roll in range(1,max(all_possible_rolls)+1)}
+            number_possible_rolls = len(all_possible_rolls)
             self._probabilitycache = [None] + [n / number_possible_rolls for _, n in sorted(ways_to_roll.items())]
             return self._probabilitycache
 
