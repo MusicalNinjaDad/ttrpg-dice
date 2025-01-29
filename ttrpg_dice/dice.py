@@ -120,23 +120,24 @@ class Dice:
         return the probabilities of results beginning with the given step, not beginning with 1.
 
         Example:
-        ```
-        >>> from ttrpg_dice import d
-        >>> dice = 2 * d(2)
-        >>> list(dice)
-        [0.0, 0.25, 0.5, 0.25]
+            ```
+            >>> from ttrpg_dice import d
+            >>> dice = 2 * d(2)
+            >>> list(dice)
+            [0.0, 0.25, 0.5, 0.25]
 
-        >>> dice[:]
-        [0.0, 0.25, 0.5, 0.25]
+            >>> dice[:]
+            [0.0, 0.25, 0.5, 0.25]
 
-        >>> dice[1]
-        0.0
+            >>> dice[1]
+            0.0
 
-        >>> dice[::2] # evens
-        [0.25, 0.25]
+            >>> dice[::2] # evens
+            [0.25, 0.25]
 
-        >>> dice[1::2] # odds
-        [0.0, 0.5]
+            >>> dice[1::2] # odds
+            [0.0, 0.5]
+            ```
         """
         if index == 0 or index == -(len(self) + 1):
             raise DiceIndexError(self)
