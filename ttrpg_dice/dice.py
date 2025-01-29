@@ -181,9 +181,16 @@ class Dice:
     def __str__(self) -> str:
         """The type of Dice in NdX notation."""
         sortedcontents = deque(sorted(self.contents.items()))
+        
+        # Place any constant at the end ("d4 + 2" not "2 + d4")
         if sortedcontents[0][0] == 1:
             sortedcontents.rotate(-1)
-        return " + ".join(f"{n if n > 1 or x == 1 else ''}d{x if x > 1 else ''}" for x, n in sortedcontents).rstrip("d")
+        
+        def _ndx(n: int,x: int) -> str:
+            if x == 1: return str(n)
+            return f"{n if n > 1 else ''}d{x}"
+        
+        return " + ".join(_ndx(n, x) for x, n in sortedcontents)
 
     def __repr__(self) -> str:
         """Classname: ndX (contents)."""
