@@ -149,7 +149,7 @@ class Dice:
             # pytype: enable=attribute-error
         except AttributeError:
             pass
-        if index == 0:
+        if index == 0 or index == -(len(self) + 1):
             raise DiceIndexError(self)
         try:
             return self._probabilities[index]

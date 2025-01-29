@@ -429,8 +429,15 @@ InvalidIndexTests = [
         errormsg = "Invalid side: This Dice has sides numbered 1 to 10.",
     ),
     SliceTest(
-        id = "too big negative",
+        id = "negative results in p(0)",
         index = -11,
+        dice = d(10),
+        errortype = IndexError,
+        errormsg = "Invalid side: This Dice has sides numbered 1 to 10.",
+    ),
+    SliceTest(
+        id = "too big negative",
+        index = -12,
         dice = d(10),
         errortype = IndexError,
         errormsg = "Invalid side: This Dice has sides numbered 1 to 10.",
