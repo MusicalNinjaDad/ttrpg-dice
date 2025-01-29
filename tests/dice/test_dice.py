@@ -94,9 +94,9 @@ def test_no_unwanted_mutations():
     d4 = d(4)
     assert len(d4.contents) == 1
     cached_hash = hash(d4)
-    assert d4.contents[5] == 0
-    assert len(d4.contents) == 1
-    assert hash(d4) == cached_hash
+    assert d4.contents[5] == 0 # does not contain a d5
+    assert len(d4.contents) == 1 # checking for d5 did not add an entry 5 : 0 to the contents, as a defaultdict would
+    assert hash(d4) == cached_hash # or change the hash
 
 
 def test_remove_zeros():
