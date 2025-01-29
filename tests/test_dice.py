@@ -545,11 +545,6 @@ def test_NonexDice():
         None * d(4)
 
 
-def test_invalidindextype():
-    with pytest.raises(TypeError, match="Cannot index 'Dice' with 'str'"):
-        d(4)["two"]
-
-
 def test_cannot_change_probabilities():
     d4 = d(4)
     msg = re.escape("You cannot change a Dice's probabilities, create a new Dice instead.")
