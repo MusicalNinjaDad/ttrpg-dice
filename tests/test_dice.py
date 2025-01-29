@@ -360,9 +360,35 @@ def test_slicing(dietype, sides, probabilities):
         pass
     assert all(check), msg
 
+# [0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625]
+
 IndexTests = [
     SliceTest(
-        id = "lastside",
+        id = "1",
+        dice = 2 * d(4),
+        side = 1,
+        probabilities = 0,
+    ),
+    SliceTest(
+        id ="2",
+        dice = 2 * d(4),
+        side = 2,
+        probabilities = 0.0625,
+    ),
+    SliceTest(
+        id = "-1",
+        dice = 2 * d(4),
+        side = -1,
+        probabilities = 0.0625,
+    ),
+    SliceTest(
+        id = "-2",
+        dice = 2 * d(4),
+        side = -2,
+        probabilities = 0.125,
+    ),
+    SliceTest(
+        id = "8 of 8",
         dice = 2 * d(4),
         side = 8,
         probabilities = 0.0625,
