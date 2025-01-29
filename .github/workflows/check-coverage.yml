@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths: 
-      - '.github/workflows/coverage.yml'
+      - '.github/workflows/check-coverage.yml'
       - 'codecov.yml'
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
       - name: Test with pytest
         run: |
           . .venv/bin/activate
-          pytest --cov --cov-report=xml
+          pytest --cov --cov-report=xml --cov-context=test # Context info not yet supported in cobertura (or any other common format between pytest-cov and codecov.io)
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:

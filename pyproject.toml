@@ -15,6 +15,12 @@
         "Intended Audience :: Developers",
         "Natural Language :: English",
     ]
+    dependencies = [
+        "matplotlib",
+        "tabulate2",
+        
+        "typing-extensions; python_version < '3.11'",
+    ]
 
 [project.urls]
     # Homepage = ""
@@ -41,14 +47,30 @@
 # ===========================
 
 [project.optional-dependencies]
-    lint = [
-        "ruff",
-        "pytype; python_version <= '3.12'"
+    lint = ["ruff"]
+    typing = [
+        "ttrpg-dice[test]",
+        "pytype; python_version <= '3.12'",
+        "typing_extensions", # required for Python3.10 and below
     ]
-    test = ["pytest", "pytest-doctest-mkdocstrings"]
-    cov = ["ttrpg-dice[test]", "pytest-cov"]
-    doc = ["black", "mkdocs", "mkdocstrings[python]", "mkdocs-material"]
-    dev = ["ttrpg-dice[lint,test,cov,doc]","jupyter"]
+    test = [
+        "pytest",
+        "pytest-doctest-mkdocstrings",
+        ]
+    cov = [
+        "ttrpg-dice[test]",
+        "pytest-cov",
+    ]
+    doc = [
+        "black",
+        "mkdocs",
+        "mkdocstrings[python]",
+        "mkdocs-material",
+    ]
+    dev = [
+        "ttrpg-dice[lint,typing,test,cov,doc]",
+        "jupyter",
+    ]
 
 [tool.pytest.ini_options]
     xfail_strict = true
@@ -63,12 +85,19 @@
 [tool.coverage.run]
     branch = true
     omit = ["tests/*"]
-    dynamic_context = "test_function"
 
 [tool.coverage.report]
 exclude_also = [
     "def __repr__",
+    "if TYPE_CHECKING:",
+    "except ImportError:",
     ]
+
+[tool.coverage.html]
+    show_contexts = true
+
+[tool.pytype]
+inputs = ["ttrpg_dice"]
 
 [tool.ruff]
     line-length = 120
@@ -78,9 +107,11 @@ exclude_also = [
 [tool.ruff.lint]
     select = ["ALL"]
     flake8-pytest-style.fixture-parentheses = false
+    flake8-pytest-style.parametrize-names-type = "list"
     flake8-annotations.mypy-init-return = true
     extend-ignore = [
         "E701",   # One-line ifs are not great, one-liners with suppression are worse
+        "ERA001", # pytype suppression blocks are identified as commented-out code
         "ANN202", # Return type annotation for private functions
         "ANN401", # Using Any often enough that supressing individually is pointless
         "W291",   # Double space at EOL is linebreak in md-docstring
@@ -96,6 +127,11 @@ exclude_also = [
         "D408",   # Section underline should be in the line following the section's name (No underlines)
         "D409",   # Section underline should match the length of its name (No underlines)
         "D413",   # Missing blank line after last section (Not required)
+        "TD",     # TODOs don't need to include github issue etc. until merging to `main`
+        "FIX002", # TODOs are fine in general
+    ]
+    extend-select = [
+        "TD005",  # TODOs need a description, even outside of `main`
     ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -107,6 +143,13 @@ exclude_also = [
         "PLR2004", # Magic number comparisons are OK in tests
         "D1",      # Don't REQUIRE docstrings for tests - but they are nice
         "N802",    # Test case names may include caps (e.g. when referring to a class under test)
+    ]
+
+    "**/conftest.py" = [
+        "D100",    # conftest.py doesn't need a top-level docstring
+        "INP001",  # Missing __init__.py
+        "S101",    # Use of `assert`
+        "PLR2004", # Magic number comparisons are OK in tests
     ]
 
     "**/__init__.py" = [

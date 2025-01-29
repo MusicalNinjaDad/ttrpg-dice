@@ -12,6 +12,7 @@ clean:
     rm -rf dist
     rm -rf wheelhouse
     rm -rf .ruff_cache
+    rm -rf .pytype
     find . -depth -type d -not -path "./.venv*/*" -name "__pycache__" -exec rm -rf "{}" \;
     find . -depth -type d -path "*.egg-info" -exec rm -rf "{}" \;
     find . -type f -name "*.egg" -delete
@@ -22,11 +23,11 @@ clean-cov:
     rm -rf pycov
 
 # clean, remove existing .venvs and rebuild the venvs with pip install -e .[dev]
-reset: clean clean-cov && install (install "python3.12" ".venv-3.12" "[lint,test]")
+reset: clean clean-cov && install (install "[typing]" "python3.12" ".venv-3.12")
     rm -rf .venv*
 
 # (re-)create a venv and install the project and required dependecies for development & testing
-install python="python" venvpath=venv extras="[dev]":
+install extras="[dev]" python="python" venvpath=venv:
     rm -rf {{venvpath}}
     {{python}} -m venv {{venvpath}}
     {{venvpath}}/bin/python -m pip install --upgrade pip 
@@ -42,7 +43,7 @@ test:
 
 # type-check python
 type-check venvpath=".venv-3.12":
-  {{venvpath}}/bin/pytype .
+  {{venvpath}}/bin/pytype
 
 # lint and test python
 check:
@@ -52,7 +53,7 @@ check:
 
 #run coverage analysis on python code
 cov:
-  {{venv}}/bin/pytest --cov --cov-report html:pycov --cov-report term
+  {{venv}}/bin/pytest --cov --cov-report html:pycov --cov-report term --cov-context=test
 
 # serve python coverage results on localhost:8000 (doesn't run coverage analysis)
 show-cov:
