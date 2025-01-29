@@ -145,6 +145,13 @@ inputs = ["ttrpg_dice"]
         "N802",    # Test case names may include caps (e.g. when referring to a class under test)
     ]
 
+    "**/conftest.py" = [
+        "D100",    # conftest.py doesn't need a top-level docstring
+        "INP001",  # Missing __init__.py
+        "S101",    # Use of `assert`
+        "PLR2004", # Magic number comparisons are OK in tests
+    ]
+
     "**/__init__.py" = [
         "F401", # Unused imports are fine: using __init__.py to expose them with implicit __ALL__
     ]

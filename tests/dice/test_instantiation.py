@@ -12,7 +12,7 @@ from ttrpg_dice import Dice as d  # noqa: N813
 
 @dataclass
 class DiceTest:
-    dice: d
+    dice_expr: str
     id: str
     description: str
     repr_: str
@@ -26,7 +26,7 @@ class DiceTest:
 # fmt: off
 DiceTests = [
     DiceTest(
-        dice=d(4),
+        dice_expr="d(4)",
         description="d4",
         repr_="Dice: d4 ({4: 1})",
         contents={4: 1},
@@ -37,18 +37,18 @@ DiceTests = [
         id="d4",
     ),
     DiceTest(
-        dice=d(100),
+        dice_expr="d(100)",
         description="d100",
         repr_="Dice: d100 ({100: 1})",
         contents={100: 1},
-        hashed = hash(((100,1),)),
+        hashed=hash(((100,1),)),
         probabilities=[0.01] * 100,
         weighted=False,
         faces=100,
         id="d100",
     ),
     DiceTest(
-        dice=2 * d(4),
+        dice_expr="2 * d(4)",
         description="2d4",
         repr_="Dice: 2d4 ({4: 2})",
         contents={4: 2},
@@ -59,7 +59,7 @@ DiceTests = [
         id="multiplication",
     ),
     DiceTest(
-        dice=d(2) + d(4),
+        dice_expr="d(2) + d(4)",
         description="d2 + d4",
         repr_="Dice: d2 + d4 ({2: 1, 4: 1})",
         contents={2: 1, 4: 1},
@@ -70,7 +70,7 @@ DiceTests = [
         id="addition",
     ),
     DiceTest(
-        dice=d(4) + 2,
+        dice_expr="d(4) + 2",
         description="d4 + 2",
         repr_="Dice: d4 + 2 ({1: 2, 4: 1})",
         contents={1: 2, 4: 1},
@@ -81,7 +81,7 @@ DiceTests = [
         id="add constant",
     ),
     DiceTest(
-        dice=d(4) + 1,
+        dice_expr="d(4) + 1",
         description="d4 + 1",
         repr_="Dice: d4 + 1 ({1: 1, 4: 1})",
         contents={1: 1, 4: 1},
@@ -92,7 +92,7 @@ DiceTests = [
         id="add 1",
     ),
     DiceTest(
-        dice=d(6) + d(4),
+        dice_expr="d(6) + d(4)",
         description="d4 + d6",
         repr_="Dice: d4 + d6 ({4: 1, 6: 1})",
         contents={4: 1, 6: 1},
@@ -114,7 +114,7 @@ DiceTests = [
         id="unsorted addition: two dice",
     ),
     DiceTest(
-        dice=(2 * d(2)) + d(4),
+        dice_expr="(2 * d(2)) + d(4)",
         description="2d2 + d4",
         repr_="Dice: 2d2 + d4 ({2: 2, 4: 1})",
         contents={2: 2, 4: 1},
@@ -125,7 +125,7 @@ DiceTests = [
         id="addition: complex dice",
     ),
     DiceTest(
-        dice=d(4) + (2 * d(3)) + 1,
+        dice_expr="d(4) + (2 * d(3)) + 1",
         description="2d3 + d4 + 1",
         repr_="Dice: 2d3 + d4 + 1 ({1: 1, 3: 2, 4: 1})",
         contents={1: 1, 3: 2, 4: 1},
@@ -148,7 +148,7 @@ DiceTests = [
         id="combined arithmetic",
     ),
     DiceTest(
-        dice=d(8) + (2 * d(8)),
+        dice_expr="d(8) + (2 * d(8))",
         description="3d8",
         repr_="Dice: 3d8 ({8: 3})",
         contents={8: 3},
@@ -186,10 +186,10 @@ DiceTests = [
 ]
 # fmt: on
 
-
 @pytest.mark.parametrize(
     ["dietype", "probabilities"],
-    [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests],
+    [(pytest.param(tc.dice_expr, tc.probabilities, id=tc.id)) for tc in DiceTests],
+    indirect=["dietype"],
 )
 def test_probabilities(dietype, probabilities):
     check = [isclose(p, e) for p, e in zip(list(dietype), probabilities)]
@@ -203,7 +203,8 @@ def test_probabilities(dietype, probabilities):
 
 @pytest.mark.parametrize(
     ["dietype", "description"],
-    [pytest.param(tc.dice, tc.description, id=tc.id) for tc in DiceTests],
+    [pytest.param(tc.dice_expr, tc.description, id=tc.id) for tc in DiceTests],
+    indirect=["dietype"],
 )
 def test_str(dietype, description):
     assert str(dietype) == description
@@ -211,7 +212,8 @@ def test_str(dietype, description):
 
 @pytest.mark.parametrize(
     ["dietype", "repr_"],
-    [pytest.param(tc.dice, tc.repr_, id=tc.id) for tc in DiceTests],
+    [(pytest.param(tc.dice_expr, tc.repr_, id=tc.id)) for tc in DiceTests],
+    indirect=["dietype"],
 )
 def test_repr(dietype, repr_):
     assert repr(dietype) == repr_
@@ -219,7 +221,8 @@ def test_repr(dietype, repr_):
 
 @pytest.mark.parametrize(
     ["dietype", "contents"],
-    [pytest.param(tc.dice, tc.contents, id=tc.id) for tc in DiceTests],
+    [(pytest.param(tc.dice_expr, tc.contents, id=tc.id)) for tc in DiceTests],
+    indirect=["dietype"],
 )
 def test_contents(dietype, contents):
     assert dietype.contents == contents
@@ -227,7 +230,8 @@ def test_contents(dietype, contents):
 
 @pytest.mark.parametrize(
     ["dietype", "hashed"],
-    [pytest.param(tc.dice, tc.hashed, id=tc.id) for tc in DiceTests],
+    [(pytest.param(tc.dice_expr, tc.hashed, id=tc.id)) for tc in DiceTests],
+    indirect=["dietype"],
 )
 def test_hash(dietype, hashed):
     assert hash(dietype) == hashed
@@ -235,7 +239,8 @@ def test_hash(dietype, hashed):
 
 @pytest.mark.parametrize(
     ["dietype", "contents"],
-    [pytest.param(tc.dice, tc.contents, id=tc.id) for tc in DiceTests],
+    [(pytest.param(tc.dice_expr, tc.contents, id=tc.id)) for tc in DiceTests],
+indirect=["dietype"],
 )
 def test_fromcontents(dietype: d, contents: dict):
     assert d.from_contents(contents) == dietype
@@ -243,7 +248,8 @@ def test_fromcontents(dietype: d, contents: dict):
 
 @pytest.mark.parametrize(
     ["dietype", "weighted"],
-    [pytest.param(tc.dice, tc.weighted, id=tc.id) for tc in DiceTests],
+    [(pytest.param(tc.dice_expr, tc.weighted, id=tc.id)) for tc in DiceTests],
+indirect=["dietype"],
 )
 def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
     assert dietype.weighted == weighted
@@ -251,7 +257,8 @@ def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
 
 @pytest.mark.parametrize(
     ["dietype", "probabilities"],
-    [pytest.param(tc.dice, tc.probabilities, id=tc.id) for tc in DiceTests],
+    [(pytest.param(tc.dice_expr, tc.probabilities, id=tc.id)) for tc in DiceTests],
+indirect=["dietype"],
 )
 def test_first_probability(dietype, probabilities):
     assert isclose(dietype[1], probabilities[0])
@@ -259,7 +266,8 @@ def test_first_probability(dietype, probabilities):
 
 @pytest.mark.parametrize(
     ["dietype", "faces"],
-    [pytest.param(tc.dice, tc.faces, id=tc.id) for tc in DiceTests],
+    [(pytest.param(tc.dice_expr, tc.faces, id=tc.id)) for tc in DiceTests],
+indirect=["dietype"],
 )
 def test_faces(dietype: d, faces: int):
     assert len(dietype) == faces
