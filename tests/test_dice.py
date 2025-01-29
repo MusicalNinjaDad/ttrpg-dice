@@ -269,76 +269,78 @@ def test_faces(dietype: d, faces: int):
 @dataclass
 class SliceTest:
     id: str
+    index: slice | int
     dice: d
-    sides: slice | int | None = None
     probabilities: list | None = None
+    errortype: Exception | None = None
+    errormsg: str | None = None
 
 
 # fmt: off
 SliceTests = [
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None, None),
+        index=slice(None, None),
         probabilities=[0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
         id="full slice",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(2, 5),
+        index=slice(2, 5),
         probabilities=[0.0625, 0.125, 0.1875],
         id="middle section",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None, 5),
+        index=slice(None, 5),
         probabilities=[0, 0.0625, 0.125, 0.1875],
         id="from start",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(3, None),
+        index=slice(3, None),
         probabilities=[0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
         id="to end",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None, None, -1),
+        index=slice(None, None, -1),
         probabilities=[0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625, 0],
         id="reverse full slice",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(7, 4, -1),
+        index=slice(7, 4, -1),
         probabilities=[0.125, 0.1875, 0.25],
         id="reverse middle section",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None, 3, -1),
+        index=slice(None, 3, -1),
         probabilities=[0.0625, 0.125, 0.1875, 0.25, 0.1875],
         id="reverse from end",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(5, None, -1),
+        index=slice(5, None, -1),
         probabilities=[0.25, 0.1875, 0.125, 0.0625, 0],
         id="reverse to start",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(2, None, 2),
+        index=slice(2, None, 2),
         probabilities=[0.0625, 0.1875, 0.1875, 0.0625],
         id="explicit evens",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(None, None, 2),
+        index=slice(None, None, 2),
         probabilities=[0.0625, 0.1875, 0.1875, 0.0625],
         id="implicit evens",
     ),
     SliceTest(
         dice=2 * d(4),
-        sides=slice(1, None, 2),
+        index=slice(1, None, 2),
         probabilities=[0, 0.125, 0.25, 0.125],
         id="odds",
     ),
@@ -348,7 +350,7 @@ SliceTests = [
 
 @pytest.mark.parametrize(
     ["dietype", "sides", "probabilities"],
-    [pytest.param(tc.dice, tc.sides, tc.probabilities, id=tc.id) for tc in SliceTests],
+    [pytest.param(tc.dice, tc.index, tc.probabilities, id=tc.id) for tc in SliceTests],
 )
 def test_slicing(dietype, sides, probabilities):
     check = [isclose(p, e) for p, e in zip(dietype[sides], probabilities)]
@@ -365,32 +367,38 @@ IndexTests = [
     SliceTest(
         id = "1",
         dice = 2 * d(4),
-        sides = 1,
+        index = 1,
         probabilities = 0,
     ),
     SliceTest(
         id ="2",
         dice = 2 * d(4),
-        sides = 2,
+        index = 2,
         probabilities = 0.0625,
     ),
     SliceTest(
         id = "-1",
         dice = 2 * d(4),
-        sides = -1,
+        index = -1,
         probabilities = 0.0625,
     ),
     SliceTest(
         id = "-2",
         dice = 2 * d(4),
-        sides = -2,
+        index = -2,
         probabilities = 0.125,
     ),
     SliceTest(
         id = "8 of 8",
         dice = 2 * d(4),
-        sides = 8,
+        index = 8,
         probabilities = 0.0625,
+    ),
+    SliceTest(
+        id = "-8 of 8",
+        dice = 2 * d(4),
+        index = -8,
+        probabilities = 0,
     ),
 ]
 # fmt: on
@@ -398,11 +406,53 @@ IndexTests = [
 
 @pytest.mark.parametrize(
     ["dietype", "side", "probability"],
-    [pytest.param(tc.dice, tc.sides, tc.probabilities, id=tc.id) for tc in IndexTests],
+    [pytest.param(tc.dice, tc.index, tc.probabilities, id=tc.id) for tc in IndexTests],
 )
 def test_indexing(dietype, side, probability):
     assert dietype[side] == pytest.approx(probability)
 
+
+# fmt: off
+InvalidIndexTests = [
+    SliceTest(
+        id = "zero",
+        index = 0,
+        dice = d(10),
+        errortype = IndexError,
+        errormsg = "Invalid side: This Dice has sides numbered 1 to 10.",
+    ),
+    SliceTest(
+        id = "too high",
+        index = 11,
+        dice = d(10),
+        errortype = IndexError,
+        errormsg = "Invalid side: This Dice has sides numbered 1 to 10.",
+    ),
+    SliceTest(
+        id = "too big negative",
+        index = -11,
+        dice = d(10),
+        errortype = IndexError,
+        errormsg = "Invalid side: This Dice has sides numbered 1 to 10.",
+    ),
+        SliceTest(
+        id = "number as string",
+        index = "3",
+        dice = d(10),
+        errortype = TypeError,
+        errormsg = "Cannot index 'Dice' with 'str'.",
+    ),
+]
+# fmt: on
+
+@pytest.mark.parametrize(
+    ["dietype", "index", "errortype", "errormsg"],
+    [pytest.param(tc.dice, tc.index, tc.errortype, tc.errormsg, id=tc.id) for tc in InvalidIndexTests],
+)
+def test_invalid_index(dietype, index, errortype, errormsg):
+    msg = re.escape(errormsg)
+    with pytest.raises(errortype, match = msg):
+        dietype[index]
 
 def test_eq():
     d4 = d(4)
@@ -472,16 +522,6 @@ def test_NonexDice():
 def test_invalidindextype():
     with pytest.raises(TypeError, match="Cannot index 'Dice' with 'str'"):
         d(4)["two"]
-
-
-def test_invalidindexvalue_too_high():
-    with pytest.raises(IndexError, match="Index out of bounds, this Dice has sides numbered 1 to 4"):
-        d(4)[5]
-
-
-def test_invalidindexvalue_zero():
-    with pytest.raises(IndexError, match="Index out of bounds, this Dice has sides numbered 1 to 4"):
-        d(4)[0]
 
 
 def test_cannot_change_probabilities():

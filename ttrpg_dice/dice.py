@@ -154,7 +154,7 @@ class Dice:
         try:
             return self._probabilities[index]
         except TypeError as e:
-            msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'"
+            msg = f"Cannot index '{type(self).__name__}' with '{type(index).__name__}'."
             raise TypeError(msg) from e
         except IndexError as e:
             raise DiceIndexError(self) from e
@@ -269,5 +269,5 @@ class DiceIndexError(IndexError):
         Args:
             dice (Dice): The Dice object where the error occurred.
         """
-        msg = f"Index out of bounds, this Dice has sides numbered 1 to {len(dice)}"
+        msg = f"Invalid side: This Dice has sides numbered 1 to {len(dice)}."
         super().__init__(msg)
