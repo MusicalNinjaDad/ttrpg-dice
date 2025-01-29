@@ -1,6 +1,6 @@
 import pytest
 
-from ttrpg_dice import Dice as d  # noqa: N813
+from ttrpg_dice import d
 
 
 @pytest.fixture

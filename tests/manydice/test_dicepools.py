@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest  # noqa: F401, RUF100
 
-from ttrpg_dice import Dice as d  # noqa: N813
+from ttrpg_dice import d
 from ttrpg_dice.manydice import PoolComparison
 
 # Anydice calculation:

@@ -121,7 +121,7 @@ class Dice:
 
         Example:
         ```
-        >>> from ttrpg_dice import Dice as d
+        >>> from ttrpg_dice import d
         >>> dice = 2 * d(2)
         >>> list(dice)
         [0.0, 0.25, 0.5, 0.25]
@@ -234,7 +234,7 @@ class Dice:
 
             For 2d4 + d6 + 2:
             ```
-            >>> from ttrpg_dice import Dice as d
+            >>> from ttrpg_dice import d
             >>> dice = (2*d(4)) + d(6) + 2
             >>> list(dice._individual_dice_rolls())
             [[1], [1], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4, 5, 6]]
