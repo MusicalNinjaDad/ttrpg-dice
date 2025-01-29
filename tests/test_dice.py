@@ -310,6 +310,18 @@ SliceTests = [
     ),
     SliceTest(
         dice=2 * d(4),
+        index=slice(-1, 0, -1),
+        probabilities=[0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625, 0],
+        id="reverse full slice to zero",
+    ),
+    SliceTest(
+        dice=2 * d(4),
+        index=slice(None, 1, -1),
+        probabilities=[0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625, 0],
+        id="reverse slice to 2",
+    ),
+    SliceTest(
+        dice=2 * d(4),
         index=slice(7, 4, -1),
         probabilities=[0.125, 0.1875, 0.25],
         id="reverse middle section",
