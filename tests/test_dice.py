@@ -268,10 +268,11 @@ def test_faces(dietype: d, faces: int):
 
 @dataclass
 class SliceTest:
-    dice: d
-    sides: slice
-    probabilities: list
     id: str
+    dice: d
+    sides: slice | None = None
+    side: int | None = None
+    probabilities: list | None = None
 
 
 # fmt: off
@@ -359,6 +360,22 @@ def test_slicing(dietype, sides, probabilities):
         pass
     assert all(check), msg
 
+IndexTests = [
+    SliceTest(
+        id = "lastside",
+        dice = 2 * d(4),
+        side = 8,
+        probabilities = 0.0625,
+    ),
+]
+
+@pytest.mark.parametrize(
+    ["dietype", "side", "probability"],
+    [pytest.param(tc.dice, tc.side, tc.probabilities, id=tc.id) for tc in IndexTests],
+)
+def test_indexing(dietype, side, probability):
+    assert dietype[side] == pytest.approx(probability)
+
 
 def test_eq():
     d4 = d(4)
@@ -423,10 +440,6 @@ def test_twoxDice():
 def test_NonexDice():
     with pytest.raises(TypeError, match="Cannot multiply 'NoneType' by 'Dice'"):
         None * d(4)
-
-
-def test_index_lastside():
-    assert (2 * d(4))[8] == 0.0625
 
 
 def test_invalidindextype():
