@@ -76,7 +76,7 @@ class Dice:
             return hash(tuple(sorted(self.items())))
 
     def __init__(self, faces: int) -> None:
-        """Build a die."""
+        """Build a die with `faces` sides."""
         self.contents = self._Contents({faces: 1})
 
     @property
