@@ -7,6 +7,9 @@ on:
       - '.github/workflows/check-coverage.yml'
       - 'codecov.yml'
 
+env:
+  python-version: '3.13'
+
 permissions:
   id-token: write
 
@@ -18,9 +21,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: ${{ env.python-version }}
       - name: Setup just
         uses: taiki-e/install-action@just
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ env.python-version }}
       - name: Install dependencies
         run: |
           just install
