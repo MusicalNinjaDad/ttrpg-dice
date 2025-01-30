@@ -18,32 +18,36 @@ clean:
     find . -type f -name "*.egg" -delete
     find . -type f -name "*.so" -delete
 
+# remove all venvs
+clean-venvs:
+  rm -rf .venv*
+
 # clean out coverage files
 clean-cov:
     rm -rf pycov
+    rm -rf .coverage
 
-# clean, remove existing .venvs and rebuild the venvs with pip install -e .[dev]
-reset: clean clean-cov && install (install "[typing]" "python3.12" ".venv-3.12")
-    rm -rf .venv*
+clean-all: clean clean-venvs clean-cov
+
+# clean, remove existing .venvs and rebuild the venvs with uv sync
+reset: clean-all install
 
 # (re-)create a venv and install the project and required dependecies for development & testing
-install extras="[dev]" python="python" venvpath=venv:
-    rm -rf {{venvpath}}
-    {{python}} -m venv {{venvpath}}
-    {{venvpath}}/bin/python -m pip install --upgrade pip 
-    {{venvpath}}/bin/pip install -e .{{extras}}
+install:
+    # upgrade until we have confirmation that dependabot will recognise and process the generated requirements.txt
+    uv sync --upgrade
 
 # lint python with ruff
 lint:
-  {{venv}}/bin/ruff check .
+  uv run ruff check .
 
 # test python
 test:
-  {{venv}}/bin/pytest
+  uv run pytest
 
 # type-check python
-type-check venvpath=".venv-3.12":
-  {{venvpath}}/bin/pytype
+type-check:
+  UV_PROJECT_ENVIRONMENT="./.venv-3.12" uv run --python 3.12 pytype
 
 # lint and test python
 check:
@@ -53,7 +57,7 @@ check:
 
 #run coverage analysis on python code
 cov:
-  {{venv}}/bin/pytest --cov --cov-report html:pycov --cov-report term --cov-context=test
+  uv run pytest --cov --cov-report html:pycov --cov-report term --cov-context=test
 
 # serve python coverage results on localhost:8000 (doesn't run coverage analysis)
 show-cov:

@@ -53,7 +53,12 @@ RUN dnf -y --setopt=install_weak_deps=False install \
     gcc-c++ \
     python3.12 \
     python3.12-devel
-    
+
+# install uv and nbstripout
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+ENV UV_LINK_MODE=copy
+RUN uv pip install --system nbstripout
+
 # ---
 # Final setup steps
 # ---
