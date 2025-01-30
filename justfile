@@ -63,6 +63,6 @@ cov:
 show-cov:
   python -m http.server -d ./pycov
 
-# serve python docs on localhost:8000
+# serve python docs on localhost:3000
 docs:
-  uv run mkdocs serve
+  uv run jupyter book start
