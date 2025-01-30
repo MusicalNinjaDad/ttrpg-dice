@@ -65,4 +65,4 @@ show-cov:
 
 # serve python docs on localhost:3000
 docs:
-  uv run jupyter book start
+  uv run jupyter book start --execute
