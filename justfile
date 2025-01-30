@@ -22,16 +22,15 @@ clean:
 clean-cov:
     rm -rf pycov
 
-# clean, remove existing .venvs and rebuild the venvs with pip install -e .[dev]
-reset: clean clean-cov && install (install "[typing]" "python3.12" ".venv-3.12")
+# clean, remove existing .venvs and rebuild the venvs with uv pip install -e .[dev]
+reset: clean clean-cov && install (install "[typing]" "3.12" ".venv-3.12")
     rm -rf .venv*
 
 # (re-)create a venv and install the project and required dependecies for development & testing
-install extras="[dev]" python="python" venvpath=venv:
+install extras="[dev]" python="3.13" venvpath=venv:
     rm -rf {{venvpath}}
-    {{python}} -m venv {{venvpath}}
-    {{venvpath}}/bin/python -m pip install --upgrade pip 
-    {{venvpath}}/bin/pip install -e .{{extras}}
+    uv venv {{venvpath}} --python {{python}}
+    VIRTUAL_ENV="./{{venvpath}}" uv pip install -e .{{extras}}
 
 # lint python with ruff
 lint:
