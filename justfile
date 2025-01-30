@@ -21,6 +21,7 @@ clean:
 # clean out coverage files
 clean-cov:
     rm -rf pycov
+    rm -rf .coverage
 
 # clean, remove existing .venvs and rebuild the venvs with uv pip install -e .[dev]
 reset: clean clean-cov && install (install "[typing]" "3.12" ".venv-3.12")
