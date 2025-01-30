@@ -53,7 +53,10 @@ RUN dnf -y --setopt=install_weak_deps=False install \
     gcc-c++ \
     python3.12 \
     python3.12-devel
-    
+
+# install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 # ---
 # Final setup steps
 # ---
