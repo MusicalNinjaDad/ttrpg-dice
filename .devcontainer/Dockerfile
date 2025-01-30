@@ -54,10 +54,13 @@ RUN dnf -y --setopt=install_weak_deps=False install \
     python3.12 \
     python3.12-devel
 
-# install uv and nbstripout
+# install uv, nbstripout, nodejs (for jupyterbook2)
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 ENV UV_LINK_MODE=copy
 RUN uv pip install --system nbstripout
+RUN dnf -y --setopt=install_weak_deps=False install \
+    nodejs \
+    npm
 
 # ---
 # Final setup steps

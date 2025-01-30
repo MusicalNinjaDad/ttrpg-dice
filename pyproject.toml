@@ -62,10 +62,8 @@
         "pytest-cov",
     ]
     doc = [
-        "black",
-        "mkdocs",
-        "mkdocstrings[python]",
-        "mkdocs-material",
+        "jupyter",
+        "jupyter-book>=2.0.0a1",
     ]
     dev = [
         {include-group = "lint"},
@@ -73,7 +71,6 @@
         {include-group = "test"},
         {include-group = "cov"},
         {include-group = "doc"},
-        "jupyter",
     ]
 
 [tool.pytest.ini_options]
