@@ -27,8 +27,10 @@ clean-cov:
     rm -rf pycov
     rm -rf .coverage
 
+clean-all: clean clean-venvs clean-cov
+
 # clean, remove existing .venvs and rebuild the venvs with uv sync
-reset: clean clean-cov clean-venvs install
+reset: clean-all install
 
 # (re-)create a venv and install the project and required dependecies for development & testing
 install:
