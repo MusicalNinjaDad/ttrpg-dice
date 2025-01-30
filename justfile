@@ -18,14 +18,17 @@ clean:
     find . -type f -name "*.egg" -delete
     find . -type f -name "*.so" -delete
 
+# remove all venvs
+clean-venvs:
+  rm -rf .venv*
+
 # clean out coverage files
 clean-cov:
     rm -rf pycov
     rm -rf .coverage
 
 # clean, remove existing .venvs and rebuild the venvs with uv pip install -e .[dev]
-reset: clean clean-cov && install (install "[typing]" "3.12" ".venv-3.12")
-    rm -rf .venv*
+reset: clean clean-cov clean-venvs install (install "[typing]" "3.12" ".venv-3.12")
 
 # (re-)create a venv and install the project and required dependecies for development & testing
 install extras="[dev]" python="3.13" venvpath=venv:
