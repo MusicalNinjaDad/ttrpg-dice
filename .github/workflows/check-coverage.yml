@@ -28,13 +28,9 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ env.python-version }}
-      - name: Install dependencies
-        run: |
-          just install [cov] ${{ env.python-version }}
       - name: Test with pytest
         run: |
-          . .venv/bin/activate
-          pytest --cov --cov-report=xml --cov-context=test # Context info not yet supported in cobertura (or any other common format between pytest-cov and codecov.io)
+          uv run pytest --cov --cov-report=xml --cov-context=test # Context info not yet supported in cobertura (or any other common format between pytest-cov and codecov.io)
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:

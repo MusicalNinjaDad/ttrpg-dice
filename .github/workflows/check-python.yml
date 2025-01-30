@@ -5,7 +5,6 @@ on:
     paths: 
     - "**.py"
     - "**pyproject.toml"
-    - "**justfile"
     - ".github/workflows/check-python.yml"
   pull_request:
   workflow_call:
@@ -31,18 +30,13 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Setup just
-      uses: taiki-e/install-action@just
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        just install [test] ${{ matrix.python-version }}
     - name: Test with pytest
       run: |
-        just test
+        uv run pytest
         
   lint:
     runs-on: ubuntu-latest
@@ -62,15 +56,10 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ env.python-version }}
-    - name: Setup just
-      uses: taiki-e/install-action@just
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
         python-version: ${{ env.python-version }}
-    - name: Install dependencies
-      run: |
-        just install [typing] ${{ env.python-version }}
     - name: Run pytype
       run: |
-        just type-check .venv
+        uv run pytype
