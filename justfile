@@ -65,4 +65,4 @@ show-cov:
 
 # serve python docs on localhost:8000
 docs:
-  mkdocs serve
+  uv run mkdocs serve
