@@ -30,7 +30,7 @@ jobs:
           python-version: ${{ env.python-version }}
       - name: Install dependencies
         run: |
-          just install
+          just install [cov] ${{ env.python-version }}
       - name: Test with pytest
         run: |
           . .venv/bin/activate

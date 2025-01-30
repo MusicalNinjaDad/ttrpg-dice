@@ -39,7 +39,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        just install [test]
+        just install [test] ${{ matrix.python-version }}
     - name: Test with pytest
       run: |
         just test
@@ -70,8 +70,7 @@ jobs:
         python-version: ${{ env.python-version }}
     - name: Install dependencies
       run: |
-        just install [typing]
+        just install [typing] ${{ env.python-version }}
     - name: Run pytype
       run: |
         just type-check .venv
-    
