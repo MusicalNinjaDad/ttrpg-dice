@@ -46,10 +46,10 @@
 #  Test, lint, documentation
 # ===========================
 
-[project.optional-dependencies]
+[dependency-groups]
     lint = ["ruff"]
     typing = [
-        "ttrpg-dice[test]",
+        {include-group = "test"},
         "pytype; python_version <= '3.12'",
         "typing_extensions", # required for Python3.10 and below
     ]
@@ -58,7 +58,7 @@
         "pytest-doctest-mkdocstrings",
         ]
     cov = [
-        "ttrpg-dice[test]",
+        {include-group = "test"},
         "pytest-cov",
     ]
     doc = [
@@ -68,7 +68,11 @@
         "mkdocs-material",
     ]
     dev = [
-        "ttrpg-dice[lint,typing,test,cov,doc]",
+        {include-group = "lint"},
+        {include-group = "typing"},
+        {include-group = "test"},
+        {include-group = "cov"},
+        {include-group = "doc"},
         "jupyter",
     ]
 

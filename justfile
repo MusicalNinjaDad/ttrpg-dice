@@ -27,26 +27,25 @@ clean-cov:
     rm -rf pycov
     rm -rf .coverage
 
-# clean, remove existing .venvs and rebuild the venvs with uv pip install -e .[dev]
-reset: clean clean-cov clean-venvs install (install "[typing]" "3.12" ".venv-3.12")
+# clean, remove existing .venvs and rebuild the venvs with uv sync
+reset: clean clean-cov clean-venvs install
 
 # (re-)create a venv and install the project and required dependecies for development & testing
-install extras="[dev]" python="3.13" venvpath=venv:
-    rm -rf {{venvpath}}
-    uv venv {{venvpath}} --python {{python}}
-    VIRTUAL_ENV="./{{venvpath}}" uv pip install -e .{{extras}}
+install:
+    # upgrade until we have confirmation that dependabot will recognise and process the generated requirements.txt
+    uv sync --upgrade
 
 # lint python with ruff
 lint:
-  {{venv}}/bin/ruff check .
+  uv run ruff check .
 
 # test python
 test:
-  {{venv}}/bin/pytest
+  uv run pytest
 
 # type-check python
-type-check venvpath=".venv-3.12":
-  {{venvpath}}/bin/pytype
+type-check:
+  UV_PROJECT_ENVIRONMENT="./.venv-3.12" uv run --python 3.12 pytype
 
 # lint and test python
 check:
@@ -56,7 +55,7 @@ check:
 
 #run coverage analysis on python code
 cov:
-  {{venv}}/bin/pytest --cov --cov-report html:pycov --cov-report term --cov-context=test
+  uv run pytest --cov --cov-report html:pycov --cov-report term --cov-context=test
 
 # serve python coverage results on localhost:8000 (doesn't run coverage analysis)
 show-cov:
