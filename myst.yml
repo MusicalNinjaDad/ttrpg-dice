@@ -2,8 +2,8 @@
 version: 1
 project:
   id: cf6ac950-931f-4176-9a02-cc20db98b72b
-  # title:
-  # description:
+  title: ttrpg-dice
+  description: Some stuff to help TTRPG gamesmasters with dice
   # keywords: []
   # authors: []
   github: https://github.com/MusicalNinjaDad/ttrpg-dice
