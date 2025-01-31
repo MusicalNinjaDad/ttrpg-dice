@@ -54,10 +54,18 @@ RUN dnf -y --setopt=install_weak_deps=False install \
     python3.12 \
     python3.12-devel
 
-# install uv, nbstripout, nodejs (for jupyterbook2)
+#uv for fast python package management
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 ENV UV_LINK_MODE=copy
+
+# nbstripout - git siff & strip handling for jupyter metadata. (Needs to be activated in workspace)
 RUN uv pip install --system nbstripout
+
+# For interactive matplotlib output in jupyter notebooks in vscode
+RUN dnf -y --setopt=install_weak_deps=False install \
+    qt6-qtwayland
+
+# nodejs & npm for jupyterbook2
 RUN dnf -y --setopt=install_weak_deps=False install \
     nodejs \
     npm
