@@ -8,6 +8,8 @@ project:
   # authors: []
   github: https://github.com/MusicalNinjaDad/ttrpg-dice
   # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
+  jupyter:
+    lite: true
 site:
   template: book-theme
   # options:
