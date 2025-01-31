@@ -20,9 +20,9 @@ ARG USERNAME=pyo3
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 RUN groupadd --gid ${USER_GID} ${USERNAME} \
-&& useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
-&& echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
-&& chmod 0440 /etc/sudoers.d/${USERNAME}
+    && useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
+    && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
+    && chmod 0440 /etc/sudoers.d/${USERNAME}
 
 # ---
 # Install ...
@@ -33,8 +33,8 @@ RUN dnf -y --setopt=install_weak_deps=False install \
     man \
     man-db \
     man-pages \
-&& dnf -y update \
-&& dnf -y --setopt=install_weak_deps=False reinstall --skip-unavailable $(dnf list --installed | awk '{print $1}')
+    && dnf -y update \
+    && dnf -y --setopt=install_weak_deps=False reinstall --skip-unavailable $(dnf list --installed | awk '{print $1}')
 
 # Basic development tools
 RUN dnf -y --setopt=install_weak_deps=False install \
@@ -60,10 +60,6 @@ ENV UV_LINK_MODE=copy
 
 # nbstripout - git siff & strip handling for jupyter metadata. (Needs to be activated in workspace)
 RUN uv pip install --system nbstripout
-
-# For interactive matplotlib output in jupyter notebooks in vscode
-RUN dnf -y --setopt=install_weak_deps=False install \
-    qt6-qtwayland
 
 # nodejs & npm for jupyterbook2
 RUN dnf -y --setopt=install_weak_deps=False install \

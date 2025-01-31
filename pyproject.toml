@@ -62,9 +62,9 @@
         "pytest-cov",
     ]
     doc = [
+        "ipympl",
         "jupyter",
         "jupyter-book>=2.0.0a1",
-        "PyQt6",
     ]
     dev = [
         {include-group = "lint"},
