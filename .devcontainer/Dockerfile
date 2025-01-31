@@ -56,7 +56,6 @@ RUN dnf -y --setopt=install_weak_deps=False install \
 
 #uv for fast python package management
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-ENV UV_LINK_MODE=copy
 
 # nbstripout - git siff & strip handling for jupyter metadata. (Needs to be activated in workspace)
 RUN uv pip install --system nbstripout
@@ -69,6 +68,9 @@ RUN dnf -y --setopt=install_weak_deps=False install \
 # ---
 # Final setup steps
 # ---
+
+# Set uv cache to inside workspace (allowing for hardlinking & explicit rentention management via uv)
+ENV UV_CACHE_DIR=.uv_cache
 
 # Set the default user
 USER ${USERNAME}
