@@ -4,33 +4,26 @@ venv := ".venv"
 list:
   @just --list --justfile {{justfile()}}
   
-# remove pre-built python libraries (excluding those in .venvs)
+# remove pre-built python libraries, tool caches, build results
 clean:
-    rm -rf .pytest_cache
     rm -rf build
     rm -rf test/assets/build
     rm -rf dist
     rm -rf wheelhouse
     rm -rf .ruff_cache
     rm -rf .pytype
-    find . -depth -type d -not -path "./.venv*/*" -name "__pycache__" -exec rm -rf "{}" \;
+    rm -rf .uv_cache
+    rm -rf .pytest_cache
+    rm -rf .venv*
+    rm -rf pycov
+    rm -rf .coverage
+    find . -depth -type d -name "__pycache__" -exec rm -rf "{}" \;
     find . -depth -type d -path "*.egg-info" -exec rm -rf "{}" \;
     find . -type f -name "*.egg" -delete
     find . -type f -name "*.so" -delete
 
-# remove all venvs
-clean-venvs:
-  rm -rf .venv*
-
-# clean out coverage files
-clean-cov:
-    rm -rf pycov
-    rm -rf .coverage
-
-clean-all: clean clean-venvs clean-cov
-
 # clean, remove existing .venvs and rebuild the venvs with uv sync
-reset: clean-all install
+reset: clean install
 
 # (re-)create a venv and install the project and required dependecies for development & testing
 install:
