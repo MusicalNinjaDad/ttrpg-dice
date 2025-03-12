@@ -1,4 +1,4 @@
-from ttrpg_dice import d, statblock
+from ttrpg_dice import StatBlock, d, statblock
 
 
 def test_empty():
@@ -8,3 +8,11 @@ def test_empty():
 
     empty = Combat()
     assert empty.WS == 0
+
+def test_isinstance_StatBlock():
+    @statblock
+    class Combat:
+        WS = d(100)
+
+    empty = Combat()
+    assert isinstance(empty, StatBlock)
