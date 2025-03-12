@@ -16,3 +16,8 @@ def test_isinstance_StatBlock():
 
     empty = Combat()
     assert isinstance(empty, StatBlock)
+
+# TODO: Subclass StatBlock with specific values
+# TODO: Immutable (frozen = True, test: hashable)
+# TODO: Addition
+# TODO: Max value assignable based on defined roll

@@ -8,7 +8,6 @@ from .dice import Dice
 class StatBlock:
     """A TTRPG StatBlock."""
 
-
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""
 
