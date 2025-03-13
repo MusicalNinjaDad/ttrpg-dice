@@ -11,6 +11,11 @@ class StatBlock:
 
     _STATS: ClassVar[dict[str, Dice]]
 
+    def __init__(self, *_args, **_kwargs) -> None:  # noqa: ANN002, ANN003
+        """Do not directly instantiate a StatBlock, please use the @statblock decorator instead."""
+        msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
+        raise TypeError(msg)
+
     def __add__(self, other: Self) -> Self:
         """Adds each stat, raises AttributeError if stat missing in `other`."""
         newstats = {

@@ -1,3 +1,7 @@
+import re
+
+import pytest
+
 from ttrpg_dice import StatBlock, d, statblock
 
 
@@ -92,6 +96,18 @@ def test_union():
 
     assert runaway.WS == 20
     assert runaway.BS == 10
+
+
+def test_no_direct_instantiation():
+    msg = re.escape("Cannot directly instantiate a StatBlock, please use the @statblock decorator instead.")
+    with pytest.raises(TypeError, match=msg):
+        _ = StatBlock()
+
+
+def test_no_direct_instantiation_with_args():
+    msg = re.escape("Cannot directly instantiate a StatBlock, please use the @statblock decorator instead.")
+    with pytest.raises(TypeError, match=msg):
+        _ = StatBlock(WS=7)
 
 
 # TODO: Immutable (frozen = True, test: hashable)
