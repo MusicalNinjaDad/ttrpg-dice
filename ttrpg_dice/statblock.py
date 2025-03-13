@@ -1,10 +1,16 @@
 """Create statblocks easily."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import ClassVar, Self
+from typing import TYPE_CHECKING
 
 from .dice import Dice
 
+if TYPE_CHECKING:
+    from contextlib import suppress
+    with suppress(ImportError):
+        from typing import ClassVar, Self
 
 class StatBlock:
     """A TTRPG StatBlock."""
