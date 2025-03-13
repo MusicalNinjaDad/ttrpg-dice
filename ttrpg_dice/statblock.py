@@ -13,7 +13,7 @@ class StatBlock:
 
     def __add__(self, other: Self) -> Self:
         """Adds each stat, raises AttributeError if stat missing in `other`."""
-        newstats = {stat: getattr(self,stat) + getattr(other,stat)
+        newstats = {stat: min(getattr(self,stat) + getattr(other,stat), len(self._STATS[stat]))
         for stat in self._STATS}
         return type(self)(**newstats)
             

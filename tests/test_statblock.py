@@ -60,9 +60,20 @@ def test__STATS():
 
     assert fighter._STATS == {"WS": d(100)}  # noqa: SLF001
 
+def test_maxed_out():
+    @statblock
+    class Combat:
+        WS = d(100)
+
+    fighter = Combat(WS=41)
+    superhuman = Combat(WS=60)
+
+    hero = fighter + superhuman
+
+    assert hero.WS == 100
+
 # TODO: Immutable (frozen = True, test: hashable)
 # TODO: Union (highest from each stat)
-# TODO: Max value assignable based on defined roll
 # TODO: kw_only
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage
