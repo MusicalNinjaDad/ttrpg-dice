@@ -27,6 +27,8 @@ def test_instatiation():
 
     assert fighter.WS == 41
     assert fighter.Dex == 0
+    assert isinstance(fighter, StatBlock)
+    assert type(fighter) is Mixed
 
 def test_addition():
     @statblock
