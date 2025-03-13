@@ -1,6 +1,7 @@
 """Create statblocks easily."""
 
 from dataclasses import dataclass
+from typing import Self
 
 from .dice import Dice
 
@@ -8,6 +9,12 @@ from .dice import Dice
 class StatBlock:
     """A TTRPG StatBlock."""
 
+    def __add__(self, other: Self) -> Self:
+        """Adds each stat, raises AttributeError if stat missing in `other`."""
+        newstats = {stat: getattr(self,stat) + getattr(other,stat)
+        for stat in vars(type(self)) if not stat.startswith("__")}
+        return type(self)(**newstats)
+            
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""
 

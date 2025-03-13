@@ -19,18 +19,30 @@ def test_isinstance_StatBlock():
 
 def test_instatiation():
     @statblock
-    class Combat:
+    class Mixed:
         WS = d(100)
         Dex = d(100)
 
-    fighter = Combat(WS=41)
+    fighter = Mixed(WS=41)
 
     assert fighter.WS == 41
     assert fighter.Dex == 0
 
+def test_addition():
+    @statblock
+    class Combat:
+        WS = d(100)
+
+    fighter = Combat(WS=41)
+    skilled = Combat(WS=10)
+
+    knight = fighter + skilled
+
+    assert knight.WS == 51
+    assert isinstance(knight, Combat)
 
 # TODO: Immutable (frozen = True, test: hashable)
-# TODO: Addition
+# TODO: Union (highest from each stat)
 # TODO: Max value assignable based on defined roll
 # TODO: kw_only
 # TODO: type-hinting instances
