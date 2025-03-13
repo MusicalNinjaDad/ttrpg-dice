@@ -51,6 +51,15 @@ def test_instance_vars():
     fighter = Combat(WS=41)
     assert vars(fighter) == {"WS": 41}
 
+def test__STATS():
+    @statblock
+    class Combat:
+        WS = d(100)
+
+    fighter = Combat(WS=41)
+
+    assert fighter._STATS == {"WS": d(100)}  # noqa: SLF001
+
 # TODO: Immutable (frozen = True, test: hashable)
 # TODO: Union (highest from each stat)
 # TODO: Max value assignable based on defined roll

@@ -144,6 +144,7 @@ inputs = ["ttrpg_dice"]
         "INP001",  # Missing __init__.py
         "ANN",     # Missing type annotations
         "S101",    # Use of `assert`
+        "SIM300",  # In tests Yoda OK is ... hmmm! (`assert thing == expected`)
         "PLR2004", # Magic number comparisons are OK in tests
         "D1",      # Don't REQUIRE docstrings for tests - but they are nice
         "N802",    # Test case names may include caps (e.g. when referring to a class under test)
