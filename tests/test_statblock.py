@@ -72,8 +72,23 @@ def test_maxed_out():
 
     assert hero.WS == 100
 
+def test_union():
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+    squire = FullCombat(WS=10, BS=10)
+    thief = FullCombat(WS=20)
+
+    runaway = squire | thief
+    
+    assert runaway.WS == 20
+    assert runaway.BS == 10
+
 # TODO: Immutable (frozen = True, test: hashable)
 # TODO: Union (highest from each stat)
 # TODO: kw_only
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage
+# TODO: Maths where blocks have different stats
