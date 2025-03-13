@@ -95,7 +95,6 @@ def test_union():
 
 
 # TODO: Immutable (frozen = True, test: hashable)
-# TODO: Union (highest from each stat)
 # TODO: kw_only
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage
