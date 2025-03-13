@@ -64,4 +64,4 @@ def test__STATS():
 # TODO: Union (highest from each stat)
 # TODO: Max value assignable based on defined roll
 # TODO: kw_only
-# TODO: type-hinting instances
+# TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
