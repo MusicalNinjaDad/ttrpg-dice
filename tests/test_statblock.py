@@ -17,7 +17,20 @@ def test_isinstance_StatBlock():
     empty = Combat()
     assert isinstance(empty, StatBlock)
 
-# TODO: Subclass StatBlock with specific values
+def test_instatiation():
+    @statblock
+    class Combat:
+        WS = d(100)
+        Dex = d(100)
+
+    fighter = Combat(WS=41)
+
+    assert fighter.WS == 41
+    assert fighter.Dex == 0
+
+
 # TODO: Immutable (frozen = True, test: hashable)
 # TODO: Addition
 # TODO: Max value assignable based on defined roll
+# TODO: kw_only
+# TODO: type-hinting instances
