@@ -9,6 +9,7 @@ def test_empty():
     empty = Combat()
     assert empty.WS == 0
 
+
 def test_isinstance_StatBlock():
     @statblock
     class Combat:
@@ -16,6 +17,7 @@ def test_isinstance_StatBlock():
 
     empty = Combat()
     assert isinstance(empty, StatBlock)
+
 
 def test_instatiation():
     @statblock
@@ -30,6 +32,7 @@ def test_instatiation():
     assert isinstance(fighter, StatBlock)
     assert type(fighter) is Mixed
 
+
 def test_addition():
     @statblock
     class Combat:
@@ -43,6 +46,7 @@ def test_addition():
     assert knight.WS == 51
     assert isinstance(knight, Combat)
 
+
 def test_instance_vars():
     @statblock
     class Combat:
@@ -50,6 +54,7 @@ def test_instance_vars():
 
     fighter = Combat(WS=41)
     assert vars(fighter) == {"WS": 41}
+
 
 def test__STATS():
     @statblock
@@ -59,6 +64,7 @@ def test__STATS():
     fighter = Combat(WS=41)
 
     assert fighter._STATS == {"WS": d(100)}  # noqa: SLF001
+
 
 def test_maxed_out():
     @statblock
@@ -72,6 +78,7 @@ def test_maxed_out():
 
     assert hero.WS == 100
 
+
 def test_union():
     @statblock
     class FullCombat:
@@ -82,9 +89,10 @@ def test_union():
     thief = FullCombat(WS=20)
 
     runaway = squire | thief
-    
+
     assert runaway.WS == 20
     assert runaway.BS == 10
+
 
 # TODO: Immutable (frozen = True, test: hashable)
 # TODO: Union (highest from each stat)

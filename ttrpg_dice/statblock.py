@@ -9,20 +9,21 @@ from .dice import Dice
 class StatBlock:
     """A TTRPG StatBlock."""
 
-    _STATS: ClassVar[dict[str,Dice]]
+    _STATS: ClassVar[dict[str, Dice]]
 
     def __add__(self, other: Self) -> Self:
         """Adds each stat, raises AttributeError if stat missing in `other`."""
-        newstats = {stat: min(getattr(self,stat) + getattr(other,stat), len(self._STATS[stat]))
-        for stat in self._STATS}
+        newstats = {
+            stat: min(getattr(self, stat) + getattr(other, stat), len(self._STATS[stat])) for stat in self._STATS
+        }
         return type(self)(**newstats)
 
     def __or__(self, other: Self) -> Self:
         """Merge stats, keeping the highest."""
-        newstats = {stat: max(getattr(self,stat), getattr(other,stat))
-        for stat in self._STATS}
+        newstats = {stat: max(getattr(self, stat), getattr(other, stat)) for stat in self._STATS}
         return type(self)(**newstats)
-            
+
+
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""
 
