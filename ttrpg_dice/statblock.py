@@ -45,6 +45,6 @@ def statblock(cls: type) -> StatBlock:
         (cls, StatBlock),
         {attr: 0 if attr in newstats else val for attr, val in vars(cls).items()},
     )
-    _interimclass.__annotations__ = {stat: int for stat in fullstats}
+    _interimclass.__annotations__ = dict.fromkeys(fullstats, int)
     _interimclass._STATS = fullstats  # noqa: SLF001
-    return dataclass(_interimclass, kw_only=True)
+    return dataclass(_interimclass, kw_only=True) # pytype: disable=wrong-keyword-args
