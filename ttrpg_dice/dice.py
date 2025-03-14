@@ -93,7 +93,7 @@ class Dice:
             return self._probabilitycache  # pytype: disable=attribute-error
         except AttributeError:
             all_possible_rolls = [sum(r) for r in product(*self._individual_dice_rolls())]
-            ways_to_roll = {roll: all_possible_rolls.count(roll) for roll in range(1,max(all_possible_rolls)+1)}
+            ways_to_roll = {roll: all_possible_rolls.count(roll) for roll in range(1, max(all_possible_rolls) + 1)}
             number_possible_rolls = len(all_possible_rolls)
             self._probabilitycache = [None] + [n / number_possible_rolls for _, n in sorted(ways_to_roll.items())]
             return self._probabilitycache
@@ -115,7 +115,7 @@ class Dice:
     def __getitem__(self, index: int | slice) -> float | list[float] | None:
         """
         Get the probability of a specific result, or a list of probabilities in the case of a slice.
-        
+
         This handles the fact that dice faces are numbered from 1, not 0. Slicing with a step > 1 will
         return the probabilities of results beginning with the given step, not beginning with 1.
 
@@ -141,13 +141,13 @@ class Dice:
         """
         if index == 0 or index == -(len(self) + 1):
             raise DiceIndexError(self)
-        
+
         try:
             # pytype: disable=attribute-error
             if index.step is None or index.step > 0:  # Positive step
                 if index.start is None:
                     index = slice(1 if index.step is None else index.step, index.stop, index.step)
-                elif index.start == 0: # To avoid possible confusion by slicing [0:]
+                elif index.start == 0:  # To avoid possible confusion by slicing [0:]
                     raise DiceIndexError(self)
             else:  # Negative Step  # noqa: PLR5501
                 if index.stop is None:
@@ -182,15 +182,16 @@ class Dice:
     def __str__(self) -> str:
         """The type of Dice in NdX notation."""
         sortedcontents = deque(sorted(self.contents.items()))
-        
+
         # Place any constant at the end ("d4 + 2" not "2 + d4")
         if sortedcontents[0][0] == 1:
             sortedcontents.rotate(-1)
-        
-        def _ndx(n: int,x: int) -> str:
-            if x == 1: return str(n)
+
+        def _ndx(n: int, x: int) -> str:
+            if x == 1:
+                return str(n)
             return f"{n if n > 1 else ''}d{x}"
-        
+
         return " + ".join(_ndx(n, x) for x, n in sortedcontents)
 
     def __repr__(self) -> str:
@@ -215,8 +216,7 @@ class Dice:
             othercontents = defaultdict(int, {1: self._int(other, "add", "and")})
 
         contents = {
-            face: self.contents[face] + othercontents[face]
-            for face in set(self.contents.keys() | othercontents.keys())
+            face: self.contents[face] + othercontents[face] for face in set(self.contents.keys() | othercontents.keys())
         }
 
         return self.from_contents(contents)
@@ -235,7 +235,7 @@ class Dice:
     def _individual_dice_rolls(self) -> Generator[list, None, None]:
         """
         Yields a series of lists, each containing the valid faces of the individual dice contained within this `Dice`.
-        
+
         Examples:
             For a simple d4:
             ```

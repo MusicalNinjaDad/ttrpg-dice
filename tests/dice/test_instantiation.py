@@ -186,13 +186,14 @@ DiceTests = [
 ]
 # fmt: on
 
+
 @pytest.mark.parametrize(
     ["dietype", "probabilities"],
     [(pytest.param(tc.dice_expr, tc.probabilities, id=tc.id)) for tc in DiceTests],
     indirect=["dietype"],
 )
 def test_probabilities(dietype, probabilities):
-    check = [isclose(p, e) for p, e in zip(list(dietype), probabilities)]
+    check = [isclose(p, e) for p, e in zip(list(dietype), probabilities)]  # noqa: B905
     try:
         mismatch = indexOf(check, False)  # noqa: FBT003
         msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
@@ -240,7 +241,7 @@ def test_hash(dietype, hashed):
 @pytest.mark.parametrize(
     ["dietype", "contents"],
     [(pytest.param(tc.dice_expr, tc.contents, id=tc.id)) for tc in DiceTests],
-indirect=["dietype"],
+    indirect=["dietype"],
 )
 def test_fromcontents(dietype: d, contents: dict):
     assert d.from_contents(contents) == dietype
@@ -249,7 +250,7 @@ def test_fromcontents(dietype: d, contents: dict):
 @pytest.mark.parametrize(
     ["dietype", "weighted"],
     [(pytest.param(tc.dice_expr, tc.weighted, id=tc.id)) for tc in DiceTests],
-indirect=["dietype"],
+    indirect=["dietype"],
 )
 def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
     assert dietype.weighted == weighted
@@ -258,7 +259,7 @@ def test_weighted(dietype: d, weighted: bool):  # noqa: FBT001
 @pytest.mark.parametrize(
     ["dietype", "probabilities"],
     [(pytest.param(tc.dice_expr, tc.probabilities, id=tc.id)) for tc in DiceTests],
-indirect=["dietype"],
+    indirect=["dietype"],
 )
 def test_first_probability(dietype, probabilities):
     assert isclose(dietype[1], probabilities[0])
@@ -267,7 +268,7 @@ def test_first_probability(dietype, probabilities):
 @pytest.mark.parametrize(
     ["dietype", "faces"],
     [(pytest.param(tc.dice_expr, tc.faces, id=tc.id)) for tc in DiceTests],
-indirect=["dietype"],
+    indirect=["dietype"],
 )
 def test_faces(dietype: d, faces: int):
     assert len(dietype) == faces
