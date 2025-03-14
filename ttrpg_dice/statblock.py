@@ -37,12 +37,14 @@ class StatBlock:
 
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""
-    stats = {statname: roll for statname, roll in vars(cls).items() if isinstance(roll, Dice)}
+    inheritedstats = getattr(cls,"_STATS",{})
+    newstats = {statname: roll for statname, roll in vars(cls).items() if isinstance(roll, Dice)}
+    fullstats = inheritedstats | newstats
     _interimclass: type = type(
         cls.__name__,
         (cls, StatBlock),
-        {attr: 0 if attr in stats else val for attr, val in vars(cls).items()},
+        {attr: 0 if attr in newstats else val for attr, val in vars(cls).items()},
     )
-    _interimclass.__annotations__ = {stat: int for stat in stats}
-    _interimclass._STATS = stats  # noqa: SLF001
+    _interimclass.__annotations__ = {stat: int for stat in fullstats}
+    _interimclass._STATS = fullstats  # noqa: SLF001
     return dataclass(_interimclass)

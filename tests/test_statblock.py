@@ -109,6 +109,28 @@ def test_no_direct_instantiation_with_args():
     with pytest.raises(TypeError, match=msg):
         _ = StatBlock(WS=7)
 
+def test_subclass_has__STATS():
+    @statblock
+    class Combat:
+        WS = d(100)
+
+    class Human(Combat):
+        WS = 33
+
+    albert = Human()
+    assert albert._STATS == {"WS": d(100)}  # noqa: SLF001
+
+def test_subclass_stat():
+    @statblock
+    class Combat:
+        WS = d(100)
+
+    @statblock
+    class Human(Combat):
+        WS = 33
+
+    albert = Human()
+    assert albert.WS == 33
 
 # TODO: Immutable (frozen = True, test: hashable)
 # TODO: kw_only
