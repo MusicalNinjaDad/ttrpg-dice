@@ -108,7 +108,7 @@ SliceTests = [
     indirect=["dietype"],
 )
 def test_slicing(dietype, sides, probabilities):
-    check = [isclose(p, e) for p, e in zip(dietype[sides], probabilities)]
+    check = [isclose(p, e) for p, e in zip(dietype[sides], probabilities)]  # noqa: B905
     try:
         mismatch = indexOf(check, False)  # noqa: FBT003
         msg = f"First mismatch p({mismatch}) is {list(dietype)[mismatch]} should be {probabilities[mismatch]}"
