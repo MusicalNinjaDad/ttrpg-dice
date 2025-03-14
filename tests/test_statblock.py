@@ -132,6 +132,19 @@ def test_subclass_stat():
     albert = Human()
     assert albert.WS == 33
 
+def test_subclass_partial():
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+    @statblock
+    class Human(FullCombat):
+        WS = 33
+
+    albert = Human()
+    assert vars(albert) == {"WS": 33, "BS": 0}
+
 # TODO: Immutable (frozen = True, test: hashable)
 # TODO: kw_only
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
