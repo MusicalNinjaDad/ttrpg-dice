@@ -38,16 +38,26 @@ jobs:
         uv run --no-default-groups --group test pytest
         
   lint:
+    env:
+      python-version: '3.13'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Ruff
-      uses: chartboost/ruff-action@v1
+    - name: Set up Python ${{ env.python-version }} (Latest which pytype supports)
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.python-version }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: ${{ env.python-version }}
+    - name: Run ruff
+      run: |
+        uv run --no-default-groups --group lint ruff check .
 
   type-check:
     env:
       python-version: '3.12'
-    continue-on-error: false # explicitly make typing mandatory as pytype is lenient by design
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
