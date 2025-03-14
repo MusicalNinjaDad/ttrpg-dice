@@ -109,6 +109,7 @@ def test_no_direct_instantiation_with_args():
     with pytest.raises(TypeError, match=msg):
         _ = StatBlock(WS=7)
 
+
 def test_subclass_has__STATS():
     @statblock
     class Combat:
@@ -119,6 +120,7 @@ def test_subclass_has__STATS():
 
     albert = Human()
     assert albert._STATS == {"WS": d(100)}  # noqa: SLF001
+
 
 def test_subclass_stat():
     @statblock
@@ -131,6 +133,7 @@ def test_subclass_stat():
 
     albert = Human()
     assert albert.WS == 33
+
 
 def test_subclass_partial():
     @statblock
@@ -145,6 +148,7 @@ def test_subclass_partial():
     albert = Human()
     assert vars(albert) == {"WS": 33, "BS": 0}
 
+
 def test_kw_only():
     @statblock
     class FullCombat:
@@ -153,7 +157,7 @@ def test_kw_only():
 
     with pytest.raises(TypeError):
         _ = FullCombat(45)
-    
+
 
 # TODO: Immutable (frozen = True, test: hashable)
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)

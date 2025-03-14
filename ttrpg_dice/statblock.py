@@ -9,8 +9,10 @@ from .dice import Dice
 
 if TYPE_CHECKING:
     from contextlib import suppress
+
     with suppress(ImportError):
         from typing import ClassVar, Self
+
 
 class StatBlock:
     """A TTRPG StatBlock."""
@@ -37,7 +39,7 @@ class StatBlock:
 
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""
-    inheritedstats = getattr(cls,"_STATS",{})
+    inheritedstats = getattr(cls, "_STATS", {})
     newstats = {statname: roll for statname, roll in vars(cls).items() if isinstance(roll, Dice)}
     fullstats = inheritedstats | newstats
     _interimclass: type = type(
@@ -47,4 +49,4 @@ def statblock(cls: type) -> StatBlock:
     )
     _interimclass.__annotations__ = dict.fromkeys(fullstats, int)
     _interimclass._STATS = fullstats  # noqa: SLF001
-    return dataclass(_interimclass, kw_only=True) # pytype: disable=wrong-keyword-args
+    return dataclass(_interimclass, kw_only=True)  # pytype: disable=wrong-keyword-args
