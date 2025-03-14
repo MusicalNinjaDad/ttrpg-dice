@@ -49,4 +49,4 @@ def statblock(cls: type) -> StatBlock:
     )
     _interimclass.__annotations__ = dict.fromkeys(fullstats, int)
     _interimclass._STATS = fullstats  # noqa: SLF001
-    return dataclass(_interimclass, kw_only=True)  # pytype: disable=wrong-keyword-args
+    return dataclass(_interimclass, kw_only=True, frozen=True)  # pytype: disable=wrong-keyword-args

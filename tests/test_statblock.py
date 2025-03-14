@@ -1,3 +1,4 @@
+import dataclasses
 import re
 
 import pytest
@@ -158,8 +159,16 @@ def test_kw_only():
     with pytest.raises(TypeError):
         _ = FullCombat(45)
 
+def test_immutable():
+    @statblock
+    class Combat:
+        WS = d(100)
 
-# TODO: Immutable (frozen = True, test: hashable)
+    fighter = Combat(WS=41)
+
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        fighter.WS = 51
+
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage
 # TODO: Maths where blocks have different stats
