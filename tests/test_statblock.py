@@ -145,8 +145,17 @@ def test_subclass_partial():
     albert = Human()
     assert vars(albert) == {"WS": 33, "BS": 0}
 
+def test_kw_only():
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+    with pytest.raises(TypeError):
+        _ = FullCombat(45)
+    
+
 # TODO: Immutable (frozen = True, test: hashable)
-# TODO: kw_only
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage
 # TODO: Maths where blocks have different stats

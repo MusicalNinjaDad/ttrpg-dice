@@ -47,4 +47,4 @@ def statblock(cls: type) -> StatBlock:
     )
     _interimclass.__annotations__ = {stat: int for stat in fullstats}
     _interimclass._STATS = fullstats  # noqa: SLF001
-    return dataclass(_interimclass)
+    return dataclass(_interimclass, kw_only=True)
