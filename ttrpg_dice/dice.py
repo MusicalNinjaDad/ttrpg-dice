@@ -235,7 +235,7 @@ class Dice:
         contents = {}
         for die in dice:
             n,d,x = die.strip().partition("d")
-            contents |= {int(x): int(n) if n else 1}
+            contents |= {int(x) if x else 1: int(n) if n else 1}
         return cls.from_contents(contents)
 
     # pytype: enable=invalid-annotation
