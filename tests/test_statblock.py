@@ -128,7 +128,6 @@ def test_subclass_stat():
     class Combat:
         WS = d(100)
 
-    @statblock
     class Human(Combat):
         WS = 33
 
@@ -142,7 +141,6 @@ def test_subclass_partial():
         WS = d(100)
         BS = d(100)
 
-    @statblock
     class Human(FullCombat):
         WS = 33
 
