@@ -23,7 +23,7 @@ class StatBlock:
         msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
         raise TypeError(msg)
 
-    def _real_init_(self, /, **stats: dict[str, int | Dice]) -> None:
+    def _real_init_(self, /, **stats: int | Dice) -> None:
         """Initialise a Statblock with some, or all stats given."""
         for stat in self._STATS:
             val = stats.pop(stat, vars(type(self)).get(stat, 0))
