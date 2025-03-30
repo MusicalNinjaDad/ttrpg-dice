@@ -26,7 +26,7 @@ class StatBlock:
     def _real_init_(self, /, **stats: dict[str, int | Dice]) -> None:
         """Initialise a Statblock with some, or all stats given."""
         for stat in self._STATS:
-            val = stats.get(stat, vars(type(self)).get(stat))
+            val = stats.get(stat, vars(type(self)).get(stat, 0))
             setattr(self, stat, val)
 
     def __add__(self, other: Self) -> Self:
