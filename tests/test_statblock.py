@@ -156,6 +156,16 @@ def test_kw_only():
     with pytest.raises(TypeError):
         _ = FullCombat(45)
 
+def test_invalid_stat():
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+    msg = "Invalid stat. FullCombat does not contain `M`."
+    with pytest.raises(AttributeError, match = msg):
+        _ = FullCombat(WS=33, M = 4)
+
 
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage

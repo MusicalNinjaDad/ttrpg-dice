@@ -26,8 +26,12 @@ class StatBlock:
     def _real_init_(self, /, **stats: dict[str, int | Dice]) -> None:
         """Initialise a Statblock with some, or all stats given."""
         for stat in self._STATS:
-            val = stats.get(stat, vars(type(self)).get(stat, 0))
+            val = stats.pop(stat, vars(type(self)).get(stat, 0))
             setattr(self, stat, val)
+        if stats:
+            remaining_stats = ", ".join(f"`{stat}`" for stat in stats)
+            msg = f"Invalid stat. {type(self).__name__} does not contain {remaining_stats}."
+            raise AttributeError(msg)
 
     def __add__(self, other: Self) -> Self:
         """Adds each stat, raises AttributeError if stat missing in `other`."""
