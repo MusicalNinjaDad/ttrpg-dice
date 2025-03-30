@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from .dice import Dice
@@ -24,6 +23,16 @@ class StatBlock:
         msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
         raise TypeError(msg)
 
+    def _real_init_(self, /, **stats: int | Dice) -> None:
+        """Initialise a Statblock with some, or all stats given."""
+        for stat in self._STATS:
+            val = stats.pop(stat, vars(type(self)).get(stat, 0))
+            setattr(self, stat, val)
+        if stats:
+            remaining_stats = ", ".join(f"`{stat}`" for stat in stats)
+            msg = f"Invalid stat. {type(self).__name__} does not contain {remaining_stats}."
+            raise AttributeError(msg)
+
     def __add__(self, other: Self) -> Self:
         """Adds each stat, raises AttributeError if stat missing in `other`."""
         newstats = {
@@ -39,14 +48,13 @@ class StatBlock:
 
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""
-    inheritedstats = getattr(cls, "_STATS", {})
-    newstats = {statname: roll for statname, roll in vars(cls).items() if isinstance(roll, Dice)}
-    fullstats = inheritedstats | newstats
+    stats = {statname: roll for statname, roll in vars(cls).items() if isinstance(roll, Dice)}
     _interimclass: type = type(
         cls.__name__,
         (cls, StatBlock),
-        {attr: 0 if attr in newstats else val for attr, val in vars(cls).items()},
+        {attr: 0 if attr in stats else val for attr, val in vars(cls).items()},
     )
-    _interimclass.__annotations__ = dict.fromkeys(fullstats, int)
-    _interimclass._STATS = fullstats  # noqa: SLF001
-    return dataclass(_interimclass, kw_only=True, frozen=True)  # pytype: disable=wrong-keyword-args
+    _interimclass.__annotations__ = dict.fromkeys(stats, int | Dice)
+    _interimclass._STATS = stats  # noqa: SLF001
+    _interimclass.__init__ = StatBlock._real_init_
+    return _interimclass

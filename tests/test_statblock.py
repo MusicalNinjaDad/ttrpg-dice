@@ -1,4 +1,3 @@
-import dataclasses
 import re
 
 import pytest
@@ -128,7 +127,6 @@ def test_subclass_stat():
     class Combat:
         WS = d(100)
 
-    @statblock
     class Human(Combat):
         WS = 33
 
@@ -142,7 +140,6 @@ def test_subclass_partial():
         WS = d(100)
         BS = d(100)
 
-    @statblock
     class Human(FullCombat):
         WS = 33
 
@@ -159,16 +156,18 @@ def test_kw_only():
     with pytest.raises(TypeError):
         _ = FullCombat(45)
 
-def test_immutable():
+def test_invalid_stat():
     @statblock
-    class Combat:
+    class FullCombat:
         WS = d(100)
+        BS = d(100)
 
-    fighter = Combat(WS=41)
+    msg = "Invalid stat. FullCombat does not contain `M`."
+    with pytest.raises(AttributeError, match = msg):
+        _ = FullCombat(WS=33, M = 4)
 
-    with pytest.raises(dataclasses.FrozenInstanceError):
-        fighter.WS = 51
 
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage
 # TODO: Maths where blocks have different stats
+# TODO: Make stats immutable and enable hash (allowing usage as a dict key)
