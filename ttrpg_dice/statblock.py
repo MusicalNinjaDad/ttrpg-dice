@@ -26,7 +26,7 @@ class StatBlock:
     def _real_init_(self, /, **stats: dict[str, int | Dice]) -> None:
         """Initialise a Statblock with some, or all stats given."""
         for stat in self._STATS:
-            val = stats.get(stat, 0)
+            val = stats.get(stat, vars(type(self)).get(stat))
             setattr(self, stat, val)
 
     def __add__(self, other: Self) -> Self:
@@ -48,7 +48,7 @@ def statblock(cls: type) -> StatBlock:
     _interimclass: type = type(
         cls.__name__,
         (cls, StatBlock),
-        {attr: val for attr, val in vars(cls).items() if attr not in stats},
+        {attr: 0 if attr in stats else val for attr, val in vars(cls).items()},
     )
     _interimclass.__annotations__ = dict.fromkeys(stats, int | Dice)
     _interimclass._STATS = stats  # noqa: SLF001
