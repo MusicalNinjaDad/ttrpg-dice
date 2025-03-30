@@ -1,5 +1,11 @@
 # ttrpg-dice Changelog
 
+## [v0.4.0] - 2025-03-30
+
+### Added
+
+- Create a `Dice` from a `str`ing in ndx notation (e.g. `d.from_str("2d4 + 3")`)
+
 ## [v0.3.0] - 2025-03-30
 
 ### Breaking Changes
