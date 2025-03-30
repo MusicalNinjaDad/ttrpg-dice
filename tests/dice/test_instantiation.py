@@ -246,6 +246,13 @@ def test_hash(dietype, hashed):
 def test_fromcontents(dietype: d, contents: dict):
     assert d.from_contents(contents) == dietype
 
+@pytest.mark.parametrize(
+    ["description", "dietype"],
+    [pytest.param(tc.description, tc.dice_expr, id=tc.id) for tc in DiceTests],
+    indirect=["dietype"],
+)
+def test_from_str(description: str, dietype: d):
+    assert d.from_str(description) == dietype
 
 @pytest.mark.parametrize(
     ["dietype", "weighted"],
@@ -398,6 +405,3 @@ def test_invalid_die(faces, errortype, errormsg):
 def test_invalid_from_contents(contents, errortype, errormsg):
     with pytest.raises(errortype, match=errormsg):
         d.from_contents(contents)
-
-def test_from_str():
-    assert d.from_str("d4") == d(4)
