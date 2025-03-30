@@ -231,8 +231,11 @@ class Dice:
     @classmethod
     def from_str(cls, description: str) -> Self:
         """Create a new die from ndX notation."""
-        n,d,x = description.partition("d")
-        contents = {int(x): int(n) if n else 1}
+        dice = description.split("+")
+        contents = {}
+        for die in dice:
+            n,d,x = die.strip().partition("d")
+            contents |= {int(x): int(n) if n else 1}
         return cls.from_contents(contents)
 
     # pytype: enable=invalid-annotation
