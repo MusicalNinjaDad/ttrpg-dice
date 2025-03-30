@@ -227,6 +227,12 @@ class Dice:
         die = cls.__new__(cls)
         die.contents = cls._Contents(contents)
         return die
+    
+    @classmethod
+    def from_str(cls, description: str) -> Self:
+        """Create a new die from ndX notation."""
+        contents = {int(description.removeprefix("d")): 1}
+        return cls.from_contents(contents)
 
     # pytype: enable=invalid-annotation
     # END Block of stuff that returns Self ... pytype doesn't like this while we have Python3.10 and below

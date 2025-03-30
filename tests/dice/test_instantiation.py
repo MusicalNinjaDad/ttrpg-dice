@@ -398,3 +398,6 @@ def test_invalid_die(faces, errortype, errormsg):
 def test_invalid_from_contents(contents, errortype, errormsg):
     with pytest.raises(errortype, match=errormsg):
         d.from_contents(contents)
+
+def test_from_str():
+    assert d.from_str("d4") == d(4)
