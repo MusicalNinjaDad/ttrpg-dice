@@ -58,8 +58,8 @@ def statblock(cls: type) -> StatBlock:
     stats = {statname: roll for statname, roll in vars(cls).items() if isinstance(roll, Dice)}
     _interimclass: type = type(
         cls.__name__,
-        (cls, StatBlock),
-        {attr: 0 if attr in stats else val for attr, val in vars(cls).items()},
+        (StatBlock,),
+        {attr: 0 if attr in stats else val for attr, val in vars(cls).items() if attr != "__dict__"},
     )
     _interimclass.__annotations__ = dict.fromkeys(stats, int | Dice)
     _interimclass._STATS = stats  # noqa: SLF001
