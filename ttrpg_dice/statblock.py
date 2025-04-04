@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator, Mapping
 from typing import TYPE_CHECKING
 
 from .dice import Dice
@@ -13,8 +14,8 @@ if TYPE_CHECKING:
         from typing import ClassVar, Self
 
 
-class StatBlock:
-    """A TTRPG StatBlock."""
+class StatBlock(Mapping):
+    """A TTRPG StatBlock, acts as a mapping of stats."""
 
     _STATS: ClassVar[dict[str, Dice]]
 
@@ -51,6 +52,14 @@ class StatBlock:
             return vars(self)[stat]
         msg = f"Unknown stat '{stat}'"
         raise KeyError(msg)
+    
+    def __len__(self) -> int:
+        """Number of stats."""
+        return len(self._STATS)
+    
+    def __iter__(self) -> Iterator:
+        """Iterate over stats."""
+        return iter(self._STATS)
     
     def __str__(self) -> str:
         """A description of the Statblock type e.g. 'Human Warhammer StatBlock'."""
