@@ -193,6 +193,20 @@ def test_repr():
     assert repr(albert) == "Human FullCombat StatBlock(WS: d100 = 33, BS: d100 = 0)"
 
 
+def test_subscripting():
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+    class Human(FullCombat):
+        WS = 33
+
+    albert = Human()
+
+    assert albert["WS"] == 33
+
+
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage
 # TODO: Maths where blocks have different stats

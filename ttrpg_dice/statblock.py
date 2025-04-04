@@ -45,7 +45,9 @@ class StatBlock:
         newstats = {stat: max(getattr(self, stat), getattr(other, stat)) for stat in self._STATS}
         return type(self)(**newstats)
 
-    # TODO: allow subscripting to get individual stat
+    def __getitem__(self, stat: str) -> int | Dice:
+        """Get a specific stat by subscripting."""
+        return vars(self)[stat]
     
     def __str__(self) -> str:
         """A description of the Statblock type e.g. 'Human Warhammer StatBlock'."""
