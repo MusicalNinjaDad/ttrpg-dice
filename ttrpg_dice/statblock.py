@@ -52,6 +52,15 @@ class StatBlock:
         statblock_index = bases.index(StatBlock)
         return " ".join(base.__name__ for base in bases[:statblock_index+1])
 
+    def __repr__(self) -> str:
+        """Statblock type as per `str` plus the stats and their challenge rolls."""
+        return (
+            str(self)
+            + "("
+            + ", ".join(f"{statname}: {roll} = {vars(self)[statname]}" for statname, roll in self._STATS.items())
+            + ")"
+        )
+
 
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""

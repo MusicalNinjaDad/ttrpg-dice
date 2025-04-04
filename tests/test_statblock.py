@@ -179,6 +179,19 @@ def test_str():
 
     assert str(albert) == "Human FullCombat StatBlock"
 
+def test_repr():
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+    class Human(FullCombat):
+        WS = 33
+
+    albert = Human()
+
+    assert repr(albert) == "Human FullCombat StatBlock(WS: d100 = 33, BS: d100 = 0)"
+
 
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage
