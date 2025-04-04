@@ -177,7 +177,7 @@ def test_str():
 
     albert = Human()
 
-    assert str(albert) == "Human FullCombat Statblock"
+    assert str(albert) == "Human FullCombat StatBlock"
 
 
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
