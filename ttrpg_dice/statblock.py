@@ -44,6 +44,8 @@ class StatBlock:
         """Merge stats, keeping the highest."""
         newstats = {stat: max(getattr(self, stat), getattr(other, stat)) for stat in self._STATS}
         return type(self)(**newstats)
+
+    # TODO: allow subscripting to get individual stat
     
     def __str__(self) -> str:
         """A description of the Statblock type e.g. 'Human Warhammer StatBlock'."""
