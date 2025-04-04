@@ -64,7 +64,7 @@ class StatBlock:
         return (
             str(self)
             + "("
-            + ", ".join(f"{statname}: {roll} = {vars(self)[statname]}" for statname, roll in self._STATS.items())
+            + ", ".join(f"{statname}: {roll} = {self[statname]}" for statname, roll in self._STATS.items())
             + ")"
         )
 
