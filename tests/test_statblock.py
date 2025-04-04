@@ -1,6 +1,7 @@
 import re
 
 import pytest
+from tabulate2 import tabulate
 
 from ttrpg_dice import StatBlock, d, statblock
 
@@ -235,6 +236,19 @@ def test_mapping():
     assert list(albert.keys()) == ["WS", "BS"]
     assert list(albert.values()) == [33, 0]
     assert list(albert.items()) == [("WS", 33), ("BS", 0)]
+
+def test_table():
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+    class Human(FullCombat):
+        WS = 33
+
+    albert = Human()
+
+    assert albert.as_table() == tabulate([[33,0]], headers=["WS","BS"], tablefmt="github")
 
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage

@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Iterator, Mapping
 from typing import TYPE_CHECKING
 
+from tabulate2 import tabulate
+
 from .dice import Dice
 
 if TYPE_CHECKING:
@@ -76,6 +78,10 @@ class StatBlock(Mapping):
             + ", ".join(f"{statname}: {roll} = {self[statname]}" for statname, roll in self._STATS.items())
             + ")"
         )
+    
+    def as_table(self) -> str:
+        """Render the StatBlock as a github markdown table."""
+        return tabulate([[*self.values()]], headers=self.keys(), tablefmt="github")
 
 
 def statblock(cls: type) -> StatBlock:
