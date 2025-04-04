@@ -44,6 +44,13 @@ class StatBlock:
         """Merge stats, keeping the highest."""
         newstats = {stat: max(getattr(self, stat), getattr(other, stat)) for stat in self._STATS}
         return type(self)(**newstats)
+    
+    def __str__(self) -> str:
+        """A description of the Statblock type e.g. 'Human Warhammer StatBlock'."""
+        cls = type(self)
+        bases = cls.mro()
+        statblock_index = bases.index(StatBlock)
+        return " ".join(base.__name__ for base in bases[:statblock_index+1])
 
 
 def statblock(cls: type) -> StatBlock:
