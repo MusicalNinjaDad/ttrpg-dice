@@ -206,6 +206,21 @@ def test_subscripting():
 
     assert albert["WS"] == 33
 
+def test_subscripting_invalidstat():
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+    class Human(FullCombat):
+        WS = 33
+
+    albert = Human()
+
+    msg = "Unknown stat 'M'"
+    with pytest.raises(KeyError, match=msg):
+        assert albert["M"] == 33
+
 
 # TODO: type-hinting instances (https://docs.python.org/3/library/typing.html#typing.get_type_hints)
 # TODO: Handle `@statblock()` usage

@@ -47,7 +47,10 @@ class StatBlock:
 
     def __getitem__(self, stat: str) -> int | Dice:
         """Get a specific stat by subscripting."""
-        return vars(self)[stat]
+        if stat in self._STATS:
+            return vars(self)[stat]
+        msg = f"Unknown stat '{stat}'"
+        raise KeyError(msg)
     
     def __str__(self) -> str:
         """A description of the Statblock type e.g. 'Human Warhammer StatBlock'."""
