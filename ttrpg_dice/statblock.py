@@ -51,7 +51,7 @@ class StatBlock(Mapping):
     def __getitem__(self, stat: str) -> int | Dice:
         """Get a specific stat by subscripting."""
         if stat in self._STATS:
-            return vars(self)[stat]
+            return getattr(self, stat)
         msg = f"Unknown stat '{stat}'"
         raise KeyError(msg)
     
