@@ -83,7 +83,9 @@ class StatBlock(Mapping):
         """Render the StatBlock as a github markdown table."""
         return tabulate([[*self.values()]], headers=self.keys(), tablefmt="github")
 
-    _repr_markdown_ = as_table
+    def _repr_markdown_(self) -> str:
+        """For IPython notebooks - L3 header and stat table."""
+        return f"### {self}\n{self.as_table()}"
 
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""
