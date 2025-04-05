@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator, Mapping
 from typing import TYPE_CHECKING
+
+from tabulate2 import tabulate
 
 from .dice import Dice
 
@@ -13,8 +16,8 @@ if TYPE_CHECKING:
         from typing import ClassVar, Self
 
 
-class StatBlock:
-    """A TTRPG StatBlock."""
+class StatBlock(Mapping):
+    """A TTRPG StatBlock, acts as a mapping of stats."""
 
     _STATS: ClassVar[dict[str, Dice]]
 
@@ -45,14 +48,52 @@ class StatBlock:
         newstats = {stat: max(getattr(self, stat), getattr(other, stat)) for stat in self._STATS}
         return type(self)(**newstats)
 
+    def __getitem__(self, stat: str) -> int | Dice:
+        """Get a specific stat by subscripting."""
+        if stat in self._STATS:
+            return getattr(self, stat)
+        msg = f"Unknown stat '{stat}'"
+        raise KeyError(msg)
+    
+    def __len__(self) -> int:
+        """Number of stats."""
+        return len(self._STATS)
+    
+    def __iter__(self) -> Iterator:
+        """Iterate over stats."""
+        return iter(self._STATS)
+    
+    def __str__(self) -> str:
+        """A description of the Statblock type e.g. 'Human Warhammer StatBlock'."""
+        cls = type(self)
+        bases = cls.mro()
+        statblock_index = bases.index(StatBlock)
+        return " ".join(base.__name__ for base in bases[:statblock_index+1])
+
+    def __repr__(self) -> str:
+        """Statblock type as per `str` plus the stats and their challenge rolls."""
+        return (
+            str(self)
+            + "("
+            + ", ".join(f"{statname}: {roll} = {self[statname]}" for statname, roll in self._STATS.items())
+            + ")"
+        )
+    
+    def as_table(self) -> str:
+        """Render the StatBlock as a github markdown table."""
+        return tabulate([[*self.values()]], headers=self.keys(), tablefmt="github")
+
+    def _repr_markdown_(self) -> str:
+        """For IPython notebooks - L3 header and stat table."""
+        return f"### {self}\n{self.as_table()}"
 
 def statblock(cls: type) -> StatBlock:
     """Create a StatBlock with the given fields."""
     stats = {statname: roll for statname, roll in vars(cls).items() if isinstance(roll, Dice)}
     _interimclass: type = type(
         cls.__name__,
-        (cls, StatBlock),
-        {attr: 0 if attr in stats else val for attr, val in vars(cls).items()},
+        (StatBlock,),
+        {attr: 0 if attr in stats else val for attr, val in vars(cls).items() if attr != "__dict__"},
     )
     _interimclass.__annotations__ = dict.fromkeys(stats, int | Dice)
     _interimclass._STATS = stats  # noqa: SLF001
