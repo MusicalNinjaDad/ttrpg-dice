@@ -22,7 +22,7 @@ class StatBlock(Mapping):
     _STATS: ClassVar[dict[str, Dice]]
 
     def __init__(self, /, **stats: int | Dice) -> None:
-        """Initialise a Statblock with some, or all stats given."""
+        """Initialise a StatBlock with some, or all stats given."""
         if type(self) is StatBlock:
             msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
             raise TypeError(msg)
