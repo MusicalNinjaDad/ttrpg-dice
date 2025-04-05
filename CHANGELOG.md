@@ -1,5 +1,15 @@
 # ttrpg-dice Changelog
 
+## [v0.5.0] - 2025-04-05
+
+### Changed
+
+- Allow `StatBlock` subclasses to extend / override `__init__`
+
+### Added
+
+- Statblock `str`, `repr` and `IPython.display`(as Markdown)
+
 ## [v0.4.0] - 2025-03-30
 
 ### Added

@@ -21,13 +21,11 @@ class StatBlock(Mapping):
 
     _STATS: ClassVar[dict[str, Dice]]
 
-    def __init__(self, *_args, **_kwargs) -> None:  # noqa: ANN002, ANN003
-        """Do not directly instantiate a StatBlock, please use the @statblock decorator instead."""
-        msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
-        raise TypeError(msg)
-
-    def _real_init_(self, /, **stats: int | Dice) -> None:
-        """Initialise a Statblock with some, or all stats given."""
+    def __init__(self, /, **stats: int | Dice) -> None:
+        """Initialise a StatBlock with some, or all stats given."""
+        if type(self) is StatBlock:
+            msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
+            raise TypeError(msg)
         for stat in self._STATS:
             val = stats.pop(stat, vars(type(self)).get(stat, 0))
             setattr(self, stat, val)
@@ -97,5 +95,4 @@ def statblock(cls: type) -> StatBlock:
     )
     _interimclass.__annotations__ = dict.fromkeys(stats, int | Dice)
     _interimclass._STATS = stats  # noqa: SLF001
-    _interimclass.__init__ = StatBlock._real_init_
     return _interimclass
