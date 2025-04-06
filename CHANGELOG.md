@@ -1,5 +1,11 @@
 # ttrpg-dice Changelog
 
+## [v0.6.0] - 2025-04-06
+
+### Breaking Changes
+
+- Subclasses should override `_pre_init_`, overridden `__init__` cannot call `super()` due to updated mro.
+
 ## [v0.5.0] - 2025-04-05
 
 ### Changed

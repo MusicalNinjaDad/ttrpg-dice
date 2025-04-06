@@ -21,11 +21,23 @@ class StatBlock(Mapping):
 
     _STATS: ClassVar[dict[str, Dice]]
 
-    def __init__(self, /, **stats: int | Dice) -> None:
-        """Initialise a StatBlock with some, or all stats given."""
+    def __init__(self, *_args, **_kwargs) -> None:  # noqa: ANN002, ANN003
+        """Raises TypeError - this method is replaced by `_init_` by the decorator."""
         if type(self) is StatBlock:
             msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
             raise TypeError(msg)
+        
+    def _pre_init_(self, /, **stats: int) -> dict[str, int | Dice]:
+        """
+        Subclasses can override this to perform actions at the start of __init__.
+        
+        Be sure to pop any used kwargs and return the remaining ones.
+        """
+        return stats
+    
+    def _init_(self, /, **stats: int | Dice) -> None:
+        """Initialise a StatBlock with some, or all stats given."""
+        stats = self._pre_init_(**stats)
         for stat in self._STATS:
             val = stats.pop(stat, vars(type(self)).get(stat, 0))
             setattr(self, stat, val)
@@ -95,4 +107,5 @@ def statblock(cls: type) -> StatBlock:
     )
     _interimclass.__annotations__ = dict.fromkeys(stats, int | Dice)
     _interimclass._STATS = stats  # noqa: SLF001
+    _interimclass.__init__ = StatBlock._init_
     return _interimclass

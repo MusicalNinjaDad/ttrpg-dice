@@ -147,6 +147,24 @@ def test_subclass_partial():
     albert = Human()
     assert vars(albert) == {"WS": 33, "BS": 0}
 
+def test_subclass_custom_init():
+
+    @statblock
+    class FullCombat:
+        WS = d(100)
+        BS = d(100)
+
+        def _pre_init_(self, /, name, **kwargs):
+            self.name = name
+            return kwargs
+    
+    class Human(FullCombat):
+        WS = 33
+
+    albert = Human(name="Albert")
+
+    assert albert.name == "Albert"
+
 
 def test_kw_only():
     @statblock
