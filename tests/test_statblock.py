@@ -154,16 +154,16 @@ def test_subclass_custom_init():
         WS = d(100)
         BS = d(100)
 
-        def _pre_init_(self, /, **kwargs):
-            self.pre = True
+        def _pre_init_(self, /, name, **kwargs):
+            self.name = name
             return kwargs
     
     class Human(FullCombat):
         WS = 33
 
-    albert = Human()
+    albert = Human(name="Albert")
 
-    assert albert.pre
+    assert albert.name == "Albert"
 
 
 def test_kw_only():
