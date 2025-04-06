@@ -26,9 +26,18 @@ class StatBlock(Mapping):
         if type(self) is StatBlock:
             msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
             raise TypeError(msg)
+        
+    def _pre_init_(self, /, **stats: int) -> dict[str, int]:
+        """
+        Subclasses can override this to perform actions at the start of __init__.
+        
+        Be sure to pop any used kwargs and return the remaining ones.
+        """
+        return stats
     
     def _init_(self, /, **stats: int) -> None:
         """Initialise a StatBlock with some, or all stats given."""
+        stats = self._pre_init_(**stats)
         for stat in self._STATS:
             val = stats.pop(stat, vars(type(self)).get(stat, 0))
             setattr(self, stat, val)
