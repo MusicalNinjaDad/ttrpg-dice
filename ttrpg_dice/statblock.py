@@ -27,7 +27,7 @@ class StatBlock(Mapping):
             msg = "Cannot directly instantiate a StatBlock, please use the @statblock decorator instead."
             raise TypeError(msg)
         
-    def _pre_init_(self, /, **stats: int) -> dict[str, int]:
+    def _pre_init_(self, /, **stats: int) -> dict[str, int | Dice]:
         """
         Subclasses can override this to perform actions at the start of __init__.
         
@@ -35,7 +35,7 @@ class StatBlock(Mapping):
         """
         return stats
     
-    def _init_(self, /, **stats: int) -> None:
+    def _init_(self, /, **stats: int | Dice) -> None:
         """Initialise a StatBlock with some, or all stats given."""
         stats = self._pre_init_(**stats)
         for stat in self._STATS:
