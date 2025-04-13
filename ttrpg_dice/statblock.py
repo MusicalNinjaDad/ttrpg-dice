@@ -49,7 +49,7 @@ class StatBlock(Mapping):
     def __add__(self, other: Self) -> Self:
         """Adds each stat, raises AttributeError if stat missing in `other`."""
         newstats = {
-            stat: min(getattr(self, stat) + getattr(other, stat), len(self._STATS[stat])) for stat in self._STATS
+            stat: min(self[stat] + other[stat], len(self._STATS[stat])) for stat in self._STATS
         }
         return type(self)(**newstats)
     
@@ -60,13 +60,13 @@ class StatBlock(Mapping):
         For example, if you want to take an NPC and remove a specific career.
         """
         newstats = {
-            stat: max(getattr(self, stat) - getattr(other, stat), 0) for stat in self._STATS
+            stat: max(self[stat] - other[stat], 0) for stat in self._STATS
         }
         return type(self)(**newstats)
 
     def __or__(self, other: Self) -> Self:
         """Merge stats, keeping the highest."""
-        newstats = {stat: max(getattr(self, stat), getattr(other, stat)) for stat in self._STATS}
+        newstats = {stat: max(self[stat], other[stat]) for stat in self._STATS}
         return type(self)(**newstats)
 
     def __getitem__(self, stat: str) -> int | Dice:
