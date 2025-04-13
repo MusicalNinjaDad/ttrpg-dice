@@ -51,6 +51,19 @@ def test_addition():
     assert knight.WS == 51
     assert isinstance(knight, Combat)
 
+def test_subtraction():
+    @statblock
+    class Combat:
+        WS = d(100)
+
+    fighter = Combat(WS=41)
+    skilled = Combat(WS=10)
+
+    unskilled = fighter - skilled
+
+    assert unskilled.WS == 31
+    assert isinstance(unskilled, Combat)
+
 
 def test_instance_vars():
     @statblock

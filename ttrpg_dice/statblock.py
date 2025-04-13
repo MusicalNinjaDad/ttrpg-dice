@@ -52,6 +52,17 @@ class StatBlock(Mapping):
             stat: min(getattr(self, stat) + getattr(other, stat), len(self._STATS[stat])) for stat in self._STATS
         }
         return type(self)(**newstats)
+    
+    def __sub__(self, other: Self) -> Self:
+        """
+        Subtracts each stat, raises AttributeError if stat missing in `other`.
+        
+        For example, if you want to take an NPC and remove a specific career.
+        """
+        newstats = {
+            stat: max(getattr(self, stat) - getattr(other, stat), 0) for stat in self._STATS
+        }
+        return type(self)(**newstats)
 
     def __or__(self, other: Self) -> Self:
         """Merge stats, keeping the highest."""
