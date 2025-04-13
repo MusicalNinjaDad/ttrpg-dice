@@ -21,7 +21,7 @@
 ### Changed
 
 - Allow `StatBlock` subclasses to extend / override `__init__`
-- `StatBlock`is a `Mapping`
+- `StatBlock` is a `Mapping`
 
 ### Added
 
