@@ -1,5 +1,15 @@
 # ttrpg-dice Changelog
 
+## [v0.7.0] - 2025-04-13
+
+### Added
+
+- Allow `StatBlock` subtraction. For example, if you want to take an NPC and remove a specific career.
+
+### Changed
+
+- `StatBlock` algebra utilises the fact that `StatBlock` is a `Mapping`
+
 ## [v0.6.0] - 2025-04-06
 
 ### Breaking Changes
@@ -11,6 +21,7 @@
 ### Changed
 
 - Allow `StatBlock` subclasses to extend / override `__init__`
+- `StatBlock` is a `Mapping`
 
 ### Added
 
