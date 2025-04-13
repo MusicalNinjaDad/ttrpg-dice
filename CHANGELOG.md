@@ -6,7 +6,7 @@
 
 - Allow `StatBlock` subtraction. For example, if you want to take an NPC and remove a specific career.
 
-## Changed
+### Changed
 
 - `StatBlock` algebra utilises the fact that `StatBlock` is a `Mapping`
 
