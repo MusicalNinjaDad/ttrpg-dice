@@ -8,7 +8,7 @@ importlib-resources==6.5.2 ; python_full_version < '3.10'
 kiwisolver==1.4.7 ; python_full_version < '3.10'
 kiwisolver==1.4.8 ; python_full_version >= '3.10'
 matplotlib==3.9.4 ; python_full_version < '3.10'
-matplotlib==3.10.3 ; python_full_version >= '3.10'
+matplotlib==3.10.6 ; python_full_version >= '3.10'
 numpy==2.0.2 ; python_full_version < '3.10'
 numpy==2.2.6 ; python_full_version >= '3.10'
 packaging==25.0
